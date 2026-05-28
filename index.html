@@ -4,130 +4,280 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
 <title>Fee Payment — Lotus International School</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet"/>
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
   body{
     min-height:100vh;
-    background:#0e0c1a;
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Outfit',sans-serif;
-    padding:20px;
+    background:#f5f5f7;
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    padding:32px 16px;
+    gap:0;
   }
-  .card{
-    background:#1a1630;
-    border:1.5px solid #2e2850;
-    border-radius:24px;
-    padding:36px 28px 32px;
-    max-width:380px;width:100%;
+
+  /* ── Brand strip ── */
+  .brand{
+    width:100%;max-width:400px;
     text-align:center;
-    box-shadow:0 24px 64px rgba(0,0,0,.5);
-    position:relative;overflow:hidden;
+    margin-bottom:18px;
   }
-  .card::before{
-    content:'';position:absolute;top:-60px;right:-60px;
-    width:200px;height:200px;
-    background:radial-gradient(circle,rgba(181,136,62,.15) 0%,transparent 70%);
+  .brand-name{
+    font-size:12px;font-weight:600;
+    color:#6e6e73;letter-spacing:.4px;
+  }
+
+  /* ── Card ── */
+  .card{
+    width:100%;max-width:400px;
+    background:#fff;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 1px 3px rgba(0,0,0,.06),0 8px 32px rgba(0,0,0,.07);
+  }
+
+  /* ── Hero ── */
+  .hero{
+    background:linear-gradient(165deg,#0f2545 0%,#1a3a6e 60%,#1e4080 100%);
+    padding:40px 28px 56px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  /* subtle grain */
+  .hero::before{
+    content:'';position:absolute;inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+    opacity:.4;pointer-events:none;
+  }
+  /* white wave at bottom */
+  .hero::after{
+    content:'';position:absolute;
+    bottom:-28px;left:-4%;
+    width:108%;height:56px;
+    background:#fff;
+    border-radius:50% 50% 0 0/100% 100% 0 0;
     pointer-events:none;
   }
-  .logo{
-    width:64px;height:64px;margin:0 auto 16px;
-    background:rgba(181,136,62,.12);
-    border:1.5px solid rgba(181,136,62,.3);
-    border-radius:18px;
-    display:flex;align-items:center;justify-content:center;
-    font-size:30px;
+  .hero-eyebrow{
+    font-size:10px;font-weight:600;
+    color:rgba(255,255,255,.45);
+    letter-spacing:2px;text-transform:uppercase;
+    margin-bottom:10px;
+    position:relative;z-index:1;
   }
-  .school{
-    font-family:'Cinzel',serif;
-    font-size:9px;font-weight:700;
-    color:#b5883e;letter-spacing:2px;
+  .hero-title{
+    font-size:28px;font-weight:700;
+    color:#fff;letter-spacing:-.6px;line-height:1.15;
+    position:relative;z-index:1;
+  }
+  .hero-sub{
+    font-size:13px;color:rgba(255,255,255,.45);
+    margin-top:6px;font-weight:400;
+    position:relative;z-index:1;
+  }
+
+  /* ── Body ── */
+  .body{
+    padding:36px 24px 28px;
+    background:#fff;
+  }
+
+  /* student info — hidden until JS fills */
+  #info-box{display:none;}
+
+  /* Avatar + name row */
+  .stu-row{
+    display:flex;align-items:center;gap:12px;
+    margin-bottom:24px;
+  }
+  .avatar{
+    width:42px;height:42px;flex-shrink:0;
+    border-radius:50%;
+    background:linear-gradient(135deg,#0f2545,#1a3a6e);
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px;font-weight:700;color:#fff;
+    letter-spacing:-.3px;
+  }
+  .stu-meta{flex:1;min-width:0;}
+  .stu-name{font-size:15px;font-weight:600;color:#1d1d1f;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .stu-adm{font-size:12px;color:#6e6e73;margin-top:1px;}
+
+  /* divider */
+  .divider{height:1px;background:#f0f0f0;margin:0 0 20px;}
+
+  /* amount */
+  .amount-section{
+    margin-bottom:28px;
+  }
+  .amount-label{font-size:12px;color:#6e6e73;font-weight:500;margin-bottom:4px;letter-spacing:.2px;}
+  .amount-row{display:flex;align-items:flex-end;justify-content:space-between;}
+  .amount-val{font-size:36px;font-weight:700;color:#1d1d1f;letter-spacing:-1.2px;line-height:1;}
+  .due-badge{
+    font-size:10px;font-weight:600;
+    color:#ff6b00;background:rgba(255,107,0,.1);
+    padding:4px 10px;border-radius:20px;letter-spacing:.4px;
     text-transform:uppercase;margin-bottom:4px;
   }
-  .title{font-size:20px;font-weight:800;color:#f4ede0;margin-bottom:24px;}
 
-  .info-box{
-    background:#12101f;border:1px solid #2a2540;
-    border-radius:14px;padding:16px 18px;
-    margin-bottom:20px;text-align:left;
+  /* UPI apps row */
+  .upi-row{
+    display:flex;gap:8px;margin-bottom:20px;
   }
-  .info-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;}
-  .info-row:not(:last-child){border-bottom:1px solid #1e1b35;}
-  .info-label{font-size:11px;color:#6b5f90;font-weight:600;text-transform:uppercase;letter-spacing:.6px;}
-  .info-val{font-size:13px;color:#d4c8f0;font-weight:700;}
-  .amount-val{font-size:22px;font-weight:800;color:#4ade80;font-family:'Outfit',sans-serif;letter-spacing:-.5px;}
+  .upi-chip{
+    flex:1;text-align:center;
+    background:#f5f5f7;border-radius:10px;
+    padding:9px 4px;
+    font-size:11px;font-weight:600;color:#1d1d1f;
+    letter-spacing:.2px;
+  }
 
-  /* Redirecting state */
-  #state-redirecting{display:none;padding:8px 0 20px;}
-  #state-redirecting.active{display:block;}
-  .rdr-icon{font-size:44px;margin-bottom:14px;}
-  .rdr-msg{font-size:15px;font-weight:800;color:#f4ede0;margin-bottom:6px;}
-  .rdr-sub{font-size:12px;color:#6b5f90;margin-bottom:20px;line-height:1.6;}
+  /* Primary button */
+  .btn-primary{
+    display:block;width:100%;
+    background:#0071e3;
+    color:#fff;
+    font-size:15px;font-weight:600;
+    border:none;border-radius:12px;
+    padding:15px;text-align:center;
+    text-decoration:none;cursor:pointer;
+    letter-spacing:-.1px;
+    transition:background .15s,transform .1s;
+    margin-bottom:10px;
+  }
+  .btn-primary:active{background:#0077ed;transform:scale(.985);}
+
+  /* Secondary button */
+  .btn-secondary{
+    display:block;width:100%;
+    background:#f5f5f7;
+    color:#1d1d1f;
+    font-size:15px;font-weight:600;
+    border:none;border-radius:12px;
+    padding:15px;text-align:center;
+    text-decoration:none;cursor:pointer;
+    letter-spacing:-.1px;
+    transition:background .15s,transform .1s;
+    margin-bottom:24px;
+  }
+  .btn-secondary:active{background:#e8e8ed;transform:scale(.985);}
+
+  /* Secure note */
+  .secure{
+    display:flex;align-items:center;justify-content:center;
+    gap:5px;margin-bottom:0;
+  }
+  .secure svg{opacity:.35;}
+  .secure span{font-size:11px;color:#aeaeb2;font-weight:400;}
 
   /* Progress bar */
-  .prog-wrap{height:4px;background:#2a2540;border-radius:4px;overflow:hidden;margin-bottom:20px;}
-  .prog-bar{height:100%;background:linear-gradient(90deg,#b5883e,#d4a54e);border-radius:4px;width:0;transition:width .8s linear;}
+  .prog-wrap{height:2px;background:#e8e8ed;border-radius:2px;overflow:hidden;margin-bottom:20px;}
+  .prog-bar{height:100%;background:#0071e3;border-radius:2px;width:0;transition:width .8s linear;}
 
-  .pay-btn{
-    display:block;width:100%;
-    background:linear-gradient(135deg,#b5883e 0%,#d4a54e 100%);
-    color:#1a0e00;font-size:15px;font-weight:800;
-    border:none;border-radius:14px;padding:16px;
-    cursor:pointer;text-decoration:none;
-    transition:all .18s;letter-spacing:.3px;
-    margin-bottom:12px;
+  /* redirecting state */
+  #state-redirecting{display:none;}
+  #state-redirecting.active{display:block;}
+
+  /* ── Footer ── */
+  .footer{
+    width:100%;max-width:400px;
+    margin-top:20px;
+    text-align:center;
   }
-  .pay-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(181,136,62,.35);}
+  .footer-label{font-size:11px;color:#aeaeb2;margin-bottom:6px;}
+  .call-btn{
+    display:inline-flex;align-items:center;gap:6px;
+    background:#fff;
+    border:1px solid #e0e0e5;
+    border-radius:980px;
+    padding:9px 20px;
+    font-size:14px;font-weight:600;color:#0071e3;
+    text-decoration:none;
+    box-shadow:0 1px 4px rgba(0,0,0,.06);
+    transition:box-shadow .15s,transform .1s;
+  }
+  .call-btn:active{transform:scale(.97);box-shadow:none;}
+  .call-icon{font-size:14px;}
 
-  .note{font-size:11px;color:#4a4070;line-height:1.6;}
-  .note span{color:#6b5f90;}
-
-  /* Error state */
-  #state-error{display:none;padding:24px 0 8px;}
+  /* ── Error ── */
+  #state-error{display:none;padding:8px 0 4px;text-align:center;}
   #state-error.active{display:block;}
-  .err-icon{font-size:48px;margin-bottom:12px;}
-  .err-msg{font-size:14px;font-weight:700;color:#f87171;margin-bottom:6px;}
-  .err-sub{font-size:12px;color:#6b5f90;}
+  .err-icon{font-size:36px;margin-bottom:10px;}
+  .err-msg{font-size:15px;font-weight:600;color:#ff3b30;margin-bottom:5px;}
+  .err-sub{font-size:13px;color:#6e6e73;line-height:1.6;}
 </style>
 </head>
 <body>
+
+<div class="brand">
+  <span class="brand-name">Lotus International School</span>
+</div>
+
 <div class="card">
-  <div class="logo">🪷</div>
-  <div class="school">Lotus International School</div>
-  <div class="title">Fee Payment</div>
 
-  <!-- Student info — always visible -->
-  <div id="info-box" class="info-box" style="display:none">
-    <div class="info-row">
-      <span class="info-label">Student</span>
-      <span class="info-val" id="disp-name">—</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">Adm No</span>
-      <span class="info-val" id="disp-adm">—</span>
-    </div>
-    <div class="info-row" style="border-bottom:none">
-      <span class="info-label">Amount Due</span>
-      <span class="amount-val" id="disp-am">—</span>
-    </div>
+  <div class="hero">
+    <div class="hero-eyebrow">Secure Payment</div>
+    <div class="hero-title">Fee Payment</div>
+    <div class="hero-sub">Pay instantly via UPI</div>
   </div>
 
-  <!-- Auto-redirecting state -->
-  <div id="state-redirecting">
-    <div class="rdr-icon">📲</div>
-    <div class="rdr-msg">Opening Payment App…</div>
-    <div class="rdr-sub">GPay / PhonePe / Paytm<br/>automatically open ho raha hai</div>
-    <div class="prog-wrap"><div class="prog-bar" id="prog-bar"></div></div>
-    <a id="pay-btn" class="pay-btn" href="#">💳 Tap Here if App Didn't Open</a>
-    <p class="note"><span>Amount &amp; details are pre-filled.</span></p>
-  </div>
+  <div class="body">
 
-  <!-- Error state -->
-  <div id="state-error">
-    <div class="err-icon">⚠️</div>
-    <div class="err-msg">Invalid Payment Link</div>
-    <div class="err-sub">Please contact the school office<br/>for a valid payment link.</div>
+    <div id="info-box">
+      <div class="stu-row">
+        <div class="avatar" id="chip-initials">—</div>
+        <div class="stu-meta">
+          <div class="stu-name" id="disp-name">—</div>
+          <div class="stu-adm">Adm No. <span id="disp-adm">—</span></div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="amount-section">
+        <div class="amount-label">AMOUNT DUE</div>
+        <div class="amount-row">
+          <div class="amount-val" id="disp-am">—</div>
+          <div class="due-badge">Due Now</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="state-redirecting">
+      <div class="prog-wrap"><div class="prog-bar" id="prog-bar"></div></div>
+      <div class="upi-row">
+        <div class="upi-chip">GPay</div>
+        <div class="upi-chip">PhonePe</div>
+        <div class="upi-chip">Paytm</div>
+        <div class="upi-chip">BHIM</div>
+      </div>
+      <a id="pay-btn" class="btn-primary" href="#">Open Payment App</a>
+      <a id="pay-btn-2" class="btn-secondary" href="#">Pay via Any UPI</a>
+      <div class="secure">
+        <svg width="10" height="12" viewBox="0 0 10 12" fill="none">
+          <path d="M5 0L0 2V5.5C0 8.5 2.2 11.3 5 12C7.8 11.3 10 8.5 10 5.5V2L5 0Z" fill="#1d1d1f"/>
+        </svg>
+        <span>256-bit encrypted · Amount pre-filled</span>
+      </div>
+    </div>
+
+    <div id="state-error">
+      <div class="err-icon">⚠️</div>
+      <div class="err-msg">Invalid Payment Link</div>
+      <div class="err-sub">Please contact the school office<br/>for a valid payment link.</div>
+    </div>
+
   </div>
+</div>
+
+<!-- Footer call button -->
+<div class="footer">
+  <div class="footer-label">Need help?</div>
+  <a class="call-btn" href="tel:+919872780990">
+    <span class="call-icon">📞</span>
+    +91 98727-80990
+  </a>
 </div>
 
 <script>
@@ -137,20 +287,23 @@
   var am   = (p.get('am')   || '').trim();
   var name = (p.get('name') || '').trim();
 
-  // Validate
   if(!adm || !am || isNaN(parseFloat(am))){
     document.getElementById('state-error').classList.add('active');
     document.getElementById('state-error').style.display = 'block';
     return;
   }
 
-  // Fill info box
   document.getElementById('disp-name').textContent = name || '—';
   document.getElementById('disp-adm').textContent  = adm;
   document.getElementById('disp-am').textContent   = '₹' + parseFloat(am).toLocaleString('en-IN');
+
+  var initials = name
+    ? name.trim().split(' ').map(function(w){return w[0];}).slice(0,2).join('').toUpperCase()
+    : adm.slice(0,2).toUpperCase();
+  document.getElementById('chip-initials').textContent = initials;
+
   document.getElementById('info-box').style.display = 'block';
 
-  // Build UPI link
   var tr  = adm + (name ? '-' + name + "'s Fee" : ' Fee');
   var upi = 'upi://pay?pa=lisdnn@icici'
           + '&pn=LOTUS%20INTERNATIONAL%20SCHOOL'
@@ -160,24 +313,15 @@
           + '&cu=INR'
           + '&mc=8299';
 
-  // Set button href
-  document.getElementById('pay-btn').href = upi;
+  document.getElementById('pay-btn').href   = upi;
+  document.getElementById('pay-btn-2').href = upi;
 
-  // Show redirecting state
-  var rdEl = document.getElementById('state-redirecting');
-  rdEl.style.display = 'block';
-  rdEl.classList.add('active');
+  var rd = document.getElementById('state-redirecting');
+  rd.style.display = 'block';
+  rd.classList.add('active');
 
-  // Animate progress bar
-  setTimeout(function(){
-    document.getElementById('prog-bar').style.width = '100%';
-  }, 50);
-
-  // Auto-redirect after 800ms
-  setTimeout(function(){
-    window.location.href = upi;
-  }, 800);
-
+  setTimeout(function(){ document.getElementById('prog-bar').style.width='100%'; }, 50);
+  setTimeout(function(){ window.location.href = upi; }, 800);
 })();
 </script>
 </body>
