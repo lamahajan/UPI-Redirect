@@ -106,10 +106,6 @@
       <span class="info-label">Adm No</span>
       <span class="info-val" id="disp-adm">—</span>
     </div>
-    <div class="info-row">
-      <span class="info-label">Class</span>
-      <span class="info-val" id="disp-cls">—</span>
-    </div>
     <div class="info-row" style="border-bottom:none">
       <span class="info-label">Amount Due</span>
       <span class="amount-val" id="disp-am">—</span>
@@ -140,7 +136,6 @@
   var adm  = (p.get('adm')  || '').trim();
   var am   = (p.get('am')   || '').trim();
   var name = (p.get('name') || '').trim();
-  var cls  = (p.get('cls')  || '').trim();
 
   // Validate
   if(!adm || !am || isNaN(parseFloat(am))){
@@ -152,7 +147,6 @@
   // Fill info box
   document.getElementById('disp-name').textContent = name || '—';
   document.getElementById('disp-adm').textContent  = adm;
-  document.getElementById('disp-cls').textContent  = cls || '—';
   document.getElementById('disp-am').textContent   = '₹' + parseFloat(am).toLocaleString('en-IN');
   document.getElementById('info-box').style.display = 'block';
 
