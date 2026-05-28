@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<title>Fee Payment — Lotus International School</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{
+    min-height:100vh;
+    background:#0e0c1a;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Outfit',sans-serif;
+    padding:20px;
+  }
+  .card{
+    background:#1a1630;
+    border:1.5px solid #2e2850;
+    border-radius:24px;
+    padding:36px 28px 32px;
+    max-width:380px;width:100%;
+    text-align:center;
+    box-shadow:0 24px 64px rgba(0,0,0,.5);
+    position:relative;overflow:hidden;
+  }
+  .card::before{
+    content:'';position:absolute;top:-60px;right:-60px;
+    width:200px;height:200px;
+    background:radial-gradient(circle,rgba(181,136,62,.15) 0%,transparent 70%);
+    pointer-events:none;
+  }
+  .logo{
+    width:64px;height:64px;margin:0 auto 16px;
+    background:rgba(181,136,62,.12);
+    border:1.5px solid rgba(181,136,62,.3);
+    border-radius:18px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:30px;
+  }
+  .school{
+    font-family:'Cinzel',serif;
+    font-size:9px;font-weight:700;
+    color:#b5883e;letter-spacing:2px;
+    text-transform:uppercase;margin-bottom:4px;
+  }
+  .title{font-size:20px;font-weight:800;color:#f4ede0;margin-bottom:24px;}
+
+  /* Student info box */
+  .info-box{
+    background:#12101f;border:1px solid #2a2540;
+    border-radius:14px;padding:16px 18px;
+    margin-bottom:20px;text-align:left;
+  }
+  .info-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;}
+  .info-row:not(:last-child){border-bottom:1px solid #1e1b35;}
+  .info-label{font-size:11px;color:#6b5f90;font-weight:600;text-transform:uppercase;letter-spacing:.6px;}
+  .info-val{font-size:13px;color:#d4c8f0;font-weight:700;}
+  .amount-val{font-size:22px;font-weight:800;color:#4ade80;font-family:'Outfit',sans-serif;letter-spacing:-.5px;}
+
+  /* Pay button */
+  .pay-btn{
+    display:block;width:100%;
+    background:linear-gradient(135deg,#b5883e 0%,#d4a54e 100%);
+    color:#1a0e00;font-size:15px;font-weight:800;
+    border:none;border-radius:14px;padding:16px;
+    cursor:pointer;text-decoration:none;
+    transition:all .18s;letter-spacing:.3px;
+    margin-bottom:12px;
+  }
+  .pay-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(181,136,62,.35);}
+  .pay-btn:active{transform:translateY(0);}
+
+  /* Spinner state */
+  .spinner{
+    display:none;width:22px;height:22px;
+    border:2.5px solid rgba(255,255,255,.2);
+    border-top-color:#fff;border-radius:50%;
+    animation:spin .7s linear infinite;
+    margin:0 auto;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .note{font-size:11px;color:#4a4070;line-height:1.6;}
+  .note span{color:#6b5f90;}
+
+  /* States */
+  .state{display:none;padding:24px 0 8px;}
+  .state.active{display:block;}
+  .state-icon{font-size:48px;margin-bottom:12px;}
+  .state-msg{font-size:14px;font-weight:700;color:#f4ede0;margin-bottom:6px;}
+  .state-sub{font-size:12px;color:#6b5f90;}
+
+  .err-state .state-msg{color:#f87171;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">🪷</div>
+  <div class="school">Lotus International School</div>
+  <div class="title">Fee Payment</div>
+
+  <!-- Main content -->
+  <div id="main-content">
+    <div class="info-box">
+      <div class="info-row">
+        <span class="info-label">Student</span>
+        <span class="info-val" id="disp-name">—</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Adm No</span>
+        <span class="info-val" id="disp-adm">—</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Class</span>
+        <span class="info-val" id="disp-cls">—</span>
+      </div>
+      <div class="info-row" style="border-bottom:none">
+        <span class="info-label">Amount Due</span>
+        <span class="amount-val" id="disp-am">—</span>
+      </div>
+    </div>
+
+    <a id="pay-btn" class="pay-btn" href="#" onclick="doPay(event)">
+      💳 Pay Now
+    </a>
+
+    <p class="note">
+      Opens your UPI app (GPay, PhonePe, Paytm).<br/>
+      <span>Amount &amp; details are pre-filled.</span>
+    </p>
+  </div>
+
+  <!-- Loading state -->
+  <div id="state-loading" class="state">
+    <div class="spinner" style="display:block;margin:0 auto 16px"></div>
+    <div class="state-msg">Opening payment app…</div>
+    <div class="state-sub">Please wait</div>
+  </div>
+
+  <!-- Error state -->
+  <div id="state-error" class="state err-state">
+    <div class="state-icon">⚠️</div>
+    <div class="state-msg">Invalid Payment Link</div>
+    <div class="state-sub">Please contact the school office for a valid payment link.</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var p      = new URLSearchParams(window.location.search);
+  var adm    = (p.get('adm')  || '').trim();
+  var am     = (p.get('am')   || '').trim();
+  var name   = (p.get('name') || '').trim();
+  var cls    = (p.get('cls')  || '').trim();
+
+  // Validate
+  if(!adm || !am || isNaN(parseFloat(am))){
+    document.getElementById('main-content').style.display='none';
+    var errEl = document.getElementById('state-error');
+    errEl.style.display='block'; errEl.classList.add('active');
+    return;
+  }
+
+  // Fill display
+  document.getElementById('disp-name').textContent = name || '—';
+  document.getElementById('disp-adm').textContent  = adm;
+  document.getElementById('disp-cls').textContent  = cls || '—';
+  document.getElementById('disp-am').textContent   = '₹' + parseFloat(am).toLocaleString('en-IN');
+
+  // Build UPI link
+  var tr  = adm + (name ? '-' + name + "'s Fee" : ' Fee');
+  var upi = 'upi://pay?pa=lisdnn@icici'
+          + '&pn=LOTUS%20INTERNATIONAL%20SCHOOL'
+          + '&tr='  + encodeURIComponent(tr)
+          + '&tn='  + encodeURIComponent(adm)
+          + '&am='  + encodeURIComponent(am)
+          + '&cu=INR'
+          + '&mc=8299';
+
+  document.getElementById('pay-btn').href = upi;
+})();
+
+function doPay(e){
+  e.preventDefault();
+  var btn = document.getElementById('pay-btn');
+  var href = btn.href;
+  if(!href || href==='#') return;
+
+  // Show loading briefly then redirect
+  document.getElementById('main-content').style.display='none';
+  var ld = document.getElementById('state-loading');
+  ld.style.display='block'; ld.classList.add('active');
+
+  setTimeout(function(){
+    window.location.href = href;
+    // After 2s, show content again in case UPI app didn't open
+    setTimeout(function(){
+      ld.style.display='none'; ld.classList.remove('active');
+      document.getElementById('main-content').style.display='block';
+    }, 2000);
+  }, 600);
+}
+</script>
+</body>
+</html>
