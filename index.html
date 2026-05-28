@@ -162,11 +162,35 @@ body{
 }
 .call-btn:active{transform:scale(.97);}
 
-#state-error{display:none;padding:8px 0;text-align:center;}
+#state-error{display:none;padding:24px 0 8px;text-align:center;}
 #state-error.active{display:block;}
-.err-icon{font-size:32px;margin-bottom:8px;}
-.err-msg{font-size:15px;font-weight:600;color:#ff3b30;margin-bottom:4px;}
-.err-sub{font-size:13px;color:#6e6e73;line-height:1.6;}
+.err-icon-wrap{
+  width:64px;height:64px;border-radius:20px;
+  background:linear-gradient(135deg,#fff1f0,#ffe4e1);
+  border:1px solid rgba(255,59,48,.12);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 16px;font-size:28px;
+}
+.err-msg{font-size:18px;font-weight:700;color:#1d1d1f;letter-spacing:-.3px;margin-bottom:6px;}
+.err-sub{font-size:13px;color:#6e6e73;line-height:1.7;margin-bottom:24px;}
+.err-divider{height:1px;background:#f0f0f0;margin:0 0 20px;}
+.err-cta{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  background:#0071e3;color:#fff;
+  font-size:15px;font-weight:600;border-radius:12px;
+  padding:14px;text-decoration:none;
+  box-shadow:0 2px 10px rgba(0,113,227,.22);
+  transition:all .15s;margin-bottom:10px;
+}
+.err-cta:active{background:#005bbf;transform:scale(.985);}
+.err-cta-sec{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  background:#f5f5f7;color:#1d1d1f;
+  font-size:14px;font-weight:500;border-radius:12px;
+  padding:13px;text-decoration:none;
+  transition:all .15s;
+}
+.err-cta-sec:active{background:#e8e8ed;}
 </style>
 </head>
 <body>
@@ -219,9 +243,18 @@ body{
     </div>
 
     <div id="state-error">
-      <div class="err-icon">⚠️</div>
+      <div class="err-icon-wrap">⚠️</div>
       <div class="err-msg">Invalid Payment Link</div>
-      <div class="err-sub">Please contact the school office<br/>for a valid payment link.</div>
+      <div class="err-sub">This link is invalid or has expired.<br/>Please contact the school office<br/>for a valid payment link.</div>
+      <div class="err-divider"></div>
+      <a class="err-cta" href="tel:+919872780990">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        Call School Office
+      </a>
+      <a class="err-cta-sec" href="https://wa.me/919872780990" target="_blank">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        WhatsApp Us
+      </a>
     </div>
   </div>
 
