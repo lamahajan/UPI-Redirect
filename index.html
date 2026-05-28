@@ -10,277 +10,163 @@
 
 body{
   min-height:100vh;
-  background:#080c14;
+  background:#f5f5f7;
   font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
   -webkit-font-smoothing:antialiased;
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  padding:32px 16px;
-  position:relative;
-  overflow-x:hidden;
+  padding:16px;
+  gap:0;
 }
 
-/* ambient glow background */
-body::before{
-  content:'';position:fixed;
-  top:-20%;left:50%;transform:translateX(-50%);
-  width:600px;height:400px;
-  background:radial-gradient(ellipse,rgba(30,64,120,.35) 0%,transparent 70%);
-  pointer-events:none;z-index:0;
-}
-body::after{
-  content:'';position:fixed;
-  bottom:-10%;left:50%;transform:translateX(-50%);
-  width:400px;height:300px;
-  background:radial-gradient(ellipse,rgba(180,140,60,.08) 0%,transparent 70%);
-  pointer-events:none;z-index:0;
-}
-
-/* ── Logo bar ── */
 .logobar{
-  position:relative;z-index:1;
-  margin-bottom:24px;
+  margin-bottom:14px;
   text-align:center;
 }
-.logobar img{
-  width:190px;
-  filter:brightness(0) invert(1);
-  opacity:.9;
-}
+.logobar img{width:170px;max-width:75vw;display:block;margin:0 auto;}
 
-/* ── Card ── */
 .card{
-  position:relative;z-index:1;
   width:100%;max-width:390px;
-  border-radius:28px;
+  background:#fff;
+  border-radius:22px;
   overflow:hidden;
-  /* glass */
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.09);
-  backdrop-filter:blur(40px);
-  -webkit-backdrop-filter:blur(40px);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,.04),
-    0 32px 80px rgba(0,0,0,.6),
-    0 8px 24px rgba(0,0,0,.4);
+  box-shadow:0 1px 3px rgba(0,0,0,.06),0 8px 32px rgba(0,0,0,.08);
 }
 
-/* shimmer line at top */
-.card-shimmer{
-  height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.2) 40%,rgba(200,165,80,.4) 60%,transparent);
-}
-
-/* ── Hero ── */
+/* Hero */
 .hero{
-  padding:36px 28px 48px;
+  background:linear-gradient(165deg,#0f2545 0%,#1a3a6e 60%,#1e4080 100%);
+  padding:24px 24px 44px;
   text-align:center;
-  position:relative;
-  overflow:hidden;
+  position:relative;overflow:hidden;
 }
-.hero-glow{
-  position:absolute;top:-60px;left:50%;transform:translateX(-50%);
-  width:280px;height:200px;
-  background:radial-gradient(ellipse,rgba(30,80,160,.4) 0%,transparent 70%);
+.hero::before{
+  content:'';position:absolute;
+  top:-60px;left:50%;transform:translateX(-50%);
+  width:260px;height:180px;
+  background:radial-gradient(ellipse,rgba(255,255,255,.05) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero::after{
+  content:'';position:absolute;
+  bottom:-24px;left:-5%;width:110%;height:50px;
+  background:#fff;
+  border-radius:50% 50% 0 0/100% 100% 0 0;
   pointer-events:none;
 }
 .hero-eyebrow{
   display:inline-flex;align-items:center;gap:5px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:20px;
-  padding:4px 12px;
-  font-size:10px;font-weight:600;
-  color:rgba(255,255,255,.5);
-  letter-spacing:1.5px;text-transform:uppercase;
+  font-size:9px;font-weight:600;
+  color:rgba(255,255,255,.45);
+  letter-spacing:1.8px;text-transform:uppercase;
+  margin-bottom:8px;position:relative;z-index:1;
+}
+.eyebrow-dot{width:5px;height:5px;border-radius:50%;background:#4ade80;flex-shrink:0;}
+.hero-title{
+  font-size:24px;font-weight:800;
+  color:#fff;letter-spacing:-.6px;line-height:1.1;
+  position:relative;z-index:1;
+}
+
+/* Body */
+.body{padding:30px 20px 22px;}
+
+#info-box{display:none;}
+
+/* Student row */
+.stu-row{
+  display:flex;align-items:center;gap:10px;
   margin-bottom:16px;
 }
-.eyebrow-dot{width:5px;height:5px;border-radius:50%;background:#4ade80;box-shadow:0 0 6px #4ade80;}
-.hero-title{
-  font-size:30px;font-weight:800;
-  color:#fff;letter-spacing:-.8px;line-height:1.1;
-  margin-bottom:6px;
-}
-.hero-sub{
-  font-size:13px;color:rgba(255,255,255,.3);
-  font-weight:400;letter-spacing:.1px;
-}
-/* wave */
-.hero::after{
-  content:'';position:absolute;
-  bottom:-26px;left:-5%;width:110%;height:52px;
-  background:rgba(255,255,255,.035);
-  border-radius:50% 50% 0 0/100% 100% 0 0;
-  pointer-events:none;
-}
-
-/* ── Body ── */
-.body{
-  padding:36px 24px 28px;
-}
-
-/* student row */
-#info-box{display:none;}
-.stu-row{
-  display:flex;align-items:center;gap:12px;
-  margin-bottom:24px;
-}
 .avatar{
-  width:44px;height:44px;flex-shrink:0;
-  border-radius:14px;
-  background:linear-gradient(135deg,#1a3a6e,#0f2545);
-  border:1px solid rgba(255,255,255,.1);
+  width:38px;height:38px;flex-shrink:0;
+  border-radius:12px;
+  background:linear-gradient(135deg,#0f2545,#1a3a6e);
   display:flex;align-items:center;justify-content:center;
-  font-size:15px;font-weight:700;color:#fff;
-  letter-spacing:-.3px;
+  font-size:13px;font-weight:700;color:#fff;
 }
-.stu-meta{flex:1;min-width:0;}
-.stu-name{
-  font-size:15px;font-weight:600;
-  color:rgba(255,255,255,.9);
-  letter-spacing:-.2px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.stu-adm{font-size:12px;color:rgba(255,255,255,.3);margin-top:2px;}
+.stu-name{font-size:14px;font-weight:600;color:#1d1d1f;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.stu-adm{font-size:11px;color:#6e6e73;margin-top:1px;}
 
-/* separator */
-.sep{
-  height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.07) 20%,rgba(255,255,255,.07) 80%,transparent);
-  margin:0 0 24px;
-}
+.sep{height:1px;background:#f0f0f0;margin:0 0 16px;}
 
-/* amount */
-.amount-label{
-  font-size:10px;font-weight:600;
-  color:rgba(255,255,255,.3);
-  letter-spacing:1.5px;text-transform:uppercase;
-  margin-bottom:8px;
-}
-.amount-row{
-  display:flex;align-items:flex-end;
-  justify-content:space-between;
-  margin-bottom:28px;
-}
-.amount-val{
-  font-size:38px;font-weight:800;
-  color:#fff;letter-spacing:-1.5px;line-height:1;
-}
+/* Amount */
+.amount-label{font-size:10px;font-weight:600;color:#aeaeb2;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:4px;}
+.amount-row{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;}
+.amount-val{font-size:34px;font-weight:800;color:#1d1d1f;letter-spacing:-1.2px;line-height:1;}
 .due-pill{
   font-size:10px;font-weight:700;
-  color:#f59e0b;
-  background:rgba(245,158,11,.12);
+  color:#f59e0b;background:rgba(245,158,11,.1);
   border:1px solid rgba(245,158,11,.2);
-  padding:5px 11px;border-radius:20px;
-  letter-spacing:.5px;text-transform:uppercase;
-  margin-bottom:4px;
+  padding:4px 10px;border-radius:20px;
+  letter-spacing:.4px;text-transform:uppercase;margin-bottom:3px;
 }
 
-/* UPI row */
-.upi-row{
-  display:flex;gap:7px;
-  margin-bottom:20px;
-}
+/* UPI chips */
+.upi-row{display:flex;gap:6px;margin-bottom:14px;}
 .upi-chip{
   flex:1;text-align:center;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:10px;
-  padding:9px 4px;
-  font-size:10px;font-weight:600;
-  color:rgba(255,255,255,.5);
-  letter-spacing:.3px;
+  background:#f5f5f7;border-radius:9px;
+  padding:7px 2px;
+  font-size:10px;font-weight:600;color:#3a3a3c;letter-spacing:.2px;
 }
 
-/* Primary btn */
+/* Buttons */
 .btn-primary{
   display:block;width:100%;
-  background:linear-gradient(135deg,#1a4faa 0%,#2060cc 100%);
-  color:#fff;
+  background:#0071e3;color:#fff;
   font-size:15px;font-weight:600;
-  border:none;border-radius:14px;
-  padding:16px;text-align:center;
-  text-decoration:none;cursor:pointer;
+  border:none;border-radius:12px;
+  padding:14px;text-align:center;text-decoration:none;cursor:pointer;
   letter-spacing:-.1px;
-  box-shadow:0 4px 20px rgba(30,80,200,.35);
-  transition:all .15s;
-  margin-bottom:10px;
-  position:relative;overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,113,227,.25);
+  transition:all .15s;margin-bottom:8px;
 }
-.btn-primary::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(255,255,255,.1) 0%,transparent 100%);
-}
-.btn-primary:active{transform:scale(.98);box-shadow:0 2px 10px rgba(30,80,200,.2);}
-
-/* Secondary btn */
+.btn-primary:active{background:#005bbf;transform:scale(.985);}
 .btn-secondary{
   display:block;width:100%;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.1);
-  color:rgba(255,255,255,.7);
+  background:#f5f5f7;color:#1d1d1f;
   font-size:15px;font-weight:500;
-  border-radius:14px;
-  padding:15px;text-align:center;
-  text-decoration:none;cursor:pointer;
-  letter-spacing:-.1px;
-  transition:all .15s;
-  margin-bottom:24px;
+  border:none;border-radius:12px;
+  padding:13px;text-align:center;text-decoration:none;cursor:pointer;
+  transition:all .15s;margin-bottom:18px;
 }
-.btn-secondary:active{background:rgba(255,255,255,.1);}
+.btn-secondary:active{background:#e8e8ed;transform:scale(.985);}
 
-/* secure */
-.secure{
-  display:flex;align-items:center;justify-content:center;
-  gap:5px;
-}
-.secure svg{opacity:.25;}
-.secure span{font-size:11px;color:rgba(255,255,255,.25);font-weight:400;}
+.secure{display:flex;align-items:center;justify-content:center;gap:5px;}
+.secure svg{opacity:.3;}
+.secure span{font-size:11px;color:#aeaeb2;}
 
-/* progress */
-.prog-wrap{height:2px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;margin-bottom:20px;}
-.prog-bar{height:100%;background:linear-gradient(90deg,#1a4faa,#2060cc);border-radius:2px;width:0;transition:width .8s linear;}
+.prog-wrap{height:2px;background:#e8e8ed;border-radius:2px;overflow:hidden;margin-bottom:14px;}
+.prog-bar{height:100%;background:#0071e3;border-radius:2px;width:0;transition:width .8s linear;}
 
 #state-redirecting{display:none;}
 #state-redirecting.active{display:block;}
 
-/* ── Footer ── */
+/* Footer */
 .footer{
-  position:relative;z-index:1;
-  margin-top:24px;
-  text-align:center;
+  width:100%;max-width:390px;
+  margin-top:14px;text-align:center;
 }
-.footer-school{
-  font-size:12px;font-weight:600;
-  color:rgba(255,255,255,.3);
-  letter-spacing:.3px;
-  margin-bottom:3px;
-}
-.footer-label{
-  font-size:11px;color:rgba(255,255,255,.18);
-  margin-bottom:10px;
-  font-weight:400;
-}
+.footer-school{font-size:12px;font-weight:600;color:#3a3a3c;letter-spacing:-.1px;margin-bottom:2px;}
+.footer-label{font-size:11px;color:#aeaeb2;margin-bottom:8px;}
 .call-btn{
   display:inline-flex;align-items:center;gap:7px;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:980px;
-  padding:10px 22px;
-  font-size:13px;font-weight:600;
-  color:rgba(255,255,255,.6);
+  background:#fff;border:1px solid #e0e0e5;
+  border-radius:980px;padding:9px 20px;
+  font-size:13px;font-weight:600;color:#0071e3;
   text-decoration:none;
-  backdrop-filter:blur(10px);
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
   transition:all .15s;
 }
-.call-btn:active{background:rgba(255,255,255,.09);}
+.call-btn:active{transform:scale(.97);}
 
-/* ── Error ── */
-#state-error{display:none;padding:8px 0 4px;text-align:center;}
+/* Error */
+#state-error{display:none;padding:8px 0;text-align:center;}
 #state-error.active{display:block;}
-.err-icon{font-size:36px;margin-bottom:10px;}
-.err-msg{font-size:15px;font-weight:600;color:#f87171;margin-bottom:5px;}
-.err-sub{font-size:13px;color:rgba(255,255,255,.3);line-height:1.6;}
+.err-icon{font-size:32px;margin-bottom:8px;}
+.err-msg{font-size:15px;font-weight:600;color:#ff3b30;margin-bottom:4px;}
+.err-sub{font-size:13px;color:#6e6e73;line-height:1.6;}
 </style>
 </head>
 <body>
@@ -290,17 +176,12 @@ body::after{
 </div>
 
 <div class="card">
-  <div class="card-shimmer"></div>
-
   <div class="hero">
-    <div class="hero-glow"></div>
     <div class="hero-eyebrow"><span class="eyebrow-dot"></span>Secure Payment</div>
     <div class="hero-title">Fee Payment</div>
-    <div class="hero-sub">Powered by UPI · Instant transfer</div>
   </div>
 
   <div class="body">
-
     <div id="info-box">
       <div class="stu-row">
         <div class="avatar" id="chip-initials">—</div>
@@ -329,7 +210,7 @@ body::after{
       <a id="pay-btn-2" class="btn-secondary" href="#">Pay via Any UPI App</a>
       <div class="secure">
         <svg width="10" height="12" viewBox="0 0 10 12" fill="none">
-          <path d="M5 0L0 2V5.5C0 8.5 2.2 11.3 5 12C7.8 11.3 10 8.5 10 5.5V2L5 0Z" fill="white"/>
+          <path d="M5 0L0 2V5.5C0 8.5 2.2 11.3 5 12C7.8 11.3 10 8.5 10 5.5V2L5 0Z" fill="#1d1d1f"/>
         </svg>
         <span>256-bit encrypted · Amount pre-filled</span>
       </div>
@@ -340,7 +221,6 @@ body::after{
       <div class="err-msg">Invalid Payment Link</div>
       <div class="err-sub">Please contact the school office<br/>for a valid payment link.</div>
     </div>
-
   </div>
 </div>
 
@@ -362,39 +242,35 @@ body::after{
 
   if(!adm || !am || isNaN(parseFloat(am))){
     document.getElementById('state-error').classList.add('active');
-    document.getElementById('state-error').style.display = 'block';
+    document.getElementById('state-error').style.display='block';
     return;
   }
 
-  document.getElementById('disp-name').textContent = name || '—';
+  document.getElementById('disp-name').textContent = name||'—';
   document.getElementById('disp-adm').textContent  = adm;
-  document.getElementById('disp-am').textContent   = '₹' + parseFloat(am).toLocaleString('en-IN');
+  document.getElementById('disp-am').textContent   = '₹'+parseFloat(am).toLocaleString('en-IN');
 
   var initials = name
     ? name.trim().split(' ').map(function(w){return w[0];}).slice(0,2).join('').toUpperCase()
     : adm.slice(0,2).toUpperCase();
   document.getElementById('chip-initials').textContent = initials;
+  document.getElementById('info-box').style.display='block';
 
-  document.getElementById('info-box').style.display = 'block';
-
-  var tr  = adm + (name ? '-' + name + "'s Fee" : ' Fee');
+  var tr  = adm+(name?'-'+name+"'s Fee":' Fee');
   var upi = 'upi://pay?pa=lisdnn@icici'
           + '&pn=LOTUS%20INTERNATIONAL%20SCHOOL'
-          + '&tr='  + encodeURIComponent(tr)
-          + '&tn='  + encodeURIComponent(adm)
-          + '&am='  + encodeURIComponent(am)
-          + '&cu=INR'
-          + '&mc=8299';
+          + '&tr='+encodeURIComponent(tr)
+          + '&tn='+encodeURIComponent(adm)
+          + '&am='+encodeURIComponent(am)
+          + '&cu=INR&mc=8299';
 
   document.getElementById('pay-btn').href   = upi;
   document.getElementById('pay-btn-2').href = upi;
 
   var rd = document.getElementById('state-redirecting');
-  rd.style.display = 'block';
-  rd.classList.add('active');
-
-  setTimeout(function(){ document.getElementById('prog-bar').style.width='100%'; }, 50);
-  setTimeout(function(){ window.location.href = upi; }, 800);
+  rd.style.display='block';rd.classList.add('active');
+  setTimeout(function(){document.getElementById('prog-bar').style.width='100%';},50);
+  setTimeout(function(){window.location.href=upi;},800);
 })();
 </script>
 </body>
