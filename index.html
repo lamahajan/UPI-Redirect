@@ -46,7 +46,6 @@
   }
   .title{font-size:20px;font-weight:800;color:#f4ede0;margin-bottom:24px;}
 
-  /* Student info box */
   .info-box{
     background:#12101f;border:1px solid #2a2540;
     border-radius:14px;padding:16px 18px;
@@ -58,7 +57,17 @@
   .info-val{font-size:13px;color:#d4c8f0;font-weight:700;}
   .amount-val{font-size:22px;font-weight:800;color:#4ade80;font-family:'Outfit',sans-serif;letter-spacing:-.5px;}
 
-  /* Pay button */
+  /* Redirecting state */
+  #state-redirecting{display:none;padding:8px 0 20px;}
+  #state-redirecting.active{display:block;}
+  .rdr-icon{font-size:44px;margin-bottom:14px;}
+  .rdr-msg{font-size:15px;font-weight:800;color:#f4ede0;margin-bottom:6px;}
+  .rdr-sub{font-size:12px;color:#6b5f90;margin-bottom:20px;line-height:1.6;}
+
+  /* Progress bar */
+  .prog-wrap{height:4px;background:#2a2540;border-radius:4px;overflow:hidden;margin-bottom:20px;}
+  .prog-bar{height:100%;background:linear-gradient(90deg,#b5883e,#d4a54e);border-radius:4px;width:0;transition:width .8s linear;}
+
   .pay-btn{
     display:block;width:100%;
     background:linear-gradient(135deg,#b5883e 0%,#d4a54e 100%);
@@ -69,29 +78,16 @@
     margin-bottom:12px;
   }
   .pay-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(181,136,62,.35);}
-  .pay-btn:active{transform:translateY(0);}
-
-  /* Spinner state */
-  .spinner{
-    display:none;width:22px;height:22px;
-    border:2.5px solid rgba(255,255,255,.2);
-    border-top-color:#fff;border-radius:50%;
-    animation:spin .7s linear infinite;
-    margin:0 auto;
-  }
-  @keyframes spin{to{transform:rotate(360deg)}}
 
   .note{font-size:11px;color:#4a4070;line-height:1.6;}
   .note span{color:#6b5f90;}
 
-  /* States */
-  .state{display:none;padding:24px 0 8px;}
-  .state.active{display:block;}
-  .state-icon{font-size:48px;margin-bottom:12px;}
-  .state-msg{font-size:14px;font-weight:700;color:#f4ede0;margin-bottom:6px;}
-  .state-sub{font-size:12px;color:#6b5f90;}
-
-  .err-state .state-msg{color:#f87171;}
+  /* Error state */
+  #state-error{display:none;padding:24px 0 8px;}
+  #state-error.active{display:block;}
+  .err-icon{font-size:48px;margin-bottom:12px;}
+  .err-msg{font-size:14px;font-weight:700;color:#f87171;margin-bottom:6px;}
+  .err-sub{font-size:12px;color:#6b5f90;}
 </style>
 </head>
 <body>
@@ -100,73 +96,65 @@
   <div class="school">Lotus International School</div>
   <div class="title">Fee Payment</div>
 
-  <!-- Main content -->
-  <div id="main-content">
-    <div class="info-box">
-      <div class="info-row">
-        <span class="info-label">Student</span>
-        <span class="info-val" id="disp-name">—</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">Adm No</span>
-        <span class="info-val" id="disp-adm">—</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">Class</span>
-        <span class="info-val" id="disp-cls">—</span>
-      </div>
-      <div class="info-row" style="border-bottom:none">
-        <span class="info-label">Amount Due</span>
-        <span class="amount-val" id="disp-am">—</span>
-      </div>
+  <!-- Student info — always visible -->
+  <div id="info-box" class="info-box" style="display:none">
+    <div class="info-row">
+      <span class="info-label">Student</span>
+      <span class="info-val" id="disp-name">—</span>
     </div>
-
-    <a id="pay-btn" class="pay-btn" href="#" onclick="doPay(event)">
-      💳 Pay Now
-    </a>
-
-    <p class="note">
-      Opens your UPI app (GPay, PhonePe, Paytm).<br/>
-      <span>Amount &amp; details are pre-filled.</span>
-    </p>
+    <div class="info-row">
+      <span class="info-label">Adm No</span>
+      <span class="info-val" id="disp-adm">—</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Class</span>
+      <span class="info-val" id="disp-cls">—</span>
+    </div>
+    <div class="info-row" style="border-bottom:none">
+      <span class="info-label">Amount Due</span>
+      <span class="amount-val" id="disp-am">—</span>
+    </div>
   </div>
 
-  <!-- Loading state -->
-  <div id="state-loading" class="state">
-    <div class="spinner" style="display:block;margin:0 auto 16px"></div>
-    <div class="state-msg">Opening payment app…</div>
-    <div class="state-sub">Please wait</div>
+  <!-- Auto-redirecting state -->
+  <div id="state-redirecting">
+    <div class="rdr-icon">📲</div>
+    <div class="rdr-msg">Opening Payment App…</div>
+    <div class="rdr-sub">GPay / PhonePe / Paytm<br/>automatically open ho raha hai</div>
+    <div class="prog-wrap"><div class="prog-bar" id="prog-bar"></div></div>
+    <a id="pay-btn" class="pay-btn" href="#">💳 Tap Here if App Didn't Open</a>
+    <p class="note"><span>Amount &amp; details are pre-filled.</span></p>
   </div>
 
   <!-- Error state -->
-  <div id="state-error" class="state err-state">
-    <div class="state-icon">⚠️</div>
-    <div class="state-msg">Invalid Payment Link</div>
-    <div class="state-sub">Please contact the school office for a valid payment link.</div>
+  <div id="state-error">
+    <div class="err-icon">⚠️</div>
+    <div class="err-msg">Invalid Payment Link</div>
+    <div class="err-sub">Please contact the school office<br/>for a valid payment link.</div>
   </div>
 </div>
 
 <script>
 (function(){
-  var p      = new URLSearchParams(window.location.search);
-  var adm    = (p.get('adm')  || '').trim();
-  var am     = (p.get('am')   || '').trim();
-  var name   = (p.get('name') || '').trim();
-  var cls    = (p.get('cls')  || '').trim();
+  var p    = new URLSearchParams(window.location.search);
+  var adm  = (p.get('adm')  || '').trim();
+  var am   = (p.get('am')   || '').trim();
+  var name = (p.get('name') || '').trim();
+  var cls  = (p.get('cls')  || '').trim();
 
   // Validate
   if(!adm || !am || isNaN(parseFloat(am))){
-    document.getElementById('main-content').style.display='none';
-    var errEl = document.getElementById('state-error');
-    errEl.style.display='block'; errEl.classList.add('active');
+    document.getElementById('state-error').classList.add('active');
+    document.getElementById('state-error').style.display = 'block';
     return;
   }
 
-  // Fill display
+  // Fill info box
   document.getElementById('disp-name').textContent = name || '—';
   document.getElementById('disp-adm').textContent  = adm;
   document.getElementById('disp-cls').textContent  = cls || '—';
   document.getElementById('disp-am').textContent   = '₹' + parseFloat(am).toLocaleString('en-IN');
+  document.getElementById('info-box').style.display = 'block';
 
   // Build UPI link
   var tr  = adm + (name ? '-' + name + "'s Fee" : ' Fee');
@@ -178,29 +166,25 @@
           + '&cu=INR'
           + '&mc=8299';
 
+  // Set button href
   document.getElementById('pay-btn').href = upi;
-})();
 
-function doPay(e){
-  e.preventDefault();
-  var btn = document.getElementById('pay-btn');
-  var href = btn.href;
-  if(!href || href==='#') return;
+  // Show redirecting state
+  var rdEl = document.getElementById('state-redirecting');
+  rdEl.style.display = 'block';
+  rdEl.classList.add('active');
 
-  // Show loading briefly then redirect
-  document.getElementById('main-content').style.display='none';
-  var ld = document.getElementById('state-loading');
-  ld.style.display='block'; ld.classList.add('active');
-
+  // Animate progress bar
   setTimeout(function(){
-    window.location.href = href;
-    // After 2s, show content again in case UPI app didn't open
-    setTimeout(function(){
-      ld.style.display='none'; ld.classList.remove('active');
-      document.getElementById('main-content').style.display='block';
-    }, 2000);
-  }, 600);
-}
+    document.getElementById('prog-bar').style.width = '100%';
+  }, 50);
+
+  // Auto-redirect after 800ms
+  setTimeout(function(){
+    window.location.href = upi;
+  }, 800);
+
+})();
 </script>
 </body>
 </html>
