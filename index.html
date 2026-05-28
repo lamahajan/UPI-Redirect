@@ -229,9 +229,9 @@ body{
 <script>
 (function(){
   var p=new URLSearchParams(window.location.search);
-  var adm=(p.get("adm")||"care").trim();
-  var am=(p.get("am")||"5000").trim();
-  var name=(p.get("name")||"Test Student").trim();
+  var adm=(p.get("adm")||"").trim();
+  var am=(p.get("am")||"").trim();
+  var name=(p.get("name")||"").trim();
   var cls=(p.get("class")||"").trim();
 
   if(!adm||!am||isNaN(parseFloat(am))){
