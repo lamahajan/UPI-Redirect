@@ -91,13 +91,14 @@ body{
 
 .stu-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
 .avatar{
-  width:36px;height:36px;flex-shrink:0;border-radius:11px;
+  width:48px;height:48px;flex-shrink:0;border-radius:13px;
   background:linear-gradient(135deg,#0f2545,#1a3a6e);
   display:flex;align-items:center;justify-content:center;
   font-size:12px;font-weight:700;color:#fff;
 }
-.stu-name{font-size:14px;font-weight:600;color:#1d1d1f;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.stu-adm{font-size:11px;color:#6e6e73;margin-top:1px;}
+.stu-name{font-size:14px;font-weight:700;color:#1d1d1f;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.stu-adm{font-size:11px;color:#6e6e73;margin-top:2px;}
+.stu-class{font-size:11px;color:#6e6e73;margin-top:1px;}
 .sep{height:1px;background:#f0f0f0;margin:0 0 14px;}
 
 .amount-label{font-size:10px;font-weight:600;color:#aeaeb2;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:3px;}
@@ -187,6 +188,7 @@ body{
         <div class="stu-meta">
           <div class="stu-name" id="disp-name">—</div>
           <div class="stu-adm">Adm No. <span id="disp-adm">—</span></div>
+          <div class="stu-class">Class: <span id="disp-class">—</span></div>
         </div>
       </div>
       <div class="sep"></div>
@@ -212,7 +214,7 @@ body{
       </a>
       <div class="secure">
         <svg width="10" height="12" viewBox="0 0 10 12" fill="none"><path d="M5 0L0 2V5.5C0 8.5 2.2 11.3 5 12C7.8 11.3 10 8.5 10 5.5V2L5 0Z" fill="#1d1d1f"/></svg>
-        <span>256-bit encrypted · Details pre-filled</span>
+        <span>256-bit encrypted · Amount pre-filled</span>
       </div>
     </div>
 
@@ -230,6 +232,7 @@ body{
   var adm=(p.get("adm")||"care").trim();
   var am=(p.get("am")||"5000").trim();
   var name=(p.get("name")||"Test Student").trim();
+  var cls=(p.get("class")||"").trim();
 
   if(!adm||!am||isNaN(parseFloat(am))){
     document.getElementById("state-error").classList.add("active");
@@ -238,6 +241,7 @@ body{
   }
   document.getElementById("disp-name").textContent=name||"—";
   document.getElementById("disp-adm").textContent=adm;
+  document.getElementById("disp-class").textContent=cls||"—";
   document.getElementById("disp-am").textContent="₹"+parseFloat(am).toLocaleString("en-IN");
   var initials=name?name.trim().split(" ").map(function(w){return w[0];}).slice(0,2).join("").toUpperCase():adm.slice(0,2).toUpperCase();
   document.getElementById("chip-initials").textContent=initials;
