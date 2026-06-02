@@ -379,34 +379,7 @@ body{
     if(document.hidden) window._upiOpened=true;
   });
 
-  // ── Polling: notify school when payment captured ──
-  // Polls Cloudflare Worker every 6 seconds for up to 30 min
-  if(qrId && proxyUrl){
-    var _pollCount=0;
-    var _maxPolls=300; // 300 × 6s = 30 min
-    var _pollTimer=null;
-
-    function pollPayment(){
-      if(_pollCount>=_maxPolls){ clearInterval(_pollTimer); return; }
-      _pollCount++;
-      fetch(proxyUrl+'/fetch-payment/'+qrId)
-        .then(function(r){ return r.json(); })
-        .then(function(data){
-          if(data.captured && data.payment){
-            clearInterval(_pollTimer);
-            // ── Mark paid in UI ──
-            var btn=document.getElementById("pay-btn");
-            if(btn){ btn.textContent="✅ Payment Received!"; btn.style.background="#16a34a"; btn.href="#"; }
-          }
-        })
-        .catch(function(){}); // silent fail — network issues
-    }
-
-    // Start polling after 10s (give parent time to complete payment)
-    setTimeout(function(){
-      _pollTimer=setInterval(pollPayment, 6000);
-    },10000);
-  }
+  // Webhook handles payment tracking — no polling needed here
 })();
 
 function showDesktopFallback(upi){
