@@ -243,6 +243,52 @@ body{
 }
 .err-cta-sec:active{background:#ebebed;}
 .err-note{font-size:11px;color:#aeaeb2;letter-spacing:.2px;text-align:center;}
+
+/* ── Success state ── */
+#state-success{display:none;}
+#state-success.active{display:flex;flex-direction:column;align-items:center;position:absolute;inset:0;padding:clamp(18px,3.5vh,26px) 20px 30px;}
+.suc-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(52,199,89,.1);border:1px solid rgba(52,199,89,.2);
+  border-radius:20px;padding:4px 12px;
+  font-size:10px;font-weight:700;color:#34c759;letter-spacing:1.2px;text-transform:uppercase;
+  margin-bottom:var(--sp-md);
+}
+.suc-icon-wrap{
+  width:clamp(64px,16vw,80px);height:clamp(64px,16vw,80px);border-radius:24px;
+  background:linear-gradient(145deg,#f0fff4,#dcfce7);
+  border:1px solid rgba(52,199,89,.15);
+  box-shadow:0 8px 32px rgba(52,199,89,.15),0 2px 6px rgba(0,0,0,.04);
+  display:flex;align-items:center;justify-content:center;
+  margin:clamp(20px,4.5vh,34px) auto clamp(14px,3vh,22px);
+  font-size:clamp(28px,7vw,36px);
+  position:relative;animation:suc-pop .45s cubic-bezier(.34,1.56,.64,1) both;
+}
+.suc-icon-wrap::after{
+  content:"";position:absolute;inset:-6px;border-radius:30px;
+  border:1px solid rgba(52,199,89,.08);
+}
+@keyframes suc-pop{from{transform:scale(.6);opacity:0;}to{transform:scale(1);opacity:1;}}
+.suc-msg{font-size:clamp(18px,4.5vw,22px);font-weight:800;color:#1d1d1f;letter-spacing:-.5px;margin-bottom:4px;text-align:center;}
+.suc-sub{font-size:clamp(12px,3vw,13.5px);color:#6e6e73;line-height:1.6;margin:0 auto clamp(16px,3vh,24px);max-width:260px;text-align:center;}
+.suc-amount-card{
+  width:100%;background:linear-gradient(135deg,#f0fff4,#dcfce7);
+  border:1px solid rgba(52,199,89,.2);border-radius:14px;
+  padding:clamp(12px,2.5vh,16px) 18px;margin-bottom:clamp(16px,3vh,22px);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.suc-amount-label{font-size:11px;font-weight:600;color:#16a34a;letter-spacing:.8px;text-transform:uppercase;}
+.suc-amount-val{font-size:clamp(22px,5.5vw,27px);font-weight:800;color:#15803d;letter-spacing:-1px;}
+.suc-divider{width:100%;height:1px;background:#f0f0f0;margin:0 0 clamp(16px,3vh,22px);}
+.suc-actions{margin-top:auto;width:100%;}
+.suc-cta{
+  display:flex;align-items:center;justify-content:center;
+  background:#34c759;color:#fff;
+  font-size:clamp(13px,3.3vw,15px);font-weight:600;border-radius:13px;
+  padding:clamp(11px,2.5vh,14px);text-decoration:none;border:none;width:100%;
+  box-shadow:0 4px 14px rgba(52,199,89,.3);transition:all .15s;cursor:pointer;
+}
+.suc-cta:active{transform:scale(.985);}
 </style>
 </head>
 <body>
@@ -301,6 +347,27 @@ body{
       </div>
     </div>
 
+    <div id="state-success">
+      <div class="suc-badge">✓ Payment Confirmed</div>
+      <div class="suc-icon-wrap">✅</div>
+      <div class="suc-msg">Payment Successful!</div>
+      <div class="suc-sub">Your fee payment has been received and confirmed by the school.</div>
+      <div class="suc-amount-card">
+        <div>
+          <div class="suc-amount-label">Amount Paid</div>
+          <div class="suc-amount-val" id="suc-am">—</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="suc-amount-label">Student</div>
+          <div style="font-size:13px;font-weight:700;color:#15803d;" id="suc-name">—</div>
+        </div>
+      </div>
+      <div class="suc-divider"></div>
+      <div class="suc-actions">
+        <button class="suc-cta" onclick="window.close()">Done</button>
+      </div>
+    </div>
+
     <div id="state-error">
       <div class="err-badge">⚠ Invalid Link</div>
       <div class="err-icon-wrap">🔗</div>
@@ -323,67 +390,128 @@ body{
 </div>
 <script>
 (function(){
-  var p=new URLSearchParams(window.location.search);
-  var adm=(p.get("adm")||"").trim();
-  var am=(p.get("am")||"").trim();
-  var name=(p.get("name")||"").trim();
-  var cls=(p.get("class")||"").trim();
-  var qrId=(p.get("qr_id")||"").trim();          // Razorpay QR id
-  var proxyUrl=(p.get("proxy")||"").trim();       // Cloudflare Worker URL
+  var p        = new URLSearchParams(window.location.search);
+  var adm      = (p.get("adm")   ||"").trim();
+  var am       = (p.get("am")    ||"").trim();
+  var name     = (p.get("name")  ||"").trim();
+  var cls      = (p.get("class") ||"").trim();
+  var qrId     = (p.get("qr_id")||"").trim();
+  var proxyUrl = (p.get("proxy") ||"").trim().replace(/\/+$/,"");
+  var txnFbUrl = (p.get("txn_fb")||"").trim().replace(/\/+$/,"");
+  var txnFbSec = (p.get("txn_fb_secret")||"").trim();
 
   if(!adm||!am||isNaN(parseFloat(am))){
-    document.getElementById("state-error").classList.add("active");
-    document.getElementById("state-error").style.display="block";
-    return;
+    showState("error"); return;
   }
 
   // ── Fill student info ──
-  document.getElementById("disp-name").textContent=name||"—";
-  document.getElementById("disp-adm").textContent=adm;
-  document.getElementById("disp-class").textContent=cls||"—";
-  document.getElementById("disp-am").textContent="₹"+parseFloat(am).toLocaleString("en-IN");
-  var initials=name?name.trim().split(" ").map(function(w){return w[0];}).slice(0,2).join("").toUpperCase():adm.slice(0,2).toUpperCase();
-  document.getElementById("chip-initials").textContent=initials;
-  document.getElementById("info-box").style.display="block";
+  var amtFormatted = "₹"+parseFloat(am).toLocaleString("en-IN");
+  document.getElementById("disp-name").textContent  = name||"—";
+  document.getElementById("disp-adm").textContent   = adm;
+  document.getElementById("disp-class").textContent = cls||"—";
+  document.getElementById("disp-am").textContent    = amtFormatted;
+  var initials = name
+    ? name.trim().split(" ").map(function(w){return w[0];}).slice(0,2).join("").toUpperCase()
+    : adm.slice(0,2).toUpperCase();
+  document.getElementById("chip-initials").textContent = initials;
+  document.getElementById("info-box").style.display = "block";
 
-  var rd=document.getElementById("state-redirecting");
-  rd.style.display="block"; rd.classList.add("active");
-  setTimeout(function(){document.getElementById("prog-bar").style.width="100%";},50);
+  // Pre-fill success card
+  document.getElementById("suc-am").textContent   = amtFormatted;
+  document.getElementById("suc-name").textContent = name||adm;
+
+  showState("redirecting");
+  setTimeout(function(){ document.getElementById("prog-bar").style.width="100%"; }, 50);
 
   // ── Build UPI string ──
-  // If Razorpay QR id present — use Razorpay UPI VPA
-  // Razorpay uses rzp@{bank} style VPA derived from QR
-  // We pass the qr UPI link as upi_url param if available
-  var upiUrl=(p.get("upi_url")||"").trim();
+  var upiUrl = (p.get("upi_url")||"").trim();
   var upi;
   if(upiUrl){
-    // Razorpay-generated UPI deep link (passed from index.html)
-    upi=decodeURIComponent(upiUrl);
+    upi = decodeURIComponent(upiUrl);
   } else {
-    // Fallback: original direct UPI
-    var tr=adm+(name?"-"+name+"'s Fee":" Fee");
-    upi="upi://pay?pa=lisdnn@icici&pn=LOTUS%20INTERNATIONAL%20SCHOOL&tr="+encodeURIComponent(tr)+"&tn="+encodeURIComponent(adm)+"&am="+encodeURIComponent(am)+"&cu=INR&mc=8299";
+    var tr = adm+(name?"-"+name+"'s Fee":" Fee");
+    upi = "upi://pay?pa=lisdnn@icici&pn=LOTUS%20INTERNATIONAL%20SCHOOL&tr="+encodeURIComponent(tr)+"&tn="+encodeURIComponent(adm)+"&am="+encodeURIComponent(am)+"&cu=INR&mc=8299";
   }
-
-  document.getElementById("pay-btn").href=upi;
+  document.getElementById("pay-btn").href = upi;
 
   // ── Auto-redirect to UPI app ──
   setTimeout(function(){
-    window.location.href=upi;
-    setTimeout(function(){
-      if(!document.hidden&&!window._upiOpened) showDesktopFallback(upi);
-    },1800);
-  },800);
+    window.location.href = upi;
+  }, 800);
 
-  document.addEventListener("visibilitychange",function(){
-    if(document.hidden) window._upiOpened=true;
+  document.addEventListener("visibilitychange", function(){
+    if(document.hidden) window._upiOpened = true;
   });
 
-  // Webhook handles payment tracking — no polling needed here
+  // ── Poll TXN Firebase for payment confirmation ──
+  // Starts after user returns from UPI app (visibility change)
+  // Also starts after 3s anyway (in case visibilitychange doesn't fire)
+  var _pollTimer   = null;
+  var _pollCount   = 0;
+  var _maxPolls    = 60;   // 60 × 5s = 5 minutes
+  var _confirmed   = false;
+
+  function startPolling(){
+    if(_pollTimer || _confirmed) return;
+    _pollTimer = setInterval(pollPayment, 5000);
+    pollPayment(); // immediate first check
+  }
+
+  function pollPayment(){
+    if(_confirmed){ clearInterval(_pollTimer); return; }
+    _pollCount++;
+    if(_pollCount > _maxPolls){ clearInterval(_pollTimer); return; }
+
+    // Strategy 1: Poll via proxy /payment-status/:qr_id (reads qr_map on main Firebase)
+    if(proxyUrl && qrId){
+      fetch(proxyUrl+"/payment-status/"+qrId)
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          if(d && d.status === "captured") confirmPayment();
+        })
+        .catch(function(){});
+    }
+
+    // Strategy 2: Poll TXN Firebase directly for this qr_id
+    if(txnFbUrl && qrId){
+      var auth = txnFbSec ? "?auth="+txnFbSec : "";
+      fetch(txnFbUrl+"/dl_transactions.json"+auth+"&orderBy="qr_id"&equalTo=""+qrId+""")
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          if(d && typeof d === "object" && Object.keys(d).length > 0) confirmPayment();
+        })
+        .catch(function(){});
+    }
+  }
+
+  function confirmPayment(){
+    if(_confirmed) return;
+    _confirmed = true;
+    clearInterval(_pollTimer);
+    showState("success");
+  }
+
+  // Start polling when user comes back from UPI app
+  document.addEventListener("visibilitychange", function(){
+    if(!document.hidden) setTimeout(startPolling, 1500);
+  });
+  // Also start after 4s as fallback
+  setTimeout(startPolling, 4000);
+
 })();
 
-function showDesktopFallback(upi){
-  if(window._upiOpened) return;
+function showState(state){
+  ["redirecting","success","error"].forEach(function(s){
+    var el = document.getElementById("state-"+s);
+    if(!el) return;
+    if(s === state){
+      el.style.display = "block";
+      el.classList.add("active");
+    } else {
+      el.style.display = "none";
+      el.classList.remove("active");
+    }
+  });
 }
 </script>
 </body>
