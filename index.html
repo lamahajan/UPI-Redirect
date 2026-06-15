@@ -475,7 +475,7 @@ body{
     // Strategy 2: Poll TXN Firebase directly for this qr_id
     if(txnFbUrl && qrId){
       var auth = txnFbSec ? "?auth="+txnFbSec : "";
-      fetch(txnFbUrl+"/dl_transactions.json"+auth+"&orderBy="qr_id"&equalTo=""+qrId+""")
+      fetch(txnFbUrl+"/dl_transactions.json"+auth+(auth?"&":"?")+"orderBy=\"qr_id\"&equalTo=\""+qrId+"\"")
         .then(function(r){ return r.json(); })
         .then(function(d){
           if(d && typeof d === "object" && Object.keys(d).length > 0) confirmPayment();
