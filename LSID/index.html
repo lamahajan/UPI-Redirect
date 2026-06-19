@@ -108,9 +108,12 @@ footer{text-align:center;padding:14px;font-size:10.5px;color:var(--mut)}
   <main>
     <div class="card">
       <div class="card-body">
-        <label class="lbl" for="adm-inp">Enter Your Admission Number</label>
+        <label class="lbl" for="adm-inp">Admission Number</label>
+        <input id="adm-inp" class="inp" placeholder="e.g. 2024001" autocomplete="off" inputmode="text" style="width:100%" onkeydown="if(event.key==='Enter')document.getElementById('mob-inp').focus()"/>
+
+        <label class="lbl" for="mob-inp" style="margin-top:14px">Registered Mobile Number</label>
         <div class="row">
-          <input id="adm-inp" class="inp" placeholder="e.g. 2024001" autocomplete="off" inputmode="text" onkeydown="if(event.key==='Enter')checkFee()"/>
+          <input id="mob-inp" class="inp" placeholder="10-digit mobile number" autocomplete="off" inputmode="numeric" maxlength="10" onkeydown="if(event.key==='Enter')checkFee()"/>
           <button class="btn btn-gold" onclick="checkFee()" id="check-btn">Check</button>
         </div>
         <div id="msg" class="msg"></div>
@@ -119,7 +122,7 @@ footer{text-align:center;padding:14px;font-size:10.5px;color:var(--mut)}
 
     <div id="empty" class="empty">
       <div class="ico">🔍</div>
-      <p>Enter your admission number above to view your<br/>fee details and pay instantly via UPI.</p>
+      <p>Enter your admission number and registered<br/>mobile number above to view your fee details<br/>and pay instantly via UPI.</p>
     </div>
 
     <div id="result" style="display:none">
@@ -162,7 +165,7 @@ footer{text-align:center;padding:14px;font-size:10.5px;color:var(--mut)}
 // ═══════════════════════════════════════════════
 //  STUDENT FEE PAY — looks up ONE student at a time
 //  via the secure Cloudflare Worker endpoint:
-//    GET <WORKER_BASE>/fee-by-adm/:adm
+//    POST <WORKER_BASE>/fee-lookup  Body: { adm, mobile }
 //  The Firebase URL + secret now live ONLY on the
 //  Worker (env vars DUE_FIREBASE_URL / DUE_FIREBASE_SECRET)
 //  and are never sent to the browser. No other student's
@@ -171,8 +174,7 @@ footer{text-align:center;padding:14px;font-size:10.5px;color:var(--mut)}
 
 // ── Hardcoded school configuration ──
 var CFG={
-  // TODO: replace with your deployed rzp-proxy Worker URL
-  workerBase: 'https://rzp-proxy.YOUR-SUBDOMAIN.workers.dev',
+  workerBase: 'https://rzp-proxy.due-4a8.workers.dev',
   pa:     'lisdnn@icici',
   pn:     'Lotus International School',
   school: 'Lotus International School'
@@ -182,18 +184,27 @@ var current=null;
 
 window.checkFee=async function(){
   var raw=(document.getElementById('adm-inp').value||'').trim();
+  var mobRaw=(document.getElementById('mob-inp').value||'').trim();
   var msg=document.getElementById('msg');
   var resultEl=document.getElementById('result');
   var emptyEl=document.getElementById('empty');
   var btn=document.getElementById('check-btn');
+
   if(!raw){ msg.className='msg err'; msg.textContent='⚠️ Please enter your admission number.'; return; }
+  var mobDigits=mobRaw.replace(/\D/g,'');
+  if(!mobDigits){ msg.className='msg err'; msg.textContent='⚠️ Please enter your registered mobile number.'; return; }
+  if(mobDigits.length<10){ msg.className='msg err'; msg.textContent='⚠️ Please enter a valid 10-digit mobile number.'; return; }
 
   btn.innerHTML='<span class="spin"></span>';
   msg.textContent=''; msg.className='msg';
 
   var s=null, errText='';
   try{
-    var r=await fetch(CFG.workerBase+'/fee-by-adm/'+encodeURIComponent(raw));
+    var r=await fetch(CFG.workerBase+'/fee-lookup',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({adm:raw, mobile:mobDigits})
+    });
     var data=await r.json();
     if(data&&data.found){ s=data; }
   }catch(e){
@@ -206,7 +217,7 @@ window.checkFee=async function(){
     msg.className='msg err';
     msg.textContent = errText
       ? '❌ Could not connect: '+errText
-      : '❌ No record found for admission number "'+raw+'". Please check the number and try again, or contact the school office.';
+      : '❌ No matching record found. Please check your admission number and registered mobile number, or contact the school office.';
     resultEl.style.display='none'; emptyEl.style.display='';
     return;
   }
