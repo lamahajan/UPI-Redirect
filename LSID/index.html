@@ -36,19 +36,18 @@ main{flex:1;padding:20px 18px 40px;display:flex;flex-direction:column;gap:16px}
 /* ── Desktop / large screens ── */
 @media (min-width:760px){
   body{background:linear-gradient(150deg,#dfe4ea 0%,#eef0f2 55%,#e6e9ed 100%);padding:40px 20px;align-items:center}
-  #app{max-width:920px;min-height:auto;border-radius:22px;box-shadow:0 24px 64px rgba(20,40,70,.16);overflow:hidden;display:grid;grid-template-columns:300px 1fr;grid-template-rows:1fr auto}
-  header{padding:0 36px;display:flex;align-items:center;grid-row:1/3}
+  #app{max-width:920px;min-height:auto;border-radius:22px;box-shadow:0 24px 64px rgba(20,40,70,.16);overflow:hidden;display:grid;grid-template-columns:300px 1fr;grid-template-rows:1fr}
+  header{padding:0 36px;display:flex;align-items:center;grid-row:1/2}
   header::before{top:-50px;right:-50px;width:160px;height:160px}
   header::after{display:none}
   header h1{font-size:24px}
   header .sub{font-size:13px;margin-top:6px}
   main{padding:40px 48px;justify-content:flex-start;max-width:none;align-items:stretch;background:#ffffff}
   main>*{max-width:520px}
-  footer{grid-column:2/3;text-align:left;padding:14px 48px 22px;background:#ffffff}
   .card-body{padding:22px}
   .result-banner{padding:20px 22px}
 }
-.card{background:var(--card);border:1.5px solid var(--bdr2);border-radius:16px;box-shadow:0 6px 22px rgba(20,40,70,.1);overflow:hidden}
+.card{background:var(--card);border:none;border-radius:16px;box-shadow:0 6px 22px rgba(20,40,70,.1);overflow:hidden}
 .card-body{padding:18px}
 .lbl{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:7px}
 .row{display:flex;gap:8px}
@@ -71,10 +70,6 @@ input.inp:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-l)}
 .msg.ok{color:var(--green)}
 .msg.inf{color:var(--mut)}
 
-.empty{text-align:center;padding:50px 16px;color:var(--mut)}
-.empty .ico{font-size:42px;margin-bottom:10px}
-.empty p{font-size:13px;line-height:1.6}
-
 .result-banner{background:linear-gradient(160deg,#1e3a63 0%,#16294a 100%);border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:var(--sha);color:#fff;position:relative;overflow:hidden}
 .result-banner::after{content:'';position:absolute;top:-26px;right:-26px;width:70px;height:70px;border-radius:50%;background:var(--gold-grad);opacity:.85}
 .result-banner .ico{font-size:30px;flex-shrink:0;position:relative;z-index:1}
@@ -91,12 +86,7 @@ input.inp:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-l)}
 .sec-hdr .title{font-size:13px;font-weight:800;flex:1}
 .sec-hdr .hint{font-size:10.5px;color:var(--mut)}
 .qr-wrap{padding:18px;display:flex;flex-direction:column;align-items:center;gap:14px}
-#qr-box{background:#fff;padding:10px;border-radius:14px;border:1.5px solid var(--bdr)}
-#qr-box img,#qr-box canvas{display:block}
-.qr-hint{font-size:10.5px;color:var(--mut);text-align:center}
 .pay-info{font-size:11px;color:var(--mut);line-height:1.6;text-align:center;padding:0 8px}
-
-footer{text-align:center;padding:14px;font-size:10.5px;color:var(--mut)}
 
 .spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp 0.7s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
@@ -139,11 +129,6 @@ footer{text-align:center;padding:14px;font-size:10.5px;color:var(--mut)}
       </div>
     </div>
 
-    <div id="empty" class="empty">
-      <div class="ico">🔍</div>
-      <p>Enter your admission number and registered<br/>mobile number above to view your fee details<br/>and pay instantly via UPI.</p>
-    </div>
-
     <div id="result" style="display:none">
       <div class="result-banner">
         <div class="ico">🎓</div>
@@ -171,13 +156,12 @@ footer{text-align:center;padding:14px;font-size:10.5px;color:var(--mut)}
         </div>
         <div class="qr-wrap">
           <button class="btn btn-gold" style="width:100%;font-size:15px;padding:14px" onclick="payNow()">📲 Pay Now</button>
-          <div class="pay-info">Secure payment via Debit Card, NetBanking, QR, UPI&amp; BHIM.</div>
+          <div class="pay-info">Secure payment via Debit Card, NetBanking, QR, UPI &amp; BHIM.</div>
         </div>
       </div>
     </div>
   </main>
 
-  <footer>Lotus International School · Fee Payment Portal · <a href="privacy.html" style="color:var(--mut);text-decoration:underline">Privacy Policy</a></footer>
 </div>
 
 <div id="modal-overlay" class="modal-overlay" onclick="if(event.target===this)closeModal()">
@@ -190,17 +174,6 @@ footer{text-align:center;padding:14px;font-size:10.5px;color:var(--mut)}
 </div>
 
 <script>
-// ═══════════════════════════════════════════════
-//  STUDENT FEE PAY — looks up ONE student at a time
-//  via the secure Cloudflare Worker endpoint:
-//    POST <WORKER_BASE>/fee-lookup  Body: { adm, mobile }
-//  The Firebase URL + secret now live ONLY on the
-//  Worker (env vars DUE_FIREBASE_URL / DUE_FIREBASE_SECRET)
-//  and are never sent to the browser. No other student's
-//  data is ever fetched or cached on this page.
-// ═══════════════════════════════════════════════
-
-// ── Hardcoded school configuration ──
 var CFG={
   workerBase: 'https://rzp-proxy.due-4a8.workers.dev',
   pa:     'lisdnn@icici',
@@ -215,7 +188,6 @@ window.checkFee=async function(){
   var mobRaw=(document.getElementById('mob-inp').value||'').trim();
   var msg=document.getElementById('msg');
   var resultEl=document.getElementById('result');
-  var emptyEl=document.getElementById('empty');
   var btn=document.getElementById('check-btn');
 
   if(!raw){ msg.className='msg err'; msg.textContent='⚠️ Please enter your admission number.'; return; }
@@ -246,13 +218,12 @@ window.checkFee=async function(){
     msg.textContent = errText
       ? '❌ Could not connect: '+errText
       : '❌ No matching record found. Please check your admission number and registered mobile number, or contact the school office.';
-    resultEl.style.display='none'; emptyEl.style.display='';
+    resultEl.style.display='none';
     return;
   }
 
   msg.textContent=''; msg.className='msg';
   current=s;
-  emptyEl.style.display='none';
   resultEl.style.display='';
   document.getElementById('search-card').style.display='none';
   var bal=Number(s.balance)||0;
@@ -269,14 +240,6 @@ window.checkFee=async function(){
   }
 };
 
-function upiUrl(s,amount){
-  var pa=CFG.pa;
-  var pn=CFG.pn;
-  var adm=s.adm||'NOADM';
-  var note=adm+'-'+(s.name||'')+"'s Fee";
-  return 'upi://pay?pa='+encodeURIComponent(pa)+'&pn='+encodeURIComponent(pn)+'&tr='+encodeURIComponent('FEE'+adm)+'&tn='+encodeURIComponent(note)+'&am='+encodeURIComponent(Math.round(amount))+'&cu=INR';
-}
-
 window.payNow=function(){
   document.getElementById('modal-overlay').classList.add('show');
 };
@@ -289,7 +252,6 @@ window.resetSearch=function(){
   current=null;
   document.getElementById('search-card').style.display='';
   document.getElementById('result').style.display='none';
-  document.getElementById('empty').style.display='';
   document.getElementById('msg').textContent='';
   document.getElementById('msg').className='msg';
   document.getElementById('adm-inp').value='';
@@ -297,7 +259,6 @@ window.resetSearch=function(){
   document.getElementById('adm-inp').focus();
 };
 
-// ── Init ──
 window.addEventListener('load',function(){
   document.getElementById('school-title').textContent=CFG.school;
 });
