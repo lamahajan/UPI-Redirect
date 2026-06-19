@@ -42,13 +42,13 @@ main{flex:1;padding:20px 18px 40px;display:flex;flex-direction:column;gap:16px}
   header::after{display:none}
   header h1{font-size:24px}
   header .sub{font-size:13px;margin-top:6px}
-  main{padding:40px 48px;justify-content:flex-start;max-width:none;align-items:stretch;background:#e3e7ec}
+  main{padding:40px 48px;justify-content:flex-start;max-width:none;align-items:stretch;background:linear-gradient(165deg,#e9eef4 0%,#dde4ec 100%)}
   main>*{max-width:520px}
-  footer{grid-column:2/3;text-align:left;padding:14px 48px 22px;background:#e3e7ec}
+  footer{grid-column:2/3;text-align:left;padding:14px 48px 22px;background:#dde4ec}
   .card-body{padding:22px}
   .result-banner{padding:20px 22px}
 }
-.card{background:var(--card);border:1.5px solid var(--bdr2);border-radius:16px;box-shadow:0 6px 22px rgba(20,40,70,.13);overflow:hidden}
+.card{background:var(--card);border:1.5px solid #b9c4d0;border-radius:16px;box-shadow:0 8px 28px rgba(20,40,70,.16);overflow:hidden}
 .card-body{padding:18px}
 .lbl{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:7px}
 .row{display:flex;gap:8px}
@@ -125,7 +125,7 @@ footer{text-align:center;padding:14px;font-size:10.5px;color:var(--mut)}
   </header>
 
   <main>
-    <div class="card">
+    <div class="card" id="search-card">
       <div class="card-body">
         <label class="lbl" for="adm-inp">Admission Number</label>
         <input id="adm-inp" class="inp" placeholder="e.g. 2024001" autocomplete="off" inputmode="text" style="width:100%" onkeydown="if(event.key==='Enter')document.getElementById('mob-inp').focus()"/>
@@ -156,6 +156,8 @@ footer{text-align:center;padding:14px;font-size:10.5px;color:var(--mut)}
           <div class="numlbl">Due</div>
         </div>
       </div>
+
+      <button class="btn btn-outline" style="width:100%;margin-top:10px;padding:11px;font-size:12.5px" onclick="resetSearch()">🔄 Check Another Student</button>
 
       <div id="paid-block" style="display:none;margin-top:14px">
         <div class="paid-banner">✅ No fee due — you're all clear!</div>
@@ -252,6 +254,7 @@ window.checkFee=async function(){
   current=s;
   emptyEl.style.display='none';
   resultEl.style.display='';
+  document.getElementById('search-card').style.display='none';
   var bal=Number(s.balance)||0;
   document.getElementById('r-name').textContent=s.name||'—';
   document.getElementById('r-meta').innerHTML='Class: '+(s.cls||'—')+' &nbsp;·&nbsp; Adm: '+(s.adm||'—');
@@ -280,6 +283,18 @@ window.payNow=function(){
 
 window.closeModal=function(){
   document.getElementById('modal-overlay').classList.remove('show');
+};
+
+window.resetSearch=function(){
+  current=null;
+  document.getElementById('search-card').style.display='';
+  document.getElementById('result').style.display='none';
+  document.getElementById('empty').style.display='';
+  document.getElementById('msg').textContent='';
+  document.getElementById('msg').className='msg';
+  document.getElementById('adm-inp').value='';
+  document.getElementById('mob-inp').value='';
+  document.getElementById('adm-inp').focus();
 };
 
 // ── Init ──
