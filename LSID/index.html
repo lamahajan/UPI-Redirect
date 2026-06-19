@@ -42,13 +42,13 @@ main{flex:1;padding:20px 18px 40px;display:flex;flex-direction:column;gap:16px}
   header::after{display:none}
   header h1{font-size:24px}
   header .sub{font-size:13px;margin-top:6px}
-  main{padding:40px 48px;justify-content:flex-start;max-width:none;align-items:stretch}
+  main{padding:40px 48px;justify-content:flex-start;max-width:none;align-items:stretch;background:#e3e7ec}
   main>*{max-width:520px}
-  footer{grid-column:2/3;text-align:left;padding:14px 48px 22px}
+  footer{grid-column:2/3;text-align:left;padding:14px 48px 22px;background:#e3e7ec}
   .card-body{padding:22px}
   .result-banner{padding:20px 22px}
 }
-.card{background:var(--card);border:1.5px solid var(--bdr);border-radius:16px;box-shadow:var(--sha);overflow:hidden}
+.card{background:var(--card);border:1.5px solid var(--bdr2);border-radius:16px;box-shadow:0 6px 22px rgba(20,40,70,.13);overflow:hidden}
 .card-body{padding:18px}
 .lbl{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:7px}
 .row{display:flex;gap:8px}
@@ -100,6 +100,16 @@ footer{text-align:center;padding:14px;font-size:10.5px;color:var(--mut)}
 
 .spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp 0.7s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
+
+/* ── Modal / Lightbox ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,25,45,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:999;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.show{opacity:1;pointer-events:auto}
+.modal-box{background:var(--card);border-radius:18px;max-width:360px;width:100%;box-shadow:0 30px 70px rgba(10,20,40,.35);padding:28px 24px 24px;text-align:center;transform:translateY(14px) scale(.97);transition:transform .2s}
+.modal-overlay.show .modal-box{transform:translateY(0) scale(1)}
+.modal-ico{width:56px;height:56px;border-radius:50%;background:var(--red-l);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 16px}
+.modal-title{font-size:16px;font-weight:800;color:var(--txt);margin-bottom:8px}
+.modal-text{font-size:12.5px;color:var(--sub);line-height:1.6;margin-bottom:22px}
+.modal-box .btn{width:100%}
 </style>
 </head>
 <body>
@@ -158,14 +168,23 @@ footer{text-align:center;padding:14px;font-size:10.5px;color:var(--mut)}
           <div class="hint">GPay · PhonePe · Paytm · BHIM</div>
         </div>
         <div class="qr-wrap">
-          <button class="btn btn-gold" style="width:100%;font-size:15px;padding:14px" onclick="payNow()">📲 Pay Now via UPI App</button>
-          <div class="pay-info">Online payment is coming soon. Please contact the school office to complete your fee payment for now.</div>
+          <button class="btn btn-gold" style="width:100%;font-size:15px;padding:14px" onclick="payNow()">📲 Pay Now</button>
+          <div class="pay-info">Secure UPI payment via GPay, PhonePe, Paytm &amp; BHIM.</div>
         </div>
       </div>
     </div>
   </main>
 
   <footer>Lotus International School · Fee Payment Portal</footer>
+</div>
+
+<div id="modal-overlay" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-ico">🚫</div>
+    <div class="modal-title">Payment Gateway Not Connected</div>
+    <div class="modal-text">Online payments aren't live yet on this portal. Please contact the school office to complete your fee payment for now.</div>
+    <button class="btn btn-gold" onclick="closeModal()">OK, Got It</button>
+  </div>
 </div>
 
 <script>
@@ -256,9 +275,11 @@ function upiUrl(s,amount){
 }
 
 window.payNow=function(){
-  var msg=document.getElementById('msg');
-  msg.className='msg inf';
-  msg.textContent='ℹ️ Online payment is coming soon. Please contact the school office to pay your fee for now.';
+  document.getElementById('modal-overlay').classList.add('show');
+};
+
+window.closeModal=function(){
+  document.getElementById('modal-overlay').classList.remove('show');
 };
 
 // ── Init ──
