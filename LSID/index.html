@@ -32,6 +32,8 @@ header .sub{font-size:11px;opacity:.85;margin-top:2px;letter-spacing:.3px}
 
 /* ── Body ── */
 main{flex:1;padding:20px 18px 40px;display:flex;flex-direction:column;gap:16px}
+#search-card .card-body{display:flex;flex-direction:column;gap:14px}
+#search-card .card-body .lbl{margin-bottom:5px}
 
 /* ── Desktop / large screens ── */
 @media (min-width:760px){
@@ -117,15 +119,18 @@ input.inp:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-l)}
   <main>
     <div class="card" id="search-card">
       <div class="card-body">
-        <label class="lbl" for="adm-inp">Admission Number</label>
-        <input id="adm-inp" class="inp" placeholder="e.g. 2024001" autocomplete="off" inputmode="text" style="width:100%" onkeydown="if(event.key==='Enter')document.getElementById('mob-inp').focus()"/>
-
-        <label class="lbl" for="mob-inp" style="margin-top:14px">Registered Mobile Number</label>
-        <div class="row">
-          <input id="mob-inp" class="inp" placeholder="10-digit mobile number" autocomplete="off" inputmode="numeric" maxlength="10" onkeydown="if(event.key==='Enter')checkFee()"/>
-          <button class="btn btn-gold" onclick="checkFee()" id="check-btn">Check</button>
+        <div>
+          <label class="lbl" for="adm-inp">Admission Number</label>
+          <input id="adm-inp" class="inp" placeholder="e.g. 2024001" autocomplete="off" inputmode="text" style="width:100%" onkeydown="if(event.key==='Enter')document.getElementById('mob-inp').focus()"/>
         </div>
-        <div id="msg" class="msg"></div>
+        <div>
+          <label class="lbl" for="mob-inp">Registered Mobile Number</label>
+          <input id="mob-inp" class="inp" placeholder="10-digit mobile number" autocomplete="off" inputmode="numeric" maxlength="10" style="width:100%" onkeydown="if(event.key==='Enter')checkFee()"/>
+        </div>
+        <div>
+          <button class="btn btn-gold" onclick="checkFee()" id="check-btn" style="width:100%;font-size:15px;padding:14px">Check Fee</button>
+          <div id="msg" class="msg"></div>
+        </div>
       </div>
     </div>
 
