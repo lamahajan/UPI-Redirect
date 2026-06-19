@@ -42,13 +42,13 @@ main{flex:1;padding:20px 18px 40px;display:flex;flex-direction:column;gap:16px}
   header::after{display:none}
   header h1{font-size:24px}
   header .sub{font-size:13px;margin-top:6px}
-  main{padding:40px 48px;justify-content:flex-start;max-width:none;align-items:stretch;background:linear-gradient(165deg,#e9eef4 0%,#dde4ec 100%)}
+  main{padding:40px 48px;justify-content:flex-start;max-width:none;align-items:stretch;background:#ffffff}
   main>*{max-width:520px}
-  footer{grid-column:2/3;text-align:left;padding:14px 48px 22px;background:#dde4ec}
+  footer{grid-column:2/3;text-align:left;padding:14px 48px 22px;background:#ffffff}
   .card-body{padding:22px}
   .result-banner{padding:20px 22px}
 }
-.card{background:var(--card);border:1.5px solid #b9c4d0;border-radius:16px;box-shadow:0 8px 28px rgba(20,40,70,.16);overflow:hidden}
+.card{background:var(--card);border:1.5px solid var(--bdr2);border-radius:16px;box-shadow:0 6px 22px rgba(20,40,70,.1);overflow:hidden}
 .card-body{padding:18px}
 .lbl{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:7px}
 .row{display:flex;gap:8px}
@@ -177,7 +177,7 @@ footer{text-align:center;padding:14px;font-size:10.5px;color:var(--mut)}
     </div>
   </main>
 
-  <footer>Lotus International School · Fee Payment Portal</footer>
+  <footer>Lotus International School · Fee Payment Portal · <a href="privacy.html" style="color:var(--mut);text-decoration:underline">Privacy Policy</a></footer>
 </div>
 
 <div id="modal-overlay" class="modal-overlay" onclick="if(event.target===this)closeModal()">
