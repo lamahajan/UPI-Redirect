@@ -397,8 +397,6 @@ body{
   var cls      = (p.get("class") ||"").trim();
   var qrId     = (p.get("qr_id")||"").trim();
   var proxyUrl = (p.get("proxy") ||"").trim().replace(/\/+$/,"");
-  var txnFbUrl = (p.get("txn_fb")||"").trim().replace(/\/+$/,"");
-  var txnFbSec = (p.get("txn_fb_secret")||"").trim();
 
   if(!adm||!am||isNaN(parseFloat(am))){
     showState("error"); return;
@@ -462,23 +460,14 @@ body{
     _pollCount++;
     if(_pollCount > _maxPolls){ clearInterval(_pollTimer); return; }
 
-    // Strategy 1: Poll via proxy /payment-status/:qr_id (reads qr_map on main Firebase)
+    // Poll via proxy /payment-status/:qr_id (reads qr_map on main Firebase).
+    // This is the only polling strategy now — it never exposes the Firebase
+    // database secret to the parent's browser.
     if(proxyUrl && qrId){
       fetch(proxyUrl+"/payment-status/"+qrId)
         .then(function(r){ return r.json(); })
         .then(function(d){
           if(d && d.status === "captured") confirmPayment();
-        })
-        .catch(function(){});
-    }
-
-    // Strategy 2: Poll TXN Firebase directly for this qr_id
-    if(txnFbUrl && qrId){
-      var auth = txnFbSec ? "?auth="+txnFbSec : "";
-      fetch(txnFbUrl+"/dl_transactions.json"+auth+(auth?"&":"?")+"orderBy=\"qr_id\"&equalTo=\""+qrId+"\"")
-        .then(function(r){ return r.json(); })
-        .then(function(d){
-          if(d && typeof d === "object" && Object.keys(d).length > 0) confirmPayment();
         })
         .catch(function(){});
     }
