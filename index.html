@@ -391,58 +391,82 @@ body{
 <script>
 (function(){
   var p        = new URLSearchParams(window.location.search);
-  var adm      = (p.get("adm")   ||"").trim();
-  var am       = (p.get("am")    ||"").trim();
-  var name     = (p.get("name")  ||"").trim();
-  var cls      = (p.get("class") ||"").trim();
   var qrId     = (p.get("qr_id")||"").trim();
   var proxyUrl = (p.get("proxy") ||"").trim().replace(/\/+$/,"");
 
-  if(!adm||!am||isNaN(parseFloat(am))){
+  // Only qr_id + proxy come from the URL now. Everything else (student
+  // name, admission no, class, and — most importantly — the amount) is
+  // fetched fresh from the worker below. Nothing in the URL bar can change
+  // what the parent actually gets charged, because the charge itself
+  // happens on Razorpay's own hosted page (short_url), not in this page.
+  if(!qrId || !proxyUrl){
     showState("error"); return;
   }
 
-  // ── Fill student info ──
-  var amtFormatted = "₹"+parseFloat(am).toLocaleString("en-IN");
-  document.getElementById("disp-name").textContent  = name||"—";
-  document.getElementById("disp-adm").textContent   = adm;
-  document.getElementById("disp-class").textContent = cls||"—";
-  document.getElementById("disp-am").textContent    = amtFormatted;
-  var initials = name
-    ? name.trim().split(" ").map(function(w){return w[0];}).slice(0,2).join("").toUpperCase()
-    : adm.slice(0,2).toUpperCase();
-  document.getElementById("chip-initials").textContent = initials;
-  document.getElementById("info-box").style.display = "block";
-
-  // Pre-fill success card
-  document.getElementById("suc-am").textContent   = amtFormatted;
-  document.getElementById("suc-name").textContent = name||adm;
-
   showState("redirecting");
-  setTimeout(function(){ document.getElementById("prog-bar").style.width="100%"; }, 50);
 
-  // ── Build UPI string ──
-  var upiUrl = (p.get("upi_url")||"").trim();
-  var upi;
-  if(upiUrl){
-    upi = decodeURIComponent(upiUrl);
-  } else {
-    var tr = adm+(name?"-"+name+"'s Fee":" Fee");
-    upi = "upi://pay?pa=lisdnn@icici&pn=LOTUS%20INTERNATIONAL%20SCHOOL&tr="+encodeURIComponent(tr)+"&tn="+encodeURIComponent(adm)+"&am="+encodeURIComponent(am)+"&cu=INR&mc=8299";
-  }
-  document.getElementById("pay-btn").href = upi;
+  fetch(proxyUrl+"/payment-status/"+encodeURIComponent(qrId))
+    .then(function(r){
+      if(!r.ok) throw new Error("not_found");
+      return r.json();
+    })
+    .then(function(d){
+      if(!d || d.status === "not_found" || !d.short_url){
+        showState("error"); return;
+      }
 
-  // ── Auto-redirect to UPI app ──
-  setTimeout(function(){
-    window.location.href = upi;
-  }, 800);
+      var adm  = String(d.adm||"");
+      var name = String(d.name||"");
+      var cls  = String(d.cls||"");
+      var am   = (Number(d.amount)||0) / 100; // paise → rupees
 
-  document.addEventListener("visibilitychange", function(){
-    if(document.hidden) window._upiOpened = true;
-  });
+      // ── Fill student info ──
+      var amtFormatted = "₹"+am.toLocaleString("en-IN");
+      document.getElementById("disp-name").textContent  = name||"—";
+      document.getElementById("disp-adm").textContent   = adm||"—";
+      document.getElementById("disp-class").textContent = cls||"—";
+      document.getElementById("disp-am").textContent    = amtFormatted;
+      var initials = name
+        ? name.trim().split(" ").map(function(w){return w[0];}).slice(0,2).join("").toUpperCase()
+        : (adm||"ST").slice(0,2).toUpperCase();
+      document.getElementById("chip-initials").textContent = initials;
+      document.getElementById("info-box").style.display = "block";
 
-  // ── Poll TXN Firebase for payment confirmation ──
-  // Starts after user returns from UPI app (visibility change)
+      // Pre-fill success card
+      document.getElementById("suc-am").textContent   = amtFormatted;
+      document.getElementById("suc-name").textContent = name||adm;
+
+      setTimeout(function(){ document.getElementById("prog-bar").style.width="100%"; }, 50);
+
+      // ── Go to Razorpay's own hosted checkout ──
+      // This is a real Razorpay Payment Link: the amount is locked on
+      // their server, it auto-offers UPI apps on mobile, and it fires a
+      // proper payment_link.paid webhook back to our worker — unlike the
+      // old self-built upi:// link, this payment is fully tracked.
+      document.getElementById("pay-btn").href = d.short_url;
+
+      if(d.status === "captured"){
+        // Already paid (e.g. parent re-opens an old link)
+        confirmPayment();
+        return;
+      }
+
+      setTimeout(function(){
+        window.location.href = d.short_url;
+      }, 800);
+
+      document.addEventListener("visibilitychange", function(){
+        if(document.hidden) window._upiOpened = true;
+      });
+
+      startPolling();
+    })
+    .catch(function(){
+      showState("error");
+    });
+
+  // ── Poll worker for payment confirmation ──
+  // Starts after user returns from Razorpay's checkout (visibility change)
   // Also starts after 3s anyway (in case visibilitychange doesn't fire)
   var _pollTimer   = null;
   var _pollCount   = 0;
