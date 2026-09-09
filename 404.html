@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#0d2a63"/>
+<title>Page Not Found — Lotus International School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --navy:#0d2a63;--navy-d:#071a3d;--navy-l:rgba(13,42,99,.08);
+  --gold:#1a56db;--gold2:#8fb3f5;--gold-d:#123fa8;--gold-l:rgba(26,86,219,.12);--gold-grad:linear-gradient(135deg,#2d6df0 0%,#1a56db 60%,#123fa8 100%);
+  --bg:#eef2f8;--card:#ffffff;--bdr:#e7edf6;--bdr2:#cfdcf2;
+  --txt:#16294a;--sub:#5b6a80;--mut:#9aa6b5;
+  --red:#d6453f;--red-l:#fde8e7;
+  --sha:0 4px 18px rgba(20,40,70,.1);
+  --sans:'Inter',sans-serif;--serif:'Playfair Display',Georgia,serif;
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--txt);min-height:100vh;display:flex;flex-direction:column}
+#app{max-width:480px;width:100%;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;background:var(--bg)}
+
+header{background:linear-gradient(160deg,#0d2a63 0%,#071a3d 100%);padding:28px 22px 40px;color:#fff;position:relative;box-shadow:var(--sha);overflow:hidden}
+header::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:var(--gold-grad);opacity:.55}
+header::after{content:'';position:absolute;bottom:-40px;left:30%;width:60px;height:60px;border-radius:50%;background:var(--gold-grad);opacity:.3}
+header .logo-row{display:flex;flex-direction:row;align-items:center;gap:14px;position:relative;z-index:1}
+header .logo-row img{width:64px;height:64px;object-fit:contain;border-radius:10px;flex-shrink:0}
+header h1{font-size:17px;font-weight:700;line-height:1.3;font-family:var(--serif);letter-spacing:.1px}
+header .sub{font-size:11px;opacity:.8;margin-top:5px;letter-spacing:.6px;font-family:var(--sans);text-transform:uppercase;font-weight:600}
+
+main{flex:1;padding:36px 22px 40px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px}
+
+@media (min-width:760px){
+  body{background:linear-gradient(150deg,#e2e9f4 0%,#eef2f8 55%,#e6ecf6 100%);padding:40px 20px;align-items:center}
+  #app{max-width:920px;min-height:600px;border-radius:22px;box-shadow:0 24px 64px rgba(20,40,70,.16);overflow:hidden;display:grid;grid-template-columns:300px 1fr;grid-template-rows:1fr auto}
+  header{padding:36px 36px;display:flex;align-items:flex-start;grid-row:1/3;flex-direction:column;justify-content:center}
+  header::before{top:-50px;right:-50px;width:160px;height:160px}
+  header::after{display:none}
+  header h1{font-size:23px}
+  header .sub{font-size:13px;margin-top:7px}
+  header .logo-row{flex-direction:column;align-items:flex-start;gap:16px}
+  header .logo-row img{width:80px;height:80px}
+  main{padding:40px 48px;background:#ffffff}
+  footer{grid-column:2/3;text-align:left;padding:14px 48px 22px;background:#ffffff}
+}
+
+.err-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--red-l);border:1px solid rgba(214,69,63,.25);
+  border-radius:20px;padding:4px 13px;
+  font-size:10px;font-weight:700;color:var(--red);letter-spacing:1.1px;text-transform:uppercase;
+  margin-bottom:18px;
+}
+.err-code{font-family:var(--serif);font-size:52px;font-weight:800;color:var(--navy);line-height:1;margin-bottom:10px}
+.err-msg{font-size:19px;font-weight:700;font-family:var(--serif);color:var(--txt);margin-bottom:8px}
+.err-sub{font-size:13px;color:var(--sub);line-height:1.6;max-width:300px;margin-bottom:28px}
+.err-actions{width:100%;max-width:300px;display:flex;flex-direction:column;gap:10px}
+.btn{border:none;border-radius:10px;padding:13px 18px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--sans);transition:all .15s;display:inline-flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;width:100%}
+.btn-gold{background:var(--gold-grad);color:#fff;box-shadow:0 4px 14px rgba(26,86,219,.28)}
+.btn-gold:active{transform:scale(.98)}
+.btn-outline{background:#fff;border:1.5px solid var(--bdr2);color:var(--navy)}
+.btn-outline:active{background:#f5f8fc}
+
+footer{text-align:center;padding:14px;font-size:10.5px;color:var(--mut)}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header>
+    <div class="logo-row">
+      <img src="https://raw.githubusercontent.com/lamahajan/UPI-Redirect/main/Logo.png" alt="Logo"/>
+      <div>
+        <h1>Lotus International School</h1>
+        <div class="sub">Student Fee Payment</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="err-badge">⚠ Not Found</div>
+    <div class="err-code">404</div>
+    <div class="err-msg">This Page Doesn't Exist</div>
+    <div class="err-sub">The link you followed may be broken, or the page may have been moved. Please check the link or return to the fee payment portal.</div>
+    <div class="err-actions">
+      <a class="btn btn-gold" href="/lsid/">🏠 Go to Fee Payment Portal</a>
+      <a class="btn btn-outline" href="tel:+919872760880">📞 Call School Office</a>
+    </div>
+  </main>
+
+  <footer>Lotus International School · Fee Payment Portal</footer>
+</div>
+</body>
+</html>
