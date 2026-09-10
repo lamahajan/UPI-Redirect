@@ -34,23 +34,23 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);min-height:10
   #app{height:100vh}
 }
 
-/* ── Left: brand panel (30%) ── */
+/* ── Left: brand panel (35%) ── */
 .brand-panel{background:linear-gradient(165deg,#012564 0%,#01184a 100%);color:#fff;position:relative;overflow:hidden;padding:44px 32px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:14px}
-.brand-panel::before{content:'';position:absolute;top:-70px;right:-60px;width:220px;height:220px;border-radius:50%;background:linear-gradient(135deg,#2d6df0,#0071e3 60%,#123fa8);opacity:.55}
-.brand-panel::after{content:'';position:absolute;bottom:-80px;left:-40px;width:160px;height:160px;border-radius:50%;background:linear-gradient(135deg,#2d6df0,#0071e3 60%,#123fa8);opacity:.25}
+.brand-panel::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cg fill='none' stroke='%238fb3f5' stroke-width='1' opacity='0.35'%3E%3Ccircle cx='0' cy='0' r='70'/%3E%3Ccircle cx='140' cy='0' r='70'/%3E%3Ccircle cx='0' cy='140' r='70'/%3E%3Ccircle cx='140' cy='140' r='70'/%3E%3Ccircle cx='70' cy='70' r='70'/%3E%3Ccircle cx='70' cy='70' r='50'/%3E%3Ccircle cx='70' cy='70' r='30'/%3E%3Ccircle cx='70' cy='70' r='10'/%3E%3Ccircle cx='0' cy='70' r='35'/%3E%3Ccircle cx='140' cy='70' r='35'/%3E%3Ccircle cx='70' cy='0' r='35'/%3E%3Ccircle cx='70' cy='140' r='35'/%3E%3C/g%3E%3C/svg%3E");background-size:140px 140px;background-repeat:repeat}
 .brand-panel .bp-inner{position:relative;z-index:1}
 .brand-panel img{width:64px;height:64px;object-fit:contain;border-radius:12px;margin-bottom:22px}
 .brand-panel h1{font-family:var(--sans);font-size:30px;font-weight:700;line-height:1.2;letter-spacing:-.01em}
 .brand-panel .tag{font-size:12px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;opacity:.75;margin-top:12px}
 .brand-panel .loc{font-size:12.5px;opacity:.6;margin-top:8px}
 @media (min-width:860px){
-  .brand-panel{flex:0 0 40%;height:100vh;padding:0 48px}
+  .brand-panel{flex:0 0 35%;height:100vh;padding:0 48px}
   .brand-panel h1{font-size:34px}
 }
 
-/* ── Right: content panel (70%) ── */
-.content-panel{flex:1;background:#fff;display:flex;align-items:center;justify-content:center;padding:32px 56px;overflow:auto}
-.content-inner{width:100%;max-width:680px}
+/* ── Right: content panel (65%) ── */
+.content-panel{flex:1;background:#fff;display:flex;align-items:center;justify-content:center;padding:32px 56px;overflow:auto;position:relative}
+.content-panel::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cg fill='none' stroke='%23d2d2d7' stroke-width='1' opacity='0.5'%3E%3Ccircle cx='0' cy='0' r='70'/%3E%3Ccircle cx='140' cy='0' r='70'/%3E%3Ccircle cx='0' cy='140' r='70'/%3E%3Ccircle cx='140' cy='140' r='70'/%3E%3Ccircle cx='70' cy='70' r='70'/%3E%3Ccircle cx='70' cy='70' r='50'/%3E%3Ccircle cx='70' cy='70' r='30'/%3E%3Ccircle cx='70' cy='70' r='10'/%3E%3Ccircle cx='0' cy='70' r='35'/%3E%3Ccircle cx='140' cy='70' r='35'/%3E%3Ccircle cx='70' cy='0' r='35'/%3E%3Ccircle cx='70' cy='140' r='35'/%3E%3C/g%3E%3C/svg%3E");background-size:140px 140px;background-repeat:repeat}
+.content-inner{width:100%;max-width:680px;position:relative;z-index:1}
 .content-inner .eyebrow{font-size:13px;font-weight:600;color:var(--accent);letter-spacing:.3px;margin-bottom:8px}
 .content-inner .ci-title{font-size:28px;font-weight:700;color:var(--ink);letter-spacing:-.01em;margin-bottom:26px}
 
