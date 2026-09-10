@@ -49,10 +49,10 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);min-height:10
 }
 
 /* ── Right: content panel (70%) ── */
-.content-panel{flex:1;background:#fff;display:flex;align-items:center;justify-content:center;padding:32px 24px;overflow:auto}
-.content-inner{width:100%;max-width:480px}
-.content-inner .eyebrow{font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.3px;margin-bottom:6px}
-.content-inner .ci-title{font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-.01em;margin-bottom:22px}
+.content-panel{flex:1;background:#fff;display:flex;align-items:center;justify-content:center;padding:32px 56px;overflow:auto}
+.content-inner{width:100%;max-width:680px}
+.content-inner .eyebrow{font-size:13px;font-weight:600;color:var(--accent);letter-spacing:.3px;margin-bottom:8px}
+.content-inner .ci-title{font-size:28px;font-weight:700;color:var(--ink);letter-spacing:-.01em;margin-bottom:26px}
 
 /* ── App-style step indicator ── */
 .steps{display:flex;align-items:center;gap:6px;margin-bottom:20px}
@@ -64,7 +64,9 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);min-height:10
 .steps .bar{width:24px;height:1.5px;background:var(--line);border-radius:2px}
 
 /* ── Form ── */
-.form-stack{display:flex;flex-direction:column;gap:20px}
+.form-stack{display:flex;flex-direction:column;gap:22px}
+.field-row{display:flex;flex-direction:column;gap:22px}
+@media (min-width:560px){.field-row{flex-direction:row;gap:18px}.field-row .field{flex:1;min-width:0}}
 .field{position:relative}
 .field .inp-wrap{position:relative}
 .field .fico{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:14px;opacity:.5;pointer-events:none}
@@ -150,18 +152,20 @@ input.inp:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-l)}
             <div class="step"><span class="dot">3</span>Pay</div>
           </div>
           <div class="form-stack">
-            <div class="field">
-              <label class="lbl" for="adm-inp">Admission Number</label>
-              <div class="inp-wrap">
-                <span class="fico">🎓</span>
-                <input id="adm-inp" class="inp" placeholder="e.g. 2024001" autocomplete="off" inputmode="text" onkeydown="if(event.key==='Enter')document.getElementById('mob-inp').focus()"/>
+            <div class="field-row">
+              <div class="field">
+                <label class="lbl" for="adm-inp">Admission Number</label>
+                <div class="inp-wrap">
+                  <span class="fico">🎓</span>
+                  <input id="adm-inp" class="inp" placeholder="e.g. 2024001" autocomplete="off" inputmode="text" onkeydown="if(event.key==='Enter')document.getElementById('mob-inp').focus()"/>
+                </div>
               </div>
-            </div>
-            <div class="field">
-              <label class="lbl" for="mob-inp">Registered Mobile Number</label>
-              <div class="inp-wrap">
-                <span class="fico">📱</span>
-                <input id="mob-inp" class="inp" placeholder="10-digit mobile number" autocomplete="off" inputmode="numeric" maxlength="10" onkeydown="if(event.key==='Enter')checkFee()"/>
+              <div class="field">
+                <label class="lbl" for="mob-inp">Registered Mobile Number</label>
+                <div class="inp-wrap">
+                  <span class="fico">📱</span>
+                  <input id="mob-inp" class="inp" placeholder="10-digit mobile number" autocomplete="off" inputmode="numeric" maxlength="10" onkeydown="if(event.key==='Enter')checkFee()"/>
+                </div>
               </div>
             </div>
             <div>
