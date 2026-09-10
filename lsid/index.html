@@ -21,36 +21,57 @@
   --sans:'Inter',sans-serif;--serif:'Playfair Display',Georgia,serif;--mono:'Inter',sans-serif;
 }
 body{font-family:var(--sans);background:var(--bg);color:var(--txt);min-height:100vh;display:flex;flex-direction:column}
-#app{max-width:480px;width:100%;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;background:var(--bg)}
+#app{width:100%;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;background:var(--bg)}
 
-/* ── Header ── */
-header{background:linear-gradient(160deg,#0d2a63 0%,#071a3d 100%);padding:28px 22px 40px;color:#fff;position:relative;box-shadow:var(--sha);overflow:hidden}
-header::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:var(--gold-grad);opacity:.55}
-header::after{content:'';position:absolute;bottom:-40px;left:30%;width:60px;height:60px;border-radius:50%;background:var(--gold-grad);opacity:.3}
-header .logo-row{display:flex;flex-direction:row;align-items:center;gap:14px;position:relative;z-index:1}
-header .logo-row img{width:64px;height:64px;object-fit:contain;border-radius:10px;flex-shrink:0}
-header h1{font-size:17px;font-weight:700;line-height:1.3;font-family:var(--serif);letter-spacing:.1px}
-header .sub{font-size:11px;opacity:.8;margin-top:5px;letter-spacing:.6px;font-family:var(--sans);text-transform:uppercase;font-weight:600}
+/* ── Site header (matches main website nav bar) ── */
+.site-header{background:#fff;border-bottom:1px solid var(--bdr);position:sticky;top:0;z-index:20}
+.site-header-inner{max-width:1100px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.site-header .logo-row{display:flex;align-items:center;gap:12px;min-width:0}
+.site-header .logo-row img{width:44px;height:44px;object-fit:contain;flex-shrink:0}
+.site-header h1{font-size:15px;font-weight:800;line-height:1.25;font-family:var(--sans);color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.site-header .sub{font-size:10px;color:var(--sub);margin-top:2px;letter-spacing:.6px;text-transform:uppercase;font-weight:700}
+.site-header .tag{flex-shrink:0;background:var(--gold-l);color:var(--gold-d);font-size:11px;font-weight:700;padding:8px 14px;border-radius:20px;letter-spacing:.2px;white-space:nowrap}
+
+/* ── Hero band (light gradient, matches inner-page heroes) ── */
+.hero{background:linear-gradient(150deg,#e2e9f4 0%,#eef2f8 55%,#e6ecf6 100%);padding:34px 20px 42px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:var(--gold-grad);opacity:.16}
+.hero::after{content:'';position:absolute;bottom:-50px;left:-30px;width:120px;height:120px;border-radius:50%;background:var(--gold-grad);opacity:.12}
+.hero-inner{position:relative;z-index:1;max-width:520px;margin:0 auto}
+.hero .eyebrow{font-size:11px;font-weight:700;color:var(--gold-d);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.hero h2{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--navy);line-height:1.25}
+.hero p{font-size:13px;color:var(--sub);margin-top:8px;line-height:1.6}
 
 /* ── Body ── */
-main{flex:1;padding:20px 18px 40px;display:flex;flex-direction:column;gap:16px;justify-content:center}
+main{flex:1;padding:22px 18px 44px;display:flex;flex-direction:column;gap:16px;align-items:center}
+main>*{width:100%;max-width:480px}
+#search-card{margin-top:-30px;position:relative;z-index:2}
 #search-card .card-body{display:flex;flex-direction:column;gap:26px;padding:28px 22px}
 #search-card .card-body .lbl{margin-bottom:5px}
 
+/* ── Footer (matches main website navy footer) ── */
+.site-footer{background:linear-gradient(160deg,#0d2a63 0%,#071a3d 100%);color:#cfd9ee;padding:40px 20px 20px;margin-top:auto}
+.site-footer-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:30px}
+.ftr-col h3{color:#fff;font-family:var(--serif);font-size:15px;margin-bottom:12px}
+.ftr-col.brand .logo-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.ftr-col.brand img{width:38px;height:38px;object-fit:contain}
+.ftr-col.brand .name{font-family:var(--sans);font-weight:700;color:#fff;font-size:14px;line-height:1.3}
+.ftr-col.brand .loc{font-size:10px;color:#9fb0d6;letter-spacing:.4px;text-transform:uppercase}
+.ftr-col.brand p{font-size:11.5px;color:#aebbd9;line-height:1.6;margin-top:8px}
+.ftr-col ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.ftr-col ul li a{color:#c4d0ea;text-decoration:none;font-size:12.5px}
+.ftr-col ul li a:hover{text-decoration:underline;color:#fff}
+.ftr-contact{font-size:12px;color:#c4d0ea;line-height:1.9}
+.ftr-social{display:flex;gap:10px;margin-top:14px}
+.ftr-social a{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;font-size:13px}
+.ftr-bottom{max-width:1100px;margin:26px auto 0;padding-top:16px;border-top:1px solid rgba(255,255,255,.12);display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-between;font-size:10.5px;color:#8ea0c9}
+.ftr-bottom a{color:#8ea0c9;text-decoration:underline}
+
 /* ── Desktop / large screens ── */
 @media (min-width:760px){
-  body{background:linear-gradient(150deg,#e2e9f4 0%,#eef2f8 55%,#e6ecf6 100%);padding:40px 20px;align-items:center}
-  #app{max-width:920px;min-height:600px;border-radius:22px;box-shadow:0 24px 64px rgba(20,40,70,.16);overflow:hidden;display:grid;grid-template-columns:300px 1fr;grid-template-rows:1fr auto}
-  header{padding:36px 36px;display:flex;align-items:flex-start;grid-row:1/3;flex-direction:column;justify-content:center}
-  header::before{top:-50px;right:-50px;width:160px;height:160px}
-  header::after{display:none}
-  header h1{font-size:23px}
-  header .sub{font-size:13px;margin-top:7px}
-  header .logo-row{flex-direction:column;align-items:flex-start;gap:16px}
-  header .logo-row img{width:80px;height:80px}
-  main{padding:40px 48px;justify-content:center;max-width:none;align-items:stretch;background:#ffffff}
-  main>*{max-width:520px}
-  footer{grid-column:2/3;text-align:left;padding:14px 48px 22px;background:#ffffff}
+  main{padding:40px 20px 56px}
+  .hero h2{font-size:32px}
+  #search-card{max-width:520px}
+  .site-footer-inner{grid-template-columns:1.3fr 1fr 1.2fr}
   .card-body{padding:22px}
   .result-banner{padding:20px 22px}
 }
@@ -117,15 +138,26 @@ footer{text-align:center;padding:14px;font-size:10.5px;color:var(--mut)}
 <body>
 <div id="app">
 
-  <header>
-    <div class="logo-row">
-      <img src="https://raw.githubusercontent.com/lamahajan/UPI-Redirect/main/Logo.png" alt="Logo"/>
-      <div>
-        <h1 id="school-title">Lotus International School</h1>
-        <div class="sub">Student Fee Payment</div>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="logo-row">
+        <img src="https://raw.githubusercontent.com/lamahajan/UPI-Redirect/main/Logo.png" alt="Logo"/>
+        <div>
+          <h1 id="school-title">Lotus International School</h1>
+          <div class="sub">Alikhan, Dinanagar</div>
+        </div>
       </div>
+      <div class="tag">📲 Fee Payment</div>
     </div>
   </header>
+
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">Student Fee Payment</div>
+      <h2>Pay Your Fees Online</h2>
+      <p>Enter your admission number and registered mobile number below to check your fee status and pay securely.</p>
+    </div>
+  </div>
 
   <main>
     <div class="card" id="search-card">
@@ -180,7 +212,46 @@ footer{text-align:center;padding:14px;font-size:10.5px;color:var(--mut)}
     </div>
   </main>
 
-  <footer>Lotus International School · Fee Payment Portal · <a href="privacy.html" style="color:var(--mut);text-decoration:underline">Privacy Policy</a> · <a href="terms.html" style="color:var(--mut);text-decoration:underline">Terms &amp; Conditions</a> · <a href="refund-policy.html" style="color:var(--mut);text-decoration:underline">Refund Policy</a></footer>
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div class="ftr-col brand">
+        <div class="logo-row">
+          <img src="https://raw.githubusercontent.com/lamahajan/UPI-Redirect/main/Logo.png" alt="Logo"/>
+          <div>
+            <div class="name">Lotus International School</div>
+            <div class="loc">Alikhan, Dinanagar</div>
+          </div>
+        </div>
+        <p>CBSE Affiliated · 1630651 &nbsp;·&nbsp; School Code - 20814<br/>Nurturing Minds. Building Future.</p>
+        <div class="ftr-social">
+          <a href="#" aria-label="WhatsApp">💬</a>
+          <a href="#" aria-label="Instagram">📷</a>
+          <a href="#" aria-label="Facebook">📘</a>
+        </div>
+      </div>
+
+      <div class="ftr-col">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="terms.html">Terms &amp; Conditions</a></li>
+          <li><a href="refund-policy.html">Refund Policy</a></li>
+        </ul>
+      </div>
+
+      <div class="ftr-col">
+        <h3>Contact Us</h3>
+        <div class="ftr-contact">
+          📍 Near Chhotu Nath Mandir, Taragarh Road,<br/>Vill-Alikhan, Pathankot, Punjab - 143534<br/>
+          📞 +91 98727-60880, +91 94637-14650<br/>
+          ✉️ info@lotusinternationalschool.org
+        </div>
+      </div>
+    </div>
+    <div class="ftr-bottom">
+      <span>© Lotus International School · Fee Payment Portal</span>
+    </div>
+  </footer>
 </div>
 
 <div id="modal-overlay" class="modal-overlay" onclick="if(event.target===this)closeModal()">
