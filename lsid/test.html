@@ -7,26 +7,29 @@
 <meta name="theme-color" content="#012564"/>
 <title>Fee Payment — Lotus International School</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --ink:#1d1d1f;--sub:#6e6e73;--mut:#86868b;
-  --bg:#ffffff;--bg-soft:#f5f5f7;--card:#ffffff;
-  --line:#d2d2d7;--line-soft:#e8e8ed;
-  --navy:#012564;--navy-d:#01184a;
-  --accent:#0071e3;--accent-d:#0058b0;--accent-l:rgba(0,113,227,.08);
-  --green:#1f9d6b;--green-l:#eaf7f0;
-  --red:#e0453f;--red-l:#fdece9;
-  --sans:'Inter','SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  --serif:'Playfair Display',Georgia,serif;
+  /* brand palette */
+  --navy:#012564;--navy-deep:#010e33;
+  --blue:#1656D6;--blue-deep:#0e3ea3;--blue-tint:#ecf3fc;
+  --white:#ffffff;
+  --ink:#000000;--body:rgba(0,0,0,.6);--mut:#6b7280;
+  --line:rgba(0,0,0,.1);--line-soft:rgba(0,0,0,.07);
+  --ok:#1a6b4d;--ok-tint:#eaf5f0;
+  --warn:#a33a2e;--warn-tint:#fbece9;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --serif:'Fraunces',Georgia,serif;
+  --ease:cubic-bezier(.4,0,.2,1);
 }
 html{-webkit-font-smoothing:antialiased}
 html,body{height:100%}
-body{font-family:var(--sans);background:var(--bg);color:var(--ink);min-height:100vh;letter-spacing:-.01em}
-#app{width:100%;min-height:100vh;display:flex;flex-direction:column;background:var(--bg)}
+body{font-family:var(--sans);background:var(--white);color:var(--ink);min-height:100vh;letter-spacing:-.01em}
+#app{width:100%;min-height:100vh;display:flex;flex-direction:column;background:var(--white)}
 
-/* ── Split shell: 30 / 70 ── */
+/* ── Split shell ── */
 .split-shell{display:flex;flex-direction:column}
 @media (min-width:860px){
   .split-shell{flex-direction:row;height:100vh}
@@ -34,92 +37,98 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);min-height:10
   #app{height:100vh}
 }
 
-/* ── Left: brand panel (30%) ── */
-.brand-panel{background:linear-gradient(165deg,#012564 0%,#01184a 100%);color:#fff;position:relative;overflow:hidden;padding:44px 32px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:14px}
-.brand-panel::before{content:'';position:absolute;top:-70px;right:-60px;width:220px;height:220px;border-radius:50%;background:linear-gradient(135deg,#2d6df0,#0071e3 60%,#123fa8);opacity:.55}
-.brand-panel::after{content:'';position:absolute;bottom:-80px;left:-40px;width:160px;height:160px;border-radius:50%;background:linear-gradient(135deg,#2d6df0,#0071e3 60%,#123fa8);opacity:.25}
-.brand-panel .bp-inner{position:relative;z-index:1}
-.brand-panel img{width:64px;height:64px;object-fit:contain;border-radius:12px;margin-bottom:22px}
-.brand-panel h1{font-family:var(--sans);font-size:30px;font-weight:700;line-height:1.2;letter-spacing:-.01em}
-.brand-panel .tag{font-size:12px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;opacity:.75;margin-top:12px}
-.brand-panel .loc{font-size:12.5px;opacity:.6;margin-top:8px}
+/* ── Left: brand panel ── */
+.brand-panel{background:linear-gradient(175deg,var(--navy) 0%,var(--navy-deep) 100%);color:#fff;position:relative;overflow:hidden;padding:40px 32px;display:flex;flex-direction:column;justify-content:space-between;gap:40px}
+.brand-panel .fine-lines{position:absolute;inset:0;opacity:.5;
+  background-image:repeating-linear-gradient(118deg,rgba(255,255,255,.05) 0px,rgba(255,255,255,.05) 1px,transparent 1px,transparent 15px);
+  -webkit-mask-image:radial-gradient(ellipse 90% 70% at 30% 20%,#000 0%,transparent 75%);
+  mask-image:radial-gradient(ellipse 90% 70% at 30% 20%,#000 0%,transparent 75%);
+}
+.brand-panel .glow{position:absolute;top:-120px;right:-100px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(22,86,214,.55) 0%,rgba(22,86,214,0) 70%);pointer-events:none}
+.brand-panel .bp-top{position:relative;z-index:1}
+.brand-panel .crest{width:58px;height:58px;border-radius:50%;padding:5px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);margin-bottom:26px}
+.brand-panel .crest img{width:100%;height:100%;object-fit:contain;border-radius:50%;display:block}
+.brand-panel h1{font-family:var(--serif);font-weight:500;font-size:26px;line-height:1.28;letter-spacing:-.01em;max-width:280px}
+.brand-panel .loc{font-size:13px;color:rgba(255,255,255,.55);margin-top:10px}
+.brand-panel .tag{font-size:12.5px;color:rgba(255,255,255,.8);margin-top:22px;padding-top:22px;border-top:1px solid rgba(255,255,255,.14);display:inline-block}
+.brand-panel .bp-bottom{position:relative;z-index:1;display:flex;align-items:center;gap:8px;font-size:11.5px;color:rgba(255,255,255,.5)}
+.brand-panel .bp-bottom svg{flex:none;opacity:.8}
 @media (min-width:860px){
-  .brand-panel{flex:0 0 40%;height:100vh;padding:0 48px}
-  .brand-panel h1{font-size:34px}
+  .brand-panel{flex:0 0 38%;height:100vh;padding:56px 52px}
+  .brand-panel h1{font-size:30px}
 }
 
-/* ── Right: content panel (70%) ── */
-.content-panel{flex:1;background:#fff;display:flex;align-items:center;justify-content:center;padding:32px 24px;overflow:auto}
-.content-inner{width:100%;max-width:480px}
-.content-inner .eyebrow{font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.3px;margin-bottom:6px}
-.content-inner .ci-title{font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-.01em;margin-bottom:22px}
+/* ── Right: content panel ── */
+.content-panel{flex:1;background:#fff;display:flex;align-items:center;justify-content:center;padding:40px 28px;overflow:auto}
+.content-inner{width:100%;max-width:440px}
+.content-inner .eyebrow{font-size:13px;font-weight:500;color:var(--blue);margin-bottom:6px;font-family:var(--serif);font-style:italic}
+.content-inner .ci-title{font-size:25px;font-weight:600;color:var(--ink);letter-spacing:-.01em;margin-bottom:30px;font-family:var(--serif)}
 
-/* ── App-style step indicator ── */
-.steps{display:flex;align-items:center;gap:6px;margin-bottom:20px}
-.steps .step{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--mut)}
-.steps .step .dot{width:18px;height:18px;border-radius:50%;background:var(--line);color:#fff;display:flex;align-items:center;justify-content:center;font-size:9.5px}
-.steps .step.active{color:var(--ink)}
-.steps .step.active .dot{background:var(--accent)}
-.steps .step.done .dot{background:var(--green)}
-.steps .bar{width:24px;height:1.5px;background:var(--line);border-radius:2px}
+/* ── Progress track ── */
+.steps{position:relative;display:flex;justify-content:space-between;margin-bottom:34px;max-width:220px}
+.steps::before{content:'';position:absolute;top:10px;left:10px;right:10px;height:1px;background:var(--line)}
+.steps .step{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:7px}
+.steps .step .dot{width:20px;height:20px;border-radius:50%;background:#fff;border:1px solid var(--line);color:var(--mut);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;transition:all .2s var(--ease)}
+.steps .step .lbl-s{font-size:10.5px;color:var(--mut);font-weight:500}
+.steps .step.active .dot{border-color:var(--blue);color:var(--blue);background:var(--blue-tint)}
+.steps .step.active .lbl-s{color:var(--ink)}
+.steps .step.done .dot{background:var(--navy);border-color:var(--navy);color:#fff}
 
 /* ── Form ── */
-.form-stack{display:flex;flex-direction:column;gap:20px}
-.field{position:relative}
-.field .inp-wrap{position:relative}
-.field .fico{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:14px;opacity:.5;pointer-events:none}
-.field input.inp{padding-left:36px}
-.lbl{font-size:11.5px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.6px;display:block;margin-bottom:7px}
-input.inp{width:100%;background:var(--bg-soft);border:1px solid var(--line-soft);border-radius:12px;color:var(--ink);padding:16px 16px;font-size:16px;font-family:var(--sans);outline:none;transition:border .15s,box-shadow .15s}
-input.inp:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-l)}
-.trust-line{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mut);margin-top:12px}
+.form-stack{display:flex;flex-direction:column;gap:24px}
+.field-row{display:flex;flex-direction:column;gap:24px}
+@media (min-width:480px){.field-row{flex-direction:row;gap:20px}.field-row .field{flex:1;min-width:0}}
+.field .inp-wrap{position:relative;display:flex;align-items:center;border-bottom:1px solid var(--line);transition:border-color .2s var(--ease)}
+.field .inp-wrap:focus-within{border-color:var(--blue)}
+.field .fico{flex:none;color:var(--mut);display:flex;transition:color .2s var(--ease)}
+.field .inp-wrap:focus-within .fico{color:var(--blue)}
+.lbl{font-size:12px;font-weight:500;color:var(--mut);display:block;margin-bottom:9px}
+input.inp{width:100%;background:transparent;border:none;color:var(--ink);padding:8px 8px 10px 10px;font-size:16px;font-family:var(--sans);outline:none}
+input.inp::placeholder{color:#b9bcc3}
+.trust-line{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--mut);margin-top:14px}
+.trust-line svg{flex:none}
 
-.btn{border:none;border-radius:12px;padding:16px 22px;font-size:15.5px;font-weight:600;cursor:pointer;font-family:var(--sans);transition:all .15s;display:inline-flex;align-items:center;justify-content:center;gap:6px}
-.btn-gold{background:var(--accent);color:#fff}
-.btn-gold:hover{background:var(--accent-d)}
-.btn-gold:active{transform:scale(.98)}
-.btn-outline{background:transparent;border:none;color:var(--accent);font-weight:500;padding:12px}
-.btn-outline:hover{text-decoration:underline}
+.btn{border:none;border-radius:10px;padding:15px 22px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--sans);transition:all .18s var(--ease);display:inline-flex;align-items:center;justify-content:center;gap:8px;letter-spacing:-.005em}
+.btn-primary{background:var(--navy);color:#fff;box-shadow:0 1px 0 rgba(255,255,255,.12) inset,0 10px 20px -10px rgba(1,37,100,.55)}
+.btn-primary:hover{background:var(--navy-deep)}
+.btn-primary:active{transform:scale(.985)}
+.btn-outline{background:transparent;border:1px solid var(--line);color:var(--ink);font-weight:500}
+.btn-outline:hover{border-color:var(--mut)}
 .msg{font-size:12.5px;margin-top:10px;line-height:1.5}
-.msg.err{color:var(--red)}
-.msg.ok{color:var(--green)}
+.msg.err{color:var(--warn)}
+.msg.ok{color:var(--ok)}
 .msg.inf{color:var(--mut)}
 
-.empty{text-align:center;padding:50px 16px;color:var(--mut)}
-
-/* ── Result / review card ── */
-.card{background:var(--card);border:1px solid var(--line-soft);border-radius:18px;box-shadow:0 1px 3px rgba(0,0,0,.03);overflow:hidden}
-.result-card{padding:28px 26px}
-.result-card .rc-lbl{font-size:12px;font-weight:600;color:var(--mut);text-align:center;letter-spacing:.3px}
-.result-card .rc-amount{font-size:42px;font-weight:700;color:var(--ink);text-align:center;line-height:1.1;margin-top:6px;letter-spacing:-.02em}
-.result-card .rc-div{height:1px;background:var(--line-soft);margin:20px 0 4px}
-.spec-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--line-soft);font-size:14px}
-.spec-row:last-child{border-bottom:none}
-.spec-row .k{color:var(--sub)}
+/* ── Statement-style result ── */
+.statement{border-top:1px solid var(--ink);border-bottom:1px solid var(--line);padding:26px 0 6px}
+.statement .rc-lbl{font-size:12px;color:var(--mut);font-weight:500}
+.statement .rc-amount{font-family:var(--serif);font-size:46px;font-weight:500;color:var(--ink);margin-top:4px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.spec-row{display:flex;align-items:baseline;justify-content:space-between;padding:13px 0;border-top:1px solid var(--line-soft);font-size:14px}
+.spec-row .k{color:var(--mut)}
 .spec-row .v{color:var(--ink);font-weight:500}
 
-.paid-card{padding:34px 26px;text-align:center}
-.paid-card .pico{width:46px;height:46px;border-radius:50%;background:var(--green-l);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:20px;margin:0 auto 14px;font-weight:700}
-.paid-card .ptitle{font-weight:600;font-size:17px;color:var(--ink)}
-.paid-card .psub{font-size:13px;color:var(--sub);margin-top:6px}
+.paid-block{margin-top:22px;background:var(--ok-tint);border-radius:12px;padding:22px 22px;display:flex;align-items:flex-start;gap:14px}
+.paid-block .pico{flex:none;width:34px;height:34px;border-radius:50%;background:var(--ok);color:#fff;display:flex;align-items:center;justify-content:center}
+.paid-block .ptitle{font-weight:600;font-size:15px;color:var(--ink)}
+.paid-block .psub{font-size:13px;color:var(--body);margin-top:4px;line-height:1.5}
 
-.sec-hdr{display:flex;align-items:center;gap:9px;padding:16px 20px;border-bottom:1px solid var(--line-soft)}
-.sec-hdr .title{font-size:14px;font-weight:600;flex:1;color:var(--ink)}
-.sec-hdr .hint{font-size:11.5px;color:var(--mut)}
-.qr-wrap{padding:20px;display:flex;flex-direction:column;align-items:center;gap:14px}
-.pay-methods{font-size:12px;color:var(--mut);text-align:center}
+.pay-block{margin-top:22px;background:var(--blue-tint);border-radius:14px;padding:22px}
+.pay-block .sec-hdr{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px}
+.pay-block .title{font-size:14px;font-weight:600;color:var(--ink)}
+.pay-block .hint{font-size:11.5px;color:var(--mut)}
+.pay-methods{font-size:12px;color:var(--mut);text-align:center;margin-top:12px}
 
 .spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp 0.7s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 
 /* ── Modal ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;padding:20px;z-index:999;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay{position:fixed;inset:0;background:rgba(1,14,51,.45);display:flex;align-items:center;justify-content:center;padding:20px;z-index:999;opacity:0;pointer-events:none;transition:opacity .2s var(--ease)}
 .modal-overlay.show{opacity:1;pointer-events:auto}
-.modal-box{background:var(--card);border-radius:18px;max-width:360px;width:100%;box-shadow:0 30px 70px rgba(0,0,0,.25);padding:28px 24px 24px;text-align:center;transform:translateY(14px) scale(.97);transition:transform .2s}
+.modal-box{background:#fff;border-radius:16px;max-width:340px;width:100%;box-shadow:0 30px 70px rgba(1,14,51,.3);padding:30px 26px 26px;text-align:center;transform:translateY(14px) scale(.97);transition:transform .2s var(--ease)}
 .modal-overlay.show .modal-box{transform:translateY(0) scale(1)}
-.modal-ico{width:52px;height:52px;border-radius:50%;background:var(--red-l);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 16px;font-weight:700}
-.modal-title{font-size:16px;font-weight:600;color:var(--ink);margin-bottom:8px}
-.modal-text{font-size:13px;color:var(--sub);line-height:1.6;margin-bottom:22px}
+.modal-ico{width:46px;height:46px;border-radius:50%;background:var(--warn-tint);color:var(--warn);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.modal-title{font-family:var(--serif);font-size:18px;font-weight:500;color:var(--ink);margin-bottom:9px}
+.modal-text{font-size:13.5px;color:var(--body);line-height:1.6;margin-bottom:24px}
 .modal-box .btn{width:100%}
 </style>
 </head>
@@ -128,11 +137,17 @@ input.inp:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-l)}
   <div class="split-shell">
 
     <aside class="brand-panel">
-      <div class="bp-inner">
-        <img src="https://raw.githubusercontent.com/lamahajan/UPI-Redirect/main/Logo.png" alt="Logo"/>
+      <div class="fine-lines"></div>
+      <div class="glow"></div>
+      <div class="bp-top">
+        <div class="crest"><img src="https://raw.githubusercontent.com/lamahajan/UPI-Redirect/main/Logo.png" alt="Logo"/></div>
         <h1 id="school-title">Lotus International School</h1>
         <div class="loc">Alikhan, Dinanagar</div>
-        <div class="tag">Fee Payment Portal</div>
+        <div class="tag">Fee payment portal</div>
+      </div>
+      <div class="bp-bottom">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+        Encrypted &amp; verified by the school office
       </div>
     </aside>
 
@@ -140,34 +155,37 @@ input.inp:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-l)}
       <div class="content-inner">
 
         <div id="search-card">
-          <div class="eyebrow">Student Portal</div>
+          <div class="eyebrow">Student portal</div>
           <div class="ci-title">Check your fee balance</div>
           <div class="steps">
-            <div class="step active"><span class="dot">1</span>Verify</div>
-            <span class="bar"></span>
-            <div class="step"><span class="dot">2</span>Review</div>
-            <span class="bar"></span>
-            <div class="step"><span class="dot">3</span>Pay</div>
+            <div class="step active"><span class="dot">1</span><span class="lbl-s">Verify</span></div>
+            <div class="step"><span class="dot">2</span><span class="lbl-s">Review</span></div>
+            <div class="step"><span class="dot">3</span><span class="lbl-s">Pay</span></div>
           </div>
           <div class="form-stack">
-            <div class="field">
-              <label class="lbl" for="adm-inp">Admission Number</label>
-              <div class="inp-wrap">
-                <span class="fico">🎓</span>
-                <input id="adm-inp" class="inp" placeholder="e.g. 2024001" autocomplete="off" inputmode="text" onkeydown="if(event.key==='Enter')document.getElementById('mob-inp').focus()"/>
+            <div class="field-row">
+              <div class="field">
+                <label class="lbl" for="adm-inp">Admission number</label>
+                <div class="inp-wrap">
+                  <span class="fico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg></span>
+                  <input id="adm-inp" class="inp" placeholder="e.g. 2024001" autocomplete="off" inputmode="text" onkeydown="if(event.key==='Enter')document.getElementById('mob-inp').focus()"/>
+                </div>
               </div>
-            </div>
-            <div class="field">
-              <label class="lbl" for="mob-inp">Registered Mobile Number</label>
-              <div class="inp-wrap">
-                <span class="fico">📱</span>
-                <input id="mob-inp" class="inp" placeholder="10-digit mobile number" autocomplete="off" inputmode="numeric" maxlength="10" onkeydown="if(event.key==='Enter')checkFee()"/>
+              <div class="field">
+                <label class="lbl" for="mob-inp">Registered mobile number</label>
+                <div class="inp-wrap">
+                  <span class="fico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg></span>
+                  <input id="mob-inp" class="inp" placeholder="10-digit mobile number" autocomplete="off" inputmode="numeric" maxlength="10" onkeydown="if(event.key==='Enter')checkFee()"/>
+                </div>
               </div>
             </div>
             <div>
-              <button class="btn btn-gold" onclick="checkFee()" id="check-btn" style="width:100%">Check Fee</button>
+              <button class="btn btn-primary" onclick="checkFee()" id="check-btn" style="width:100%">Check fee</button>
               <div id="msg" class="msg"></div>
-              <div class="trust-line">🔒 Your information stays private and secure</div>
+              <div class="trust-line">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg>
+                Your information stays private and secure
+              </div>
             </div>
           </div>
         </div>
@@ -175,35 +193,32 @@ input.inp:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-l)}
         <div id="empty"></div>
 
         <div id="result" style="display:none">
-          <div class="eyebrow">Student Portal</div>
+          <div class="eyebrow">Student portal</div>
           <div class="ci-title">Review your fees</div>
 
-          <div class="card result-card">
-            <div class="rc-lbl">Amount Due</div>
+          <div class="statement">
+            <div class="rc-lbl">Amount due</div>
             <div class="rc-amount" id="r-amount">—</div>
-            <div class="rc-div"></div>
             <div class="spec-row"><span class="k">Student</span><span class="v" id="r-name">—</span></div>
             <div class="spec-row"><span class="k">Class</span><span class="v" id="r-cls">—</span></div>
-            <div class="spec-row"><span class="k">Admission No.</span><span class="v" id="r-adm">—</span></div>
+            <div class="spec-row"><span class="k">Admission no.</span><span class="v" id="r-adm">—</span></div>
           </div>
 
-          <div id="paid-block" style="display:none;margin-top:14px">
-            <div class="card paid-card">
-              <div class="pico">✓</div>
+          <div id="paid-block" class="paid-block" style="display:none">
+            <div class="pico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+            <div>
               <div class="ptitle">You're all paid up</div>
               <div class="psub">There's no pending fee for this student right now.</div>
             </div>
           </div>
 
-          <div id="pay-block" class="card" style="margin-top:14px">
+          <div id="pay-block" class="pay-block">
             <div class="sec-hdr">
               <div class="title">Complete your payment</div>
               <div class="hint">Powered by Razorpay</div>
             </div>
-            <div class="qr-wrap">
-              <button class="btn btn-gold" style="width:100%" onclick="payNow()">Pay Now</button>
-              <div class="pay-methods">Debit Card · NetBanking · UPI · QR · BHIM</div>
-            </div>
+            <button class="btn btn-primary" style="width:100%" onclick="payNow()">Pay now</button>
+            <div class="pay-methods">Debit card · NetBanking · UPI · QR · BHIM</div>
           </div>
 
           <button class="btn btn-outline" style="width:100%;margin-top:16px" onclick="resetSearch()">Search another student</button>
@@ -217,10 +232,10 @@ input.inp:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-l)}
 
 <div id="modal-overlay" class="modal-overlay" onclick="if(event.target===this)closeModal()">
   <div class="modal-box">
-    <div class="modal-ico">!</div>
+    <div class="modal-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg></div>
     <div class="modal-title">Online payments coming soon</div>
     <div class="modal-text">We're setting up secure online payments for this portal. Until then, please visit or call the school office to complete your fee payment.</div>
-    <button class="btn btn-gold" onclick="closeModal()">Got it</button>
+    <button class="btn btn-primary" onclick="closeModal()">Got it</button>
   </div>
 </div>
 
@@ -263,7 +278,7 @@ window.checkFee=async function(){
     errText=e.message;
   }
 
-  btn.textContent='Check Fee';
+  btn.textContent='Check fee';
 
   if(!s){
     msg.className='msg err';
@@ -290,7 +305,7 @@ window.checkFee=async function(){
     paidBlock.style.display='none';
   }else{
     payBlock.style.display='none';
-    paidBlock.style.display='';
+    paidBlock.style.display='flex';
   }
 };
 
