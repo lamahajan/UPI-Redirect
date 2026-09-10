@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#10254f"/>
+<title>Fee Payment — Lotus International School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --navy:#10254f;--navy-d:#081633;
+  --brass:#a9782c;--brass-l:#ede0c3;--brass-d:#7d5a1f;
+  --paper:#f6f3ea;--paper2:#efe8d6;--card:#fffdf9;
+  --line:#ddd3ba;--line-soft:#e9e2cd;
+  --ink:#1c2b44;--ink-sub:#5c6b82;--mut:#93a0b3;
+  --stamp-red:#a4342b;--stamp-green:#2f7a4f;--stamp-green-l:#e3f0e7;
+  --sha:0 2px 10px rgba(16,37,79,.07);
+  --sans:'Inter',sans-serif;--serif:'Playfair Display',Georgia,serif;
+}
+body{
+  font-family:var(--sans);color:var(--ink);min-height:100vh;display:flex;flex-direction:column;
+  background-color:var(--paper);
+  background-image:repeating-linear-gradient(to bottom, rgba(16,37,79,.035) 0 1px, transparent 1px 30px);
+}
+#app{max-width:480px;width:100%;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+
+/* ── Masthead ── */
+header{background:var(--navy);padding:26px 22px 22px;color:#fff;position:relative;border-bottom:3px solid var(--brass)}
+header .ring{position:absolute;top:-30px;right:-40px;width:150px;height:150px;border-radius:50%;border:1px solid rgba(255,255,255,.14)}
+header .ring::after{content:'';position:absolute;inset:16px;border-radius:50%;border:1px solid rgba(255,255,255,.1)}
+header .row{display:flex;align-items:center;gap:14px;position:relative;z-index:1}
+header img{width:56px;height:56px;object-fit:contain;flex-shrink:0}
+header h1{font-size:18px;font-weight:700;line-height:1.25;font-family:var(--serif)}
+header .sub{font-size:12px;color:var(--brass-l);margin-top:4px;letter-spacing:.02em}
+
+/* ── Body ── */
+main{flex:1;padding:22px 18px 36px;display:flex;flex-direction:column;gap:18px;justify-content:center}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:var(--sha)}
+.card-body{padding:22px}
+.field{margin-bottom:20px}
+.field:last-of-type{margin-bottom:0}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--ink-sub);margin-bottom:6px;letter-spacing:.01em}
+.field input{
+  width:100%;background:transparent;border:none;border-bottom:1.5px solid var(--line);
+  color:var(--ink);padding:8px 2px;font-size:16px;font-family:var(--sans);outline:none;transition:border-color .15s
+}
+.field input:focus{border-bottom-color:var(--brass)}
+.field input::placeholder{color:var(--mut)}
+
+.btn{border:none;border-radius:6px;padding:14px 18px;font-size:14.5px;font-weight:700;cursor:pointer;font-family:var(--sans);width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:filter .15s,transform .1s}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--navy);color:#fff}
+.btn-primary:hover{filter:brightness(1.15)}
+.btn-brass{background:var(--brass);color:#fff}
+.btn-brass:hover{filter:brightness(1.08)}
+.btn-outline{background:transparent;border:1.5px solid var(--line);color:var(--navy);font-weight:600}
+.btn-outline:hover{background:var(--paper2)}
+.btn:focus-visible,input:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.btn-primary[disabled]{opacity:.75;cursor:progress}
+
+.msg{font-size:12.5px;margin-top:12px;line-height:1.5}
+.msg.err{color:var(--stamp-red)}
+.msg.ok{color:var(--stamp-green)}
+
+/* ── Result: fee statement ── */
+.statement .title-row{padding:16px 20px;border-bottom:1px solid var(--line)}
+.statement .title-row .name{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--navy)}
+.doc-row{display:flex;justify-content:space-between;padding:12px 20px;border-bottom:1px solid var(--line-soft);font-size:13px}
+.doc-row .k{color:var(--ink-sub)}
+.doc-row .v{font-weight:600}
+.total-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:20px;background:var(--paper2)}
+.total-row .lbl{font-size:11.5px;color:var(--ink-sub);margin-bottom:4px}
+.total-row .amt{font-family:var(--serif);font-size:30px;font-weight:700;color:var(--navy);line-height:1}
+.stamp{display:inline-block;border:2px dashed var(--stamp-red);color:var(--stamp-red);font-weight:800;font-size:11.5px;padding:6px 13px;border-radius:4px;transform:rotate(-7deg);letter-spacing:.06em;white-space:nowrap}
+.stamp.paid{border-color:var(--stamp-green);color:var(--stamp-green)}
+
+.paid-note{margin-top:14px;background:var(--stamp-green-l);border:1px solid var(--stamp-green);border-radius:8px;padding:14px 16px;text-align:center;color:var(--stamp-green);font-weight:600;font-size:13.5px}
+
+.pay-card{margin-top:16px}
+.pay-head{padding:15px 20px;border-bottom:1px solid var(--line);display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pay-head .t{font-size:13.5px;font-weight:700;color:var(--ink)}
+.pay-head .h{font-size:11px;color:var(--mut)}
+.pay-body{padding:20px;display:flex;flex-direction:column;gap:12px}
+.pay-info{font-size:11px;color:var(--mut);line-height:1.6;text-align:center}
+
+.actions{margin-top:16px}
+
+/* ── Desktop ── */
+@media (min-width:760px){
+  body{padding:40px 20px;align-items:center;background-attachment:fixed}
+  #app{max-width:900px;min-height:600px;border-radius:14px;box-shadow:0 20px 54px rgba(16,37,79,.16);overflow:hidden;display:grid;grid-template-columns:280px 1fr;grid-template-rows:1fr auto;border:1px solid var(--line)}
+  header{padding:40px 34px;grid-row:1/3;display:flex;align-items:center;border-bottom:none;border-right:3px solid var(--brass)}
+  header .ring{top:-40px;right:-50px;width:200px;height:200px}
+  header .row{flex-direction:column;align-items:flex-start;gap:18px}
+  header img{width:72px;height:72px}
+  header h1{font-size:22px}
+  main{padding:44px 46px;justify-content:center;background:var(--card);background-image:none}
+  main>*{max-width:480px}
+  footer{grid-column:2/3;text-align:left;padding:16px 46px 24px;background:var(--card)}
+}
+
+footer{text-align:center;padding:16px;font-size:11px;color:var(--mut);line-height:1.8}
+footer a{color:var(--ink-sub);text-decoration:none;border-bottom:1px solid var(--line)}
+
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition:none!important}}
+
+/* ── Modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(8,22,51,.6);display:flex;align-items:center;justify-content:center;padding:20px;z-index:999;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.show{opacity:1;pointer-events:auto}
+.modal-box{background:var(--card);border-radius:12px;max-width:340px;width:100%;box-shadow:0 30px 70px rgba(10,20,40,.35);padding:26px 24px 22px;text-align:center;border-top:3px solid var(--brass);transform:translateY(10px);transition:transform .2s}
+.modal-overlay.show .modal-box{transform:translateY(0)}
+.modal-title{font-size:16px;font-weight:700;color:var(--navy);font-family:var(--serif);margin-bottom:8px}
+.modal-text{font-size:12.5px;color:var(--ink-sub);line-height:1.6;margin-bottom:20px}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header>
+    <div class="ring"></div>
+    <div class="row">
+      <img src="https://raw.githubusercontent.com/lamahajan/UPI-Redirect/main/Logo.png" alt="Logo"/>
+      <div>
+        <h1 id="school-title">Lotus International School</h1>
+        <div class="sub">Fee payment register</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="card" id="search-card">
+      <div class="card-body">
+        <div class="field">
+          <label for="adm-inp">Admission number</label>
+          <input id="adm-inp" placeholder="e.g. 2024001" autocomplete="off" inputmode="text" onkeydown="if(event.key==='Enter')document.getElementById('mob-inp').focus()"/>
+        </div>
+        <div class="field">
+          <label for="mob-inp">Registered mobile number</label>
+          <input id="mob-inp" placeholder="10-digit mobile number" autocomplete="off" inputmode="numeric" maxlength="10" onkeydown="if(event.key==='Enter')checkFee()"/>
+        </div>
+        <div>
+          <button class="btn btn-primary" onclick="checkFee()" id="check-btn">Check fee due</button>
+          <div id="msg" class="msg"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="empty"></div>
+
+    <div id="result" style="display:none">
+      <div class="card statement">
+        <div class="title-row">
+          <div class="name" id="r-name">—</div>
+        </div>
+        <div class="doc-row"><span class="k">Class</span><span class="v" id="r-class">—</span></div>
+        <div class="doc-row"><span class="k">Admission no.</span><span class="v" id="r-adm">—</span></div>
+        <div class="total-row">
+          <div>
+            <div class="lbl">Amount payable</div>
+            <div class="amt" id="r-amount">—</div>
+          </div>
+          <span class="stamp" id="r-stamp">DUE</span>
+        </div>
+      </div>
+
+      <div id="paid-block" style="display:none">
+        <div class="paid-note">No fee due — this student's account is all clear.</div>
+      </div>
+
+      <div id="pay-block" class="card pay-card">
+        <div class="pay-head">
+          <span class="t">Pay via Razorpay</span>
+          <span class="h">Debit card · NetBanking · QR · UPI</span>
+        </div>
+        <div class="pay-body">
+          <button class="btn btn-brass" onclick="payNow()">Pay now</button>
+          <div class="pay-info">Secure payment via debit card, NetBanking, QR, UPI &amp; BHIM.</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-outline" onclick="resetSearch()">Check another student</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>Lotus International School · Fee Payment Portal<br/><a href="privacy.html">Privacy Policy</a> &nbsp; <a href="terms.html">Terms &amp; Conditions</a> &nbsp; <a href="refund-policy.html">Refund Policy</a></footer>
+</div>
+
+<div id="modal-overlay" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-title">Payment gateway not connected</div>
+    <div class="modal-text">Online payments aren't live yet on this portal. Please contact the school office to complete your fee payment for now.</div>
+    <button class="btn btn-primary" onclick="closeModal()">OK, got it</button>
+  </div>
+</div>
+
+<script>
+var CFG={
+  workerBase: 'https://rzp-proxy.due-4a8.workers.dev',
+  pa:     'lisdnn@icici',
+  pn:     'Lotus International School',
+  school: 'Lotus International School'
+};
+
+var current=null;
+
+window.checkFee=async function(){
+  var raw=(document.getElementById('adm-inp').value||'').trim();
+  var mobRaw=(document.getElementById('mob-inp').value||'').trim();
+  var msg=document.getElementById('msg');
+  var resultEl=document.getElementById('result');
+  var emptyEl=document.getElementById('empty');
+  var btn=document.getElementById('check-btn');
+
+  if(!raw){ msg.className='msg err'; msg.textContent='Please enter your admission number.'; return; }
+  var mobDigits=mobRaw.replace(/\D/g,'');
+  if(!mobDigits){ msg.className='msg err'; msg.textContent='Please enter your registered mobile number.'; return; }
+  if(mobDigits.length<10){ msg.className='msg err'; msg.textContent='Please enter a valid 10-digit mobile number.'; return; }
+
+  btn.disabled=true;
+  btn.innerHTML='<span class="spin"></span>';
+  msg.textContent=''; msg.className='msg';
+
+  var s=null, errText='';
+  try{
+    var r=await fetch(CFG.workerBase+'/fee-lookup',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({adm:raw, mobile:mobDigits})
+    });
+    var data=await r.json();
+    if(data&&data.found){ s=data; }
+  }catch(e){
+    errText=e.message;
+  }
+
+  btn.disabled=false;
+  btn.textContent='Check fee due';
+
+  if(!s){
+    msg.className='msg err';
+    msg.textContent = errText
+      ? 'Could not connect: '+errText
+      : 'No matching record found. Please check your admission number and registered mobile number, or contact the school office.';
+    resultEl.style.display='none'; emptyEl.style.display='';
+    return;
+  }
+
+  msg.textContent=''; msg.className='msg';
+  current=s;
+  emptyEl.style.display='none';
+  resultEl.style.display='';
+  document.getElementById('search-card').style.display='none';
+  var bal=Number(s.balance)||0;
+  document.getElementById('r-name').textContent=s.name||'—';
+  document.getElementById('r-class').textContent=s.cls||'—';
+  document.getElementById('r-adm').textContent=s.adm||'—';
+  document.getElementById('r-amount').textContent='₹'+Math.round(bal).toLocaleString('en-IN');
+  var payBlock=document.getElementById('pay-block'), paidBlock=document.getElementById('paid-block'), stamp=document.getElementById('r-stamp');
+  if(bal>0){
+    payBlock.style.display='';
+    paidBlock.style.display='none';
+    stamp.textContent='Due';
+    stamp.className='stamp';
+  }else{
+    payBlock.style.display='none';
+    paidBlock.style.display='';
+    stamp.textContent='Paid';
+    stamp.className='stamp paid';
+  }
+};
+
+window.payNow=function(){
+  document.getElementById('modal-overlay').classList.add('show');
+};
+
+window.closeModal=function(){
+  document.getElementById('modal-overlay').classList.remove('show');
+};
+
+window.resetSearch=function(){
+  current=null;
+  document.getElementById('search-card').style.display='';
+  document.getElementById('result').style.display='none';
+  document.getElementById('empty').style.display='';
+  document.getElementById('msg').textContent='';
+  document.getElementById('msg').className='msg';
+  document.getElementById('adm-inp').value='';
+  document.getElementById('mob-inp').value='';
+  document.getElementById('adm-inp').focus();
+};
+
+window.addEventListener('load',function(){
+  document.getElementById('school-title').textContent=CFG.school;
+});
+</script>
+</body>
+</html>
