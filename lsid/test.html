@@ -91,6 +91,9 @@ input.inp::placeholder{color:#a7adb8;font-weight:400}
 .info-row .ik{flex:1;font-size:11.5px;color:var(--mut)}
 .info-row .iv{font-size:13.5px;color:var(--ink);font-weight:600}
 
+.stat-block-paid{margin-top:clamp(14px,2.4vh,20px);background:linear-gradient(160deg,var(--ok-tint) 0%,#f6fbf8 100%);border-radius:var(--r-md);padding:22px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.stat-block-paid .spico{width:44px;height:44px;border-radius:50%;background:var(--ok);color:#fff;display:flex;align-items:center;justify-content:center}
+.stat-block-paid .rc-lbl{font-size:11.5px;color:var(--ok);font-weight:600}
 .paid-block{margin-top:16px;background:var(--ok-tint);border-radius:var(--r-md);padding:16px 18px;display:flex;align-items:flex-start;gap:12px}
 .paid-block .pico{flex:none;width:30px;height:30px;border-radius:50%;background:var(--ok);color:#fff;display:flex;align-items:center;justify-content:center}
 .paid-block .ptitle{font-weight:700;font-size:14px;color:var(--ink)}
@@ -184,9 +187,14 @@ input.inp::placeholder{color:#a7adb8;font-weight:400}
         <div class="eyebrow">Student portal</div>
         <div class="ci-title">Review your fees</div>
 
-        <div class="stat-block">
+        <div class="stat-block" id="amount-block">
           <div class="rc-lbl">Amount due</div>
           <div class="rc-amount" id="r-amount">—</div>
+        </div>
+
+        <div class="stat-block-paid" id="paid-hero" style="display:none">
+          <div class="spico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <div class="rc-lbl">All paid up</div>
         </div>
 
         <div class="info-rows">
@@ -304,12 +312,17 @@ window.checkFee=async function(){
   document.getElementById('r-adm').textContent=s.adm||'—';
   document.getElementById('r-amount').textContent='₹'+Math.round(bal).toLocaleString('en-IN');
   var payBlock=document.getElementById('pay-block'), paidBlock=document.getElementById('paid-block');
+  var amountBlock=document.getElementById('amount-block'), paidHero=document.getElementById('paid-hero');
   if(bal>0){
     payBlock.style.display='';
     paidBlock.style.display='none';
+    amountBlock.style.display='';
+    paidHero.style.display='none';
   }else{
     payBlock.style.display='none';
     paidBlock.style.display='flex';
+    amountBlock.style.display='none';
+    paidHero.style.display='flex';
   }
 };
 
