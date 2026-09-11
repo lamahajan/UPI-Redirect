@@ -2,193 +2,408 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="theme-color" content="#0d2a63"/>
+<meta name="theme-color" content="#001848"/>
 <title>Fee Payment — Lotus International School</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --navy:#0d2a63;--navy-d:#071a3d;--navy-l:rgba(13,42,99,.08);
-  --gold:#1a56db;--gold2:#8fb3f5;--gold-d:#123fa8;--gold-l:rgba(26,86,219,.12);--gold-grad:linear-gradient(135deg,#2d6df0 0%,#1a56db 60%,#123fa8 100%);
-  --bg:#eef2f8;--card:#ffffff;--bdr:#e7edf6;--bdr2:#cfdcf2;
-  --txt:#16294a;--sub:#5b6a80;--mut:#9aa6b5;
-  --green:#1f9d6b;--green-l:#d9f5e9;
-  --red:#d6453f;--red-l:#fde8e7;
-  --sha:0 4px 18px rgba(20,40,70,.1);
-  --sans:'Inter',sans-serif;--serif:'Playfair Display',Georgia,serif;--mono:'Inter',sans-serif;
+  --navy:#0d2a6e;--navy-deep:#001848;
+  --blue:#0071e3;--blue-deep:#005bbf;--blue-tint:#eaf1fd;--blue-tint-soft:#eaf2fd;
+  --white:#ffffff;
+  --ink:#1d1d1f;--body:#6e6e73;--mut:#aeaeb2;
+  --line:rgba(0,0,0,.08);--line-soft:rgba(0,0,0,.05);
+  --ok:#34c759;--ok-tint:#eafaf0;
+  --warn:#ff3b30;--warn-tint:#fff1f0;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --ease:cubic-bezier(.4,0,.2,1);
+  --r-lg:22px;--r-md:14px;--r-sm:10px;
 }
-body{font-family:var(--sans);background:var(--bg);color:var(--txt);min-height:100vh;display:flex;flex-direction:column}
-#app{max-width:480px;width:100%;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;background:var(--bg)}
+html{-webkit-font-smoothing:antialiased;height:100%}
+body{font-family:var(--sans);background:#eaf2fd;color:var(--ink);height:100%;overflow:hidden;letter-spacing:-.01em}
 
-/* ── Header ── */
-header{background:linear-gradient(160deg,#0d2a63 0%,#071a3d 100%);padding:28px 22px 40px;color:#fff;position:relative;box-shadow:var(--sha);overflow:hidden}
-header::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:var(--gold-grad);opacity:.55}
-header::after{content:'';position:absolute;bottom:-40px;left:30%;width:60px;height:60px;border-radius:50%;background:var(--gold-grad);opacity:.3}
-header .logo-row{display:flex;flex-direction:row;align-items:center;gap:14px;position:relative;z-index:1}
-header .logo-row img{width:64px;height:64px;object-fit:contain;border-radius:10px;flex-shrink:0}
-header h1{font-size:17px;font-weight:700;line-height:1.3;font-family:var(--serif);letter-spacing:.1px}
-header .sub{font-size:11px;opacity:.8;margin-top:5px;letter-spacing:.6px;font-family:var(--sans);text-transform:uppercase;font-weight:600}
+#app{height:100vh;height:100svh;display:flex;flex-direction:column}
 
-/* ── Body ── */
-main{flex:1;padding:20px 18px 40px;display:flex;flex-direction:column;gap:16px;justify-content:center}
-#search-card .card-body{display:flex;flex-direction:column;gap:26px;padding:28px 22px}
-#search-card .card-body .lbl{margin-bottom:5px}
-
-/* ── Desktop / large screens ── */
-@media (min-width:760px){
-  body{background:linear-gradient(150deg,#e2e9f4 0%,#eef2f8 55%,#e6ecf6 100%);padding:40px 20px;align-items:center}
-  #app{max-width:920px;min-height:600px;border-radius:22px;box-shadow:0 24px 64px rgba(20,40,70,.16);overflow:hidden;display:grid;grid-template-columns:300px 1fr;grid-template-rows:1fr auto}
-  header{padding:36px 36px;display:flex;align-items:flex-start;grid-row:1/3;flex-direction:column;justify-content:center}
-  header::before{top:-50px;right:-50px;width:160px;height:160px}
-  header::after{display:none}
-  header h1{font-size:23px}
-  header .sub{font-size:13px;margin-top:7px}
-  header .logo-row{flex-direction:column;align-items:flex-start;gap:16px}
-  header .logo-row img{width:80px;height:80px}
-  main{padding:40px 48px;justify-content:center;max-width:none;align-items:stretch;background:#ffffff}
-  main>*{max-width:520px}
-  footer{grid-column:2/3;text-align:left;padding:14px 48px 22px;background:#ffffff}
-  .card-body{padding:22px}
-  .result-banner{padding:20px 22px}
+/* ── Desktop / large screens: true side-by-side split, full page ── */
+@media (min-width:860px){
+  #app{
+    flex-direction:row;
+    width:100%;
+    height:100vh;
+    height:100svh;
+  }
 }
-.card{background:var(--card);border:none;border-radius:16px;box-shadow:none;overflow:hidden}
-.card-body{padding:18px}
-.lbl{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:7px}
-.row{display:flex;gap:8px}
-.row input.inp{min-width:0}
-.row .btn{flex-shrink:0;white-space:nowrap;padding:13px 16px}
-@media (max-width:380px){
-  .row{flex-wrap:wrap}
-  .row input.inp{flex:1 1 100%}
-  .row .btn{flex:1 1 100%}
+
+/* ── Hero: navy gradient header, matching index.html ── */
+.fp-hero{
+  background:
+    radial-gradient(ellipse 140% 120% at 80% -10%, #0a3d8f 0%, transparent 55%),
+    radial-gradient(ellipse 100% 80% at -10% 110%, #082660 0%, transparent 60%),
+    radial-gradient(ellipse 80% 60% at 50% 50%, #092e78 0%, transparent 70%),
+    linear-gradient(175deg, #0d2a6e 0%, #001848 40%, #092e78 100%);
+  padding:clamp(18px,4vh,28px) 20px clamp(20px,4.5vh,30px);
+  text-align:center;position:relative;overflow:hidden;flex-shrink:0;
+  border-radius:0 0 22px 22px;
 }
-input.inp{flex:1;background:#f5f8fc;border:1.5px solid var(--bdr2);border-radius:10px;color:var(--txt);padding:13px 14px;font-size:16px;font-family:var(--sans);outline:none;transition:border .2s}
-input.inp:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-l)}
-.btn{border:none;border-radius:10px;padding:13px 18px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--sans);transition:all .15s;display:inline-flex;align-items:center;justify-content:center;gap:6px}
-.btn-gold{background:var(--gold-grad);color:#fff;box-shadow:0 4px 14px rgba(26,86,219,.28)}
-.btn-gold:hover{filter:brightness(1.05)}
-.btn-gold:active{transform:scale(.97)}
-.btn-outline{background:#fff;border:1.5px solid var(--bdr2);color:var(--navy)}
-.msg{font-size:12.5px;margin-top:10px;line-height:1.5}
-.msg.err{color:var(--red)}
-.msg.ok{color:var(--green)}
+.fp-hero::before{
+  content:"";position:absolute;top:-50px;left:50%;transform:translateX(-50%);
+  width:280px;height:180px;
+  background:radial-gradient(ellipse,rgba(255,255,255,.07) 0%,transparent 70%);
+  pointer-events:none;
+}
+.fp-hero-logo{display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;z-index:1}
+.fp-crest{width:46px;height:46px;border-radius:50%;overflow:hidden;border:1px solid rgba(255,255,255,.15)}
+.fp-crest img{width:100%;height:100%;object-fit:contain;display:block}
+.fp-hero-wordmark{font-size:clamp(11px,2.8vw,13.5px);font-weight:700;color:rgba(255,255,255,.92);letter-spacing:1.2px}
+.fp-hero-sub{font-size:clamp(9px,2.2vw,10.5px);font-weight:600;color:rgba(255,255,255,.4);letter-spacing:1.4px;text-transform:uppercase;margin-top:1px}
+.fp-hero-divider{width:28px;height:1px;background:rgba(255,255,255,.15);margin:clamp(10px,2vh,14px) auto 0;position:relative;z-index:1}
+.fp-hero-eyebrow{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:600;color:rgba(255,255,255,.45);letter-spacing:1.8px;text-transform:uppercase;margin-top:clamp(10px,2vh,14px);position:relative;z-index:1}
+.fp-eyebrow-dot{width:5px;height:5px;border-radius:50%;background:#4ade80;flex-shrink:0}
+.fp-hero-title{font-size:clamp(17px,4.5vw,20px);font-weight:800;color:#fff;letter-spacing:-.5px;margin-top:4px;position:relative;z-index:1}
+
+.fp-features{display:none}
+
+@media (min-width:860px){
+  .fp-hero{
+    flex:0 0 35%;height:100%;border-radius:0;
+    padding:22px 48px 0;text-align:left;
+    display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;
+  }
+  .fp-hero::before{top:auto;bottom:-60px;left:50%}
+  .fp-hero-logo{align-items:flex-start}
+  .fp-crest{width:58px;height:58px}
+  .fp-hero-wordmark{font-size:15px;letter-spacing:1.4px}
+  .fp-hero-sub{font-size:11px}
+  .fp-hero-divider{margin:22px 0 0}
+  .fp-hero-eyebrow{margin-top:22px}
+  .fp-hero-title{font-size:27px;margin-top:8px}
+  .fp-features{display:flex;flex-direction:column;gap:20px;margin-top:40px;width:100%;max-width:280px}
+  .fp-feat{display:flex;align-items:flex-start;gap:11px;text-align:left}
+  .fp-feat .fico2{flex:none;width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.1);color:#fff;display:flex;align-items:center;justify-content:center}
+  .fp-feat p{font-size:12px;color:rgba(255,255,255,.65);line-height:1.5;padding-top:4px}
+}
+
+.fp-tagline{display:none}
+.fp-legal{display:none}
+.stage-help{display:none}
+@media (min-width:860px){
+  .fp-hero{position:relative}
+  .fp-tagline{
+    display:block;text-align:left;padding-bottom:12px;margin-top:auto;
+    font-size:12px;font-weight:600;color:rgba(255,255,255,.9);letter-spacing:.3px;
+  }
+  .fp-legal{
+    display:flex;align-items:center;justify-content:flex-start;gap:8px;padding-bottom:22px;
+    font-size:10.5px;color:rgba(255,255,255,.4);
+  }
+  .fp-legal a{color:rgba(255,255,255,.55);text-decoration:none}
+  .fp-legal a:hover{color:#fff}
+  .fp-legal .dot{width:2.5px;height:2.5px;border-radius:50%;background:rgba(255,255,255,.35)}
+  .stage-help{
+    display:flex;align-items:center;gap:6px;
+    font-size:12px;color:var(--mut);
+  }
+  .stage-help a{color:rgb(22,86,214);font-weight:600;text-decoration:none}
+  .stage-help a:hover{text-decoration:underline}
+}
+
+/* ── Stage ── */
+.stage{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:clamp(10px,2.4vh,22px) 18px;overflow:auto;background:#eaf2fd}
+
+@media (min-width:860px){
+  .stage{
+    flex:0 0 65%;height:100%;padding:22px 40px 44px;position:relative;justify-content:space-between;
+    background:#ffffff;
+  }
+  .stage-help{margin-top:0;align-self:flex-end}
+}
+
+.hero{width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2vh,16px)}
+
+.badge{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);color:var(--navy);font-size:11.5px;font-weight:600;padding:6px 13px;border-radius:999px;box-shadow:0 1px 2px rgba(11,42,92,.05);margin-bottom:clamp(10px,2vh,16px)}
+.badge svg{flex:none;color:var(--blue)}
+
+@media (min-width:860px){
+  .badge{margin-bottom:16px}
+}
+
+/* ── Card ── */
+.panel{width:100%;background:#fff;border-radius:var(--r-lg);box-shadow:0 1px 2px rgba(11,42,92,.04),0 18px 40px -22px rgba(11,42,92,.28);border:1px solid var(--line-soft);padding:clamp(18px,3.4vh,30px) clamp(20px,4vw,30px);position:relative;overflow:hidden}
+.panel::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue) 0%,#57a2ff 100%)}
+.eyebrow{font-size:10.5px;font-weight:700;color:rgb(22,86,214);margin-bottom:6px;letter-spacing:1.4px;text-transform:uppercase}
+.ci-title{font-size:clamp(19px,3vh,23px);font-weight:800;color:var(--ink);letter-spacing:-.02em}
+.ci-sub{font-size:12.5px;color:var(--mut);margin-top:5px;line-height:1.5}
+
+.card-head{display:flex;align-items:flex-start;gap:14px}
+.card-head .chead-ico{flex:none;width:44px;height:44px;border-radius:12px;background:var(--blue-tint);color:rgb(22,86,214);display:flex;align-items:center;justify-content:center}
+
+@media (min-width:860px){
+  .hero{max-width:640px;gap:20px}
+  .panel{background:transparent;border:none;box-shadow:none;border-radius:0;padding:0}
+  .panel::before{display:none}
+  .badge{box-shadow:0 4px 14px -6px rgba(11,42,92,.15)}
+}
+
+/* ── Form: always vertical, bigger fields ── */
+.form-stack{display:flex;flex-direction:column;gap:16px;margin-top:clamp(14px,2.2vh,20px)}
+.field+.field{margin-top:14px}
+.field{width:100%}
+.lbl{font-size:12px;font-weight:600;color:var(--navy);display:block;margin-bottom:8px}
+.field .inp-wrap{position:relative;display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid rgba(0,113,227,.35);border-radius:var(--r-md);padding:0 14px;transition:border-color .18s var(--ease),background .18s var(--ease)}
+.field .inp-wrap:focus-within{border-color:var(--blue);background:#fff;box-shadow:0 0 0 4px rgba(22,86,214,.08)}
+.field .fico{flex:none;width:30px;height:30px;border-radius:9px;background:var(--blue-tint);color:var(--blue);display:flex;align-items:center;justify-content:center}
+.field .inp-wrap:focus-within .fico{background:var(--blue);color:#fff}
+input.inp{width:100%;background:transparent;border:none;color:var(--ink);padding:20px 4px;font-size:17px;font-weight:500;font-family:var(--sans);outline:none}
+input.inp::placeholder{color:#a7adb8;font-weight:400}
+
+.trust-line{display:flex;align-items:center;justify-content:center;gap:7px;font-size:11.5px;color:var(--mut);margin-top:14px}
+.trust-line svg{flex:none;color:var(--blue)}
+
+.steps-bar{width:100%;max-width:320px;margin:22px auto 0}
+.step-row{display:flex;align-items:center}
+.step-num{flex:none;width:24px;height:24px;border-radius:50%;background:#eaf2fd;color:var(--mut);font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--line);transition:all .18s var(--ease)}
+.step-num.active{background:rgb(22,86,214);color:#fff;border-color:rgb(22,86,214)}
+.step-line{flex:1;height:1.5px;background:var(--line);margin:0 6px}
+.step-labels{display:flex;justify-content:space-between;margin-top:5px;padding:0 1px}
+.step-labels span{font-size:10.5px;font-weight:600;color:var(--mut)}
+.step-labels span.active{color:var(--navy)}
+
+@media (min-width:860px){
+  .card-head{gap:20px;margin-top:28px}
+  .ci-sub{margin-top:14px}
+  .form-stack{gap:20px;margin-top:28px}
+  .field+.field{margin-top:24px}
+  .trust-line{margin-top:20px}
+}
+
+.btn{border:none;border-radius:var(--r-md);padding:19px 22px;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--sans);transition:all .18s var(--ease);display:inline-flex;align-items:center;justify-content:center;gap:8px;letter-spacing:-.005em}
+.btn-primary{background:rgb(22,86,214);color:#fff}
+.btn-primary:hover{filter:brightness(1.04)}
+.btn-primary:active{background:rgb(14,66,166);transform:scale(.985)}
+.btn-outline{background:#eaf2fd;border:none;color:var(--ink);font-weight:600}
+.btn-outline:hover{background:#d9e8fb}
+.btn-outline:active{background:#d9e8fb}
+.btn-wrap{position:relative}
+.msg{font-size:12.5px;line-height:1.5;position:absolute;top:calc(100% + 8px);left:0;right:0;text-align:center}
+.msg.err{color:var(--warn)}
+.msg.ok{color:var(--ok)}
 .msg.inf{color:var(--mut)}
 
-.empty{text-align:center;padding:50px 16px;color:var(--mut)}
-.empty .ico{font-size:42px}
+/* ── Result: stat + info rows ── */
+.stat-block{margin-top:clamp(14px,2.4vh,20px);background:linear-gradient(160deg,var(--blue-tint) 0%,var(--blue-tint-soft) 100%);border-radius:var(--r-md);padding:18px 20px;text-align:center}
+.stat-block .rc-lbl{font-size:11.5px;color:var(--navy);font-weight:600}
+.stat-block .rc-amount{font-size:clamp(30px,6vh,40px);font-weight:800;color:var(--ink);margin-top:2px;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
 
-.result-banner{background:linear-gradient(160deg,#0d2a63 0%,#071a3d 100%);border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:var(--sha);color:#fff;position:relative;overflow:hidden}
-.result-banner::after{content:'';position:absolute;top:-26px;right:-26px;width:70px;height:70px;border-radius:50%;background:var(--gold-grad);opacity:.55}
-.result-banner .ico{font-size:30px;flex-shrink:0;position:relative;z-index:1}
-.result-banner .name{font-size:17px;font-weight:700;line-height:1.25;font-family:var(--serif);position:relative;z-index:1}
-.result-banner .meta{font-size:11.5px;opacity:.8;margin-top:4px;position:relative;z-index:1}
-.result-banner .stat{margin-left:auto;text-align:right;flex-shrink:0;position:relative;z-index:1}
-.result-banner .num{font-size:24px;font-weight:800;font-family:var(--mono);line-height:1;color:var(--gold2)}
-.result-banner .numlbl{font-size:9px;opacity:.8;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin-top:2px}
+.info-rows{margin-top:14px;display:flex;flex-direction:column;gap:0}
+.info-row{display:flex;align-items:center;gap:11px;padding:10px 0;border-top:1px solid var(--line-soft)}
+.info-row .iico{flex:none;width:30px;height:30px;border-radius:9px;background:var(--blue-tint);color:var(--blue);display:flex;align-items:center;justify-content:center}
+.info-row .ik{flex:1;font-size:11.5px;color:var(--mut)}
+.info-row .iv{font-size:13.5px;color:var(--ink);font-weight:600}
 
-.paid-banner{background:var(--green-l);border:1.5px solid var(--green);border-radius:16px;padding:18px;text-align:center;color:#1f7a51;font-weight:700}
+.stat-block-paid{margin-top:clamp(14px,2.4vh,20px);background:linear-gradient(160deg,var(--ok-tint) 0%,#f6fbf8 100%);border-radius:var(--r-md);padding:24px 22px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.stat-block-paid .spico{width:44px;height:44px;border-radius:13px;background:var(--ok);color:#fff;display:flex;align-items:center;justify-content:center}
+.stat-block-paid .rc-lbl{font-size:13.5px;color:var(--ok);font-weight:700}
+.stat-block-paid .rc-psub{font-size:12.5px;color:var(--body);line-height:1.5;max-width:280px}
 
-.sec-hdr{display:flex;align-items:center;gap:9px;padding:14px 16px;border-bottom:1px solid var(--bdr)}
-.sec-hdr .ico{font-size:17px}
-.sec-hdr .title{font-size:13px;font-weight:700;flex:1}
-.sec-hdr .hint{font-size:10.5px;color:var(--mut)}
-.qr-wrap{padding:18px;display:flex;flex-direction:column;align-items:center;gap:14px}
-.pay-info{font-size:11px;color:var(--mut);line-height:1.6;text-align:center;padding:0 8px}
+.pay-block{margin-top:16px}
+.pay-block .sec-hdr{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px}
+.pay-block .title{font-size:12.5px;font-weight:700;color:var(--navy)}
+.pay-block .hint{font-size:11px;color:var(--mut)}
+.pay-methods{font-size:11.5px;color:var(--mut);text-align:center;margin-top:10px}
 
-footer{text-align:center;padding:14px;font-size:10.5px;color:var(--mut)}
+.back-row{margin-top:14px}
 
-.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp 0.7s linear infinite}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 
 /* ── Modal ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(7,26,61,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:999;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay{position:fixed;inset:0;background:rgba(7,27,61,.45);display:flex;align-items:center;justify-content:center;padding:20px;z-index:999;opacity:0;pointer-events:none;transition:opacity .2s var(--ease)}
 .modal-overlay.show{opacity:1;pointer-events:auto}
-.modal-box{background:var(--card);border-radius:18px;max-width:360px;width:100%;box-shadow:0 30px 70px rgba(10,20,40,.35);padding:28px 24px 24px;text-align:center;transform:translateY(14px) scale(.97);transition:transform .2s}
+.modal-box{background:#fff;border-radius:var(--r-lg);max-width:340px;width:100%;box-shadow:0 30px 70px rgba(7,27,61,.3);padding:28px 24px 24px;text-align:center;transform:translateY(14px) scale(.97);transition:transform .2s var(--ease)}
 .modal-overlay.show .modal-box{transform:translateY(0) scale(1)}
-.modal-ico{width:56px;height:56px;border-radius:50%;background:var(--red-l);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 16px}
-.modal-title{font-size:16px;font-weight:700;color:var(--txt);font-family:var(--serif);margin-bottom:8px}
-.modal-text{font-size:12.5px;color:var(--sub);line-height:1.6;margin-bottom:22px}
+.modal-ico{width:44px;height:44px;border-radius:50%;background:var(--warn-tint);color:var(--warn);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.modal-title{font-size:17px;font-weight:800;color:var(--ink);margin-bottom:8px}
+.modal-text{font-size:13px;color:var(--body);line-height:1.6;margin-bottom:20px}
 .modal-box .btn{width:100%}
+
+@media (max-height:680px){
+  .badge{display:none}
+  .steps-bar{margin-bottom:10px}
+}
 </style>
 </head>
 <body>
 <div id="app">
 
-  <header>
-    <div class="logo-row">
-      <img src="https://raw.githubusercontent.com/lamahajan/UPI-Redirect/main/Logo.png" alt="Logo"/>
+  <div class="fp-hero">
+    <div class="fp-hero-logo">
+      <div class="fp-crest"><img src="https://raw.githubusercontent.com/lamahajan/UPI-Redirect/main/Logo.png" alt="Logo"/></div>
       <div>
-        <h1 id="school-title">Lotus International School</h1>
-        <div class="sub">Student Fee Payment</div>
+        <div class="fp-hero-wordmark" id="school-title">Lotus International School</div>
+        <div class="fp-hero-sub">Alikhan, Dinanagar</div>
       </div>
     </div>
-  </header>
+    <div class="fp-hero-divider"></div>
+    <div class="fp-hero-eyebrow"><span class="fp-eyebrow-dot"></span>Secure Portal</div>
+    <div class="fp-hero-title">DigiFee Mitra</div>
 
-  <main>
-    <div class="card" id="search-card">
-      <div class="card-body">
-        <div>
-          <label class="lbl" for="adm-inp">Admission Number</label>
-          <input id="adm-inp" class="inp" placeholder="e.g. 2024001" autocomplete="off" inputmode="text" style="width:100%" onkeydown="if(event.key==='Enter')document.getElementById('mob-inp').focus()"/>
-        </div>
-        <div>
-          <label class="lbl" for="mob-inp">Registered Mobile Number</label>
-          <input id="mob-inp" class="inp" placeholder="10-digit mobile number" autocomplete="off" inputmode="numeric" maxlength="10" style="width:100%" onkeydown="if(event.key==='Enter')checkFee()"/>
-        </div>
-        <div>
-          <button class="btn btn-gold" onclick="checkFee()" id="check-btn" style="width:100%;font-size:15px;padding:14px">Check Fee</button>
-          <div id="msg" class="msg"></div>
-        </div>
+    <div class="fp-features">
+      <div class="fp-feat">
+        <span class="fico2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg></span>
+        <p>Encrypted lookup — nothing is stored on this device</p>
+      </div>
+      <div class="fp-feat">
+        <span class="fico2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <p>Verified directly against the school office records</p>
+      </div>
+      <div class="fp-feat">
+        <span class="fico2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m13 2-9 12h7l-1 8 9-12h-7l1-8Z"/></svg></span>
+        <p>Instant balance, statement and payment</p>
+      </div>
+    </div>
+    <div class="fp-tagline">Nurturing Minds. Building Future.</div>
+    <div class="fp-legal">
+      <a href="https://lisdnn.org/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>
+      <span class="dot"></span>
+      <a href="https://lisdnn.org/terms-and-conditions" target="_blank" rel="noopener">Terms &amp; Conditions</a>
+      <span class="dot"></span>
+      <a href="https://lisdnn.org/refund-policy" target="_blank" rel="noopener">Refund Policy</a>
+    </div>
+  </div>
+
+  <main class="stage">
+    <div class="badge">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+      Verified by the school office
+    </div>
+
+    <div class="steps-bar" id="steps-bar">
+      <div class="step-row">
+        <div class="step-num active" id="step-num-1">1</div>
+        <div class="step-line"></div>
+        <div class="step-num" id="step-num-2">2</div>
+        <div class="step-line"></div>
+        <div class="step-num" id="step-num-3">3</div>
+      </div>
+      <div class="step-labels">
+        <span class="active" id="step-lbl-1">Check</span>
+        <span id="step-lbl-2">Review</span>
+        <span id="step-lbl-3">Pay</span>
       </div>
     </div>
 
-    <div id="empty"></div>
+    <div class="hero">
 
-    <div id="result" style="display:none">
-      <div class="result-banner">
-        <div class="ico">🎓</div>
-        <div>
-          <div class="name" id="r-name">—</div>
-          <div class="meta" id="r-meta">—</div>
+      <div id="search-card" class="panel">
+        <div class="card-head">
+          <div class="chead-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2.5"/><path d="M2 10h20"/><path d="M6 15h4"/></svg></div>
+          <div>
+            <div class="eyebrow">Student portal</div>
+            <div class="ci-title">Check your fee balance</div>
+          </div>
         </div>
-        <div class="stat">
-          <div class="num" id="r-amount">—</div>
-          <div class="numlbl">Due</div>
+        <div class="ci-sub">Enter the admission number and registered mobile number to look up dues.</div>
+
+        <div class="form-stack">
+          <div class="field">
+            <label class="lbl" for="adm-inp">Admission number</label>
+            <div class="inp-wrap">
+              <span class="fico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg></span>
+              <input id="adm-inp" class="inp" placeholder="e.g. 2024001" autocomplete="off" inputmode="text" onkeydown="if(event.key==='Enter')document.getElementById('mob-inp').focus()"/>
+            </div>
+          </div>
+          <div class="field">
+            <label class="lbl" for="mob-inp">Registered mobile number</label>
+            <div class="inp-wrap">
+              <span class="fico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg></span>
+              <input id="mob-inp" class="inp" placeholder="10-digit mobile number" autocomplete="off" inputmode="numeric" maxlength="10" onkeydown="if(event.key==='Enter')checkFee()"/>
+            </div>
+          </div>
+          <div class="btn-wrap">
+            <button class="btn btn-primary" onclick="checkFee()" id="check-btn" style="width:100%">Check fee</button>
+            <div id="msg" class="msg"></div>
+          </div>
+          <div class="trust-line">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg>
+            Your information stays private and secure
+          </div>
         </div>
       </div>
 
-      <div id="paid-block" style="display:none;margin-top:14px">
-        <div class="paid-banner">✅ No fee due — you're all clear!</div>
+      <div id="empty"></div>
+
+      <div id="result" class="panel" style="display:none">
+        <div class="card-head">
+          <div class="chead-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v5h5"/><path d="M6 3h8l5 5v13H6z"/><path d="M9 13h6M9 17h6"/></svg></div>
+          <div>
+            <div class="eyebrow">Student portal</div>
+            <div class="ci-title">Review your fees</div>
+          </div>
+        </div>
+
+        <div class="stat-block" id="amount-block">
+          <div class="rc-lbl">Amount due</div>
+          <div class="rc-amount" id="r-amount">—</div>
+        </div>
+
+        <div class="stat-block-paid" id="paid-hero" style="display:none">
+          <div class="spico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <div class="rc-lbl">All paid up</div>
+          <div class="rc-psub">There's no pending fee for this student right now.</div>
+        </div>
+
+        <div class="info-rows">
+          <div class="info-row">
+            <span class="iico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg></span>
+            <span class="ik">Student</span>
+            <span class="iv" id="r-name">—</span>
+          </div>
+          <div class="info-row">
+            <span class="iico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg></span>
+            <span class="ik">Class</span>
+            <span class="iv" id="r-cls">—</span>
+          </div>
+          <div class="info-row">
+            <span class="iico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 3v3M16 3v3"/></svg></span>
+            <span class="ik">Admission no.</span>
+            <span class="iv" id="r-adm">—</span>
+          </div>
+        </div>
+
+        <div id="pay-block" class="pay-block">
+          <div class="sec-hdr">
+            <div class="title">Complete your payment</div>
+            <div class="hint">Powered by Razorpay</div>
+          </div>
+          <button class="btn btn-primary" style="width:100%" onclick="payNow()">Pay now</button>
+          <div class="pay-methods">Debit card · NetBanking · UPI · QR · BHIM</div>
+        </div>
+
+        <div class="back-row">
+          <button class="btn btn-outline" style="width:100%" onclick="resetSearch()">Search another student</button>
+        </div>
       </div>
 
-      <div id="pay-block" class="card" style="margin-top:14px">
-        <div class="sec-hdr">
-          <span class="ico">📲</span>
-          <div class="title">Pay via Razorpay</div>
-          <div class="hint">Debit Card · NetBanking · QR · UPI</div>
-        </div>
-        <div class="qr-wrap">
-          <button class="btn btn-gold" style="width:100%;font-size:15px;padding:14px" onclick="payNow()">📲 Pay Now</button>
-          <div class="pay-info">Secure payment via Debit Card, NetBanking, QR, UPI &amp; BHIM.</div>
-        </div>
-      </div>
+    </div>
 
-      <button class="btn btn-outline" style="width:100%;margin-top:14px;padding:13px;font-size:13px" onclick="resetSearch()">🔄 Check Another Student</button>
+    <div class="stage-help">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 0 1 4.9.8c0 1.7-2.4 2-2.4 3.5"/><path d="M12 17h.01"/></svg>
+      Need help? <a href="tel:+919872760880">Call the school office</a>
     </div>
   </main>
 
-  <footer>Lotus International School · Fee Payment Portal · <a href="privacy.html" style="color:var(--mut);text-decoration:underline">Privacy Policy</a> · <a href="terms.html" style="color:var(--mut);text-decoration:underline">Terms &amp; Conditions</a> · <a href="refund-policy.html" style="color:var(--mut);text-decoration:underline">Refund Policy</a></footer>
 </div>
 
 <div id="modal-overlay" class="modal-overlay" onclick="if(event.target===this)closeModal()">
   <div class="modal-box">
-    <div class="modal-ico">🚫</div>
-    <div class="modal-title">Payment Gateway Not Connected</div>
-    <div class="modal-text">Online payments aren't live yet on this portal. Please contact the school office to complete your fee payment for now.</div>
-    <button class="btn btn-gold" onclick="closeModal()">OK, Got It</button>
+    <div class="modal-ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg></div>
+    <div class="modal-title">Online payments coming soon</div>
+    <div class="modal-text">We are currently setting up secure online payments for this portal. In the meantime, please visit or contact the school office to complete your fee payment.</div>
+    <button class="btn btn-primary" onclick="closeModal()">Got it</button>
   </div>
 </div>
 
@@ -210,10 +425,10 @@ window.checkFee=async function(){
   var emptyEl=document.getElementById('empty');
   var btn=document.getElementById('check-btn');
 
-  if(!raw){ msg.className='msg err'; msg.textContent='⚠️ Please enter your admission number.'; return; }
+  if(!raw){ msg.className='msg err'; msg.textContent='Please enter the admission number to continue.'; return; }
   var mobDigits=mobRaw.replace(/\D/g,'');
-  if(!mobDigits){ msg.className='msg err'; msg.textContent='⚠️ Please enter your registered mobile number.'; return; }
-  if(mobDigits.length<10){ msg.className='msg err'; msg.textContent='⚠️ Please enter a valid 10-digit mobile number.'; return; }
+  if(!mobDigits){ msg.className='msg err'; msg.textContent='Please enter the registered mobile number to continue.'; return; }
+  if(mobDigits.length<10){ msg.className='msg err'; msg.textContent='Please enter a valid 10-digit mobile number.'; return; }
 
   btn.innerHTML='<span class="spin"></span>';
   msg.textContent=''; msg.className='msg';
@@ -231,13 +446,13 @@ window.checkFee=async function(){
     errText=e.message;
   }
 
-  btn.textContent='Check Fee';
+  btn.textContent='Check fee';
 
   if(!s){
     msg.className='msg err';
     msg.textContent = errText
-      ? '❌ Could not connect: '+errText
-      : '❌ No matching record found. Please check your admission number and registered mobile number, or contact the school office.';
+      ? 'We are unable to connect at the moment. Please check your internet connection and try again.'
+      : 'We could not find a record matching these details. Please verify the admission number and mobile number, or contact the school office for assistance.';
     resultEl.style.display='none'; emptyEl.style.display='';
     return;
   }
@@ -247,21 +462,36 @@ window.checkFee=async function(){
   emptyEl.style.display='none';
   resultEl.style.display='';
   document.getElementById('search-card').style.display='none';
+  setStep(2);
   var bal=Number(s.balance)||0;
   document.getElementById('r-name').textContent=s.name||'—';
-  document.getElementById('r-meta').innerHTML='Class: '+(s.cls||'—')+' &nbsp;·&nbsp; Adm: '+(s.adm||'—');
+  document.getElementById('r-cls').textContent=s.cls||'—';
+  document.getElementById('r-adm').textContent=s.adm||'—';
   document.getElementById('r-amount').textContent='₹'+Math.round(bal).toLocaleString('en-IN');
-  var payBlock=document.getElementById('pay-block'), paidBlock=document.getElementById('paid-block');
+  var payBlock=document.getElementById('pay-block');
+  var amountBlock=document.getElementById('amount-block'), paidHero=document.getElementById('paid-hero');
   if(bal>0){
     payBlock.style.display='';
-    paidBlock.style.display='none';
+    amountBlock.style.display='';
+    paidHero.style.display='none';
   }else{
     payBlock.style.display='none';
-    paidBlock.style.display='';
+    amountBlock.style.display='none';
+    paidHero.style.display='flex';
+  }
+};
+
+window.setStep=function(n){
+  for(var i=1;i<=3;i++){
+    var num=document.getElementById('step-num-'+i), lbl=document.getElementById('step-lbl-'+i);
+    if(!num) continue;
+    if(i<=n){ num.classList.add('active'); lbl.classList.add('active'); }
+    else { num.classList.remove('active'); lbl.classList.remove('active'); }
   }
 };
 
 window.payNow=function(){
+  setStep(3);
   document.getElementById('modal-overlay').classList.add('show');
 };
 
@@ -271,6 +501,7 @@ window.closeModal=function(){
 
 window.resetSearch=function(){
   current=null;
+  setStep(1);
   document.getElementById('search-card').style.display='';
   document.getElementById('result').style.display='none';
   document.getElementById('empty').style.display='';
@@ -280,7 +511,6 @@ window.resetSearch=function(){
   document.getElementById('mob-inp').value='';
   document.getElementById('adm-inp').focus();
 };
-
 window.addEventListener('load',function(){
   document.getElementById('school-title').textContent=CFG.school;
 });
