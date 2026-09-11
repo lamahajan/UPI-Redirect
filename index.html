@@ -390,28 +390,39 @@ body{
 </div>
 <script>
 (function(){
+  // Worker URL hardcoded — parent's link only ever carries ?qr_id=..., which
+  // can't be tampered with to change amount/student (that's all re-fetched
+  // fresh from the worker below; the actual charge happens on Razorpay's own
+  // hosted page).
+  var PROXY_URL = 'https://rzp-proxy.due-4a8.workers.dev';
   var p        = new URLSearchParams(window.location.search);
   var qrId     = (p.get("qr_id")||"").trim();
-  var proxyUrl = (p.get("proxy") ||"").trim().replace(/\/+$/,"");
+  var proxyUrl = PROXY_URL;
 
-  // Only qr_id + proxy come from the URL now. Everything else (student
-  // name, admission no, class, and — most importantly — the amount) is
-  // fetched fresh from the worker below. Nothing in the URL bar can change
-  // what the parent actually gets charged, because the charge itself
-  // happens on Razorpay's own hosted page (short_url), not in this page.
-  if(!qrId || !proxyUrl){
+  if(!qrId){
     showState("error"); return;
   }
 
   showState("redirecting");
 
   fetch(proxyUrl+"/payment-status/"+encodeURIComponent(qrId))
-    .then(function(r){
-      if(!r.ok) throw new Error("not_found");
-      return r.json();
-    })
+    .then(function(r){ return r.ok ? r.json() : { status: "not_found" }; })
     .then(function(d){
-      if(!d || d.status === "not_found" || !d.short_url){
+      if(!d || d.status === "not_found"){
+        // Record is gone — either the monthly cleanup wiped it, or it was
+        // already closed and later cleared. Either way, double payment is
+        // impossible (the Razorpay link itself is auto-cancelled right after
+        // capture), so we show a calm "already processed" success screen
+        // instead of an alarming error that might make the parent retry.
+        var amtCard = document.querySelector("#state-success .suc-amount-card");
+        if(amtCard) amtCard.style.display = "none";
+        var subEl = document.querySelector("#state-success .suc-sub");
+        if(subEl) subEl.textContent = "This payment link has already been processed. If you have any questions, please contact the school office.";
+        showState("success");
+        return;
+      }
+
+      if(!d.short_url && d.status !== "captured"){
         showState("error"); return;
       }
 
@@ -438,18 +449,20 @@ body{
 
       setTimeout(function(){ document.getElementById("prog-bar").style.width="100%"; }, 50);
 
+      if(d.status === "captured"){
+        // Already paid (e.g. parent re-opens an old link, or worker already
+        // auto-closed it right after capture). Show success immediately —
+        // never send them back to Razorpay's checkout for a paid link.
+        confirmPayment();
+        return;
+      }
+
       // ── Go to Razorpay's own hosted checkout ──
       // This is a real Razorpay Payment Link: the amount is locked on
       // their server, it auto-offers UPI apps on mobile, and it fires a
       // proper payment_link.paid webhook back to our worker — unlike the
       // old self-built upi:// link, this payment is fully tracked.
       document.getElementById("pay-btn").href = d.short_url;
-
-      if(d.status === "captured"){
-        // Already paid (e.g. parent re-opens an old link)
-        confirmPayment();
-        return;
-      }
 
       setTimeout(function(){
         window.location.href = d.short_url;
