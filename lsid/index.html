@@ -164,14 +164,15 @@ input.inp::placeholder{color:#a7adb8;font-weight:400}
 .trust-line{display:flex;align-items:center;justify-content:center;gap:7px;font-size:11.5px;color:var(--mut);margin-top:14px}
 .trust-line svg{flex:none;color:var(--blue)}
 
-.steps-bar{width:100%;max-width:320px;margin:22px auto 0}
+.steps-bar{width:100%;max-width:320px;margin:17px auto 0}
 .step-row{display:flex;align-items:center}
 .step-num{flex:none;width:24px;height:24px;border-radius:50%;background:#eaf2fd;color:var(--mut);font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--line);transition:all .18s var(--ease)}
 .step-num.active{background:rgb(22,86,214);color:#fff;border-color:rgb(22,86,214)}
 .step-line{flex:1;height:1.5px;background:var(--line);margin:0 6px}
-.step-labels{display:flex;justify-content:space-between;margin-top:5px;padding:0 1px}
-.step-labels span{font-size:10.5px;font-weight:600;color:var(--mut)}
-.step-labels span.active{color:var(--navy)}
+.step-labels{display:flex;align-items:flex-start;margin-top:5px}
+.step-lbl{flex:none;width:24px;text-align:center;overflow:visible;white-space:nowrap;font-size:10.5px;font-weight:600;color:var(--mut)}
+.step-lbl.active{color:var(--navy)}
+.step-lbl-spacer{flex:1;margin:0 6px}
 
 @media (min-width:860px){
   .card-head{gap:20px;margin-top:28px}
@@ -294,9 +295,11 @@ input.inp::placeholder{color:#a7adb8;font-weight:400}
         <div class="step-num" id="step-num-3">3</div>
       </div>
       <div class="step-labels">
-        <span class="active" id="step-lbl-1">Check</span>
-        <span id="step-lbl-2">Review</span>
-        <span id="step-lbl-3">Pay</span>
+        <span class="step-lbl active" id="step-lbl-1">Check</span>
+        <span class="step-lbl-spacer"></span>
+        <span class="step-lbl" id="step-lbl-2">Review</span>
+        <span class="step-lbl-spacer"></span>
+        <span class="step-lbl" id="step-lbl-3">Pay</span>
       </div>
     </div>
 
