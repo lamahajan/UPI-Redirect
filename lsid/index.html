@@ -194,28 +194,29 @@ input.inp::placeholder{color:#a7adb8;font-weight:400}
 .msg.inf{color:var(--mut)}
 
 /* ── Result: stat + info rows ── */
-.stat-block{margin-top:clamp(14px,2.4vh,20px);background:linear-gradient(160deg,var(--blue-tint) 0%,var(--blue-tint-soft) 100%);border-radius:var(--r-md);padding:18px 20px;text-align:center}
-.stat-block .rc-lbl{font-size:11.5px;color:var(--navy);font-weight:600}
-.stat-block .rc-amount{font-size:clamp(30px,6vh,40px);font-weight:800;color:var(--ink);margin-top:2px;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.amount-row{margin-top:clamp(10px,1.8vh,14px);display:flex;align-items:center;gap:11px;background:linear-gradient(160deg,var(--blue-tint) 0%,var(--blue-tint-soft) 100%);border-radius:var(--r-md);padding:13px 16px}
+.amount-row .iico{flex:none;width:30px;height:30px;border-radius:9px;background:#fff;color:var(--blue);display:flex;align-items:center;justify-content:center}
+.amount-row .ik{flex:1;font-size:12.5px;font-weight:600;color:var(--navy)}
+.amount-row .iv-amount{font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 
-.info-rows{margin-top:14px;display:flex;flex-direction:column;gap:0}
-.info-row{display:flex;align-items:center;gap:11px;padding:10px 0;border-top:1px solid var(--line-soft)}
+.info-rows{margin-top:10px;display:flex;flex-direction:column;gap:0}
+.info-row{display:flex;align-items:center;gap:11px;padding:8px 0;border-top:1px solid var(--line-soft)}
 .info-row .iico{flex:none;width:30px;height:30px;border-radius:9px;background:var(--blue-tint);color:var(--blue);display:flex;align-items:center;justify-content:center}
 .info-row .ik{flex:1;font-size:11.5px;color:var(--mut)}
 .info-row .iv{font-size:13.5px;color:var(--ink);font-weight:600}
 
-.stat-block-paid{margin-top:clamp(14px,2.4vh,20px);background:linear-gradient(160deg,var(--ok-tint) 0%,#f6fbf8 100%);border-radius:var(--r-md);padding:24px 22px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.stat-block-paid{margin-top:clamp(10px,1.8vh,14px);background:linear-gradient(160deg,var(--ok-tint) 0%,#f6fbf8 100%);border-radius:var(--r-md);padding:16px 18px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
 .stat-block-paid .spico{width:44px;height:44px;border-radius:13px;background:var(--ok);color:#fff;display:flex;align-items:center;justify-content:center}
 .stat-block-paid .rc-lbl{font-size:13.5px;color:var(--ok);font-weight:700}
 .stat-block-paid .rc-psub{font-size:12.5px;color:var(--body);line-height:1.5;max-width:280px}
 
-.pay-block{margin-top:16px}
-.pay-block .sec-hdr{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px}
+.pay-block{margin-top:12px}
+.pay-block .sec-hdr{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px}
 .pay-block .title{font-size:12.5px;font-weight:700;color:var(--navy)}
 .pay-block .hint{font-size:11px;color:var(--mut)}
 .pay-methods{font-size:11.5px;color:var(--mut);text-align:center;margin-top:10px}
 
-.back-row{margin-top:14px}
+.back-row{margin-top:10px}
 
 .spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
@@ -345,9 +346,10 @@ input.inp::placeholder{color:#a7adb8;font-weight:400}
           </div>
         </div>
 
-        <div class="stat-block" id="amount-block">
-          <div class="rc-lbl">Amount due</div>
-          <div class="rc-amount" id="r-amount">—</div>
+        <div class="amount-row" id="amount-block">
+          <span class="iico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5h4.5a2 2 0 0 1 0 4H9m0 0h5"/></svg></span>
+          <span class="ik">Amount due</span>
+          <span class="iv iv-amount" id="r-amount">—</span>
         </div>
 
         <div class="stat-block-paid" id="paid-hero" style="display:none">
