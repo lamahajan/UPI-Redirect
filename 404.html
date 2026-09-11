@@ -60,7 +60,7 @@ body{font-family:var(--sans);background:#eaf2fd;color:var(--ink);height:100%;ove
 .fp-crest img{width:100%;height:100%;object-fit:contain;display:block}
 .fp-hero-wordmark{font-size:clamp(11px,2.8vw,13.5px);font-weight:700;color:rgba(255,255,255,.92);letter-spacing:1.2px}
 .fp-hero-sub{font-size:clamp(9px,2.2vw,10.5px);font-weight:600;color:rgba(255,255,255,.4);letter-spacing:1.4px;text-transform:uppercase;margin-top:1px}
-.fp-hero-divider{width:28px;height:1px;background:rgba(255,255,255,.15);margin:clamp(10px,2vh,14px) auto 0;position:relative;z-index:1}
+.fp-hero-divider{width:28px;height:1px;background:#eaf1fd;margin:clamp(10px,2vh,14px) auto 0;position:relative;z-index:1}
 .fp-hero-eyebrow{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:600;color:rgba(255,255,255,.45);letter-spacing:1.8px;text-transform:uppercase;margin-top:clamp(10px,2vh,14px);position:relative;z-index:1}
 .fp-eyebrow-dot{width:5px;height:5px;border-radius:50%;background:#4ade80;flex-shrink:0}
 .fp-hero-title{font-size:clamp(17px,4.5vw,20px);font-weight:800;color:#fff;letter-spacing:-.5px;margin-top:4px;position:relative;z-index:1}
@@ -249,12 +249,16 @@ input.inp::placeholder{color:#a7adb8;font-weight:400}
 .err-msg{font-size:clamp(19px,3vh,24px);font-weight:800;color:var(--ink);margin-bottom:8px;letter-spacing:-.3px;text-align:center}
 .err-sub{font-size:13.5px;color:var(--body);line-height:1.65;max-width:340px;text-align:center;margin-bottom:clamp(20px,3.4vh,28px)}
 .err-actions{width:100%;max-width:320px;display:flex;flex-direction:column;gap:10px}
+.btn-portal{background:#eaf2fd;color:rgb(22,86,214)}
+.btn-portal:hover{background:#d9e8fb}
+.btn-portal:active{background:#d9e8fb;transform:scale(.985)}
 
 @media (min-width:860px){
   .err-code{font-size:72px}
   .err-msg{font-size:26px}
   .err-sub{max-width:380px}
   .stage{justify-content:center}
+  .stage-help{position:absolute;right:40px;bottom:22px;margin-top:0}
 }
 </style>
 </head>
@@ -306,8 +310,7 @@ input.inp::placeholder{color:#a7adb8;font-weight:400}
       <div class="err-msg">This Page Doesn't Exist</div>
       <div class="err-sub">The link you followed may be broken, or the page may have been moved. Please check the link or return to the fee payment portal.</div>
       <div class="err-actions">
-        <a class="btn btn-primary" href="/lsid/">🏠 Go to Fee Payment Portal</a>
-        <a class="btn btn-outline" href="tel:+919872760880">📞 Call School Office</a>
+        <a class="btn btn-portal" href="/lsid/">🏠 Go to Fee Payment Portal</a>
       </div>
     </div>
 
