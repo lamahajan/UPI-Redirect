@@ -32,10 +32,10 @@ header{
     radial-gradient(ellipse 100% 80% at -10% 110%, #082660 0%, transparent 60%),
     radial-gradient(ellipse 80% 60% at 50% 50%, #092e78 0%, transparent 70%),
     linear-gradient(175deg, #0d2a6e 0%, #001848 40%, #092e78 100%);
-  padding:26px 22px 34px;color:#fff;position:relative;overflow:hidden;border-radius:0 0 22px 22px;
+  color:#fff;position:relative;overflow:hidden;border-radius:0 0 22px 22px;
 }
 header::before{content:"";position:absolute;top:-50px;left:50%;transform:translateX(-50%);width:280px;height:180px;background:radial-gradient(ellipse,rgba(255,255,255,.07) 0%,transparent 70%);pointer-events:none}
-header .inner{position:relative;z-index:1;max-width:900px;margin:0 auto}
+header .inner{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:26px 22px 34px}
 header a.back{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.75);opacity:.9;font-size:12px;font-weight:600;text-decoration:none;margin-bottom:16px}
 header a.back:hover{color:#fff}
 .hd-crest-row{display:flex;align-items:center;gap:11px;margin-bottom:16px}
@@ -47,11 +47,12 @@ header h1{font-size:21px;font-weight:800;line-height:1.25;letter-spacing:-.4px}
 header .sub{font-size:12px;opacity:.6;margin-top:6px;letter-spacing:.2px}
 
 @media (min-width:640px){
-  header{padding:34px 36px 42px}
+  header .inner{padding:34px 36px 42px}
   header h1{font-size:25px}
+  main{padding-left:36px;padding-right:36px}
 }
 
-main{flex:1;padding:22px 18px 44px;max-width:900px;margin:0 auto;width:100%}
+main{flex:1;padding:22px 22px 44px;max-width:900px;margin:0 auto;width:100%}
 
 .updated{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--mut);margin-bottom:20px;font-weight:600;letter-spacing:.2px}
 
@@ -98,22 +99,20 @@ footer .links{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin
 
 /* ── Desktop optimization: wider layout + TOC sidebar ── */
 @media (min-width:1024px){
-  header .inner{max-width:1180px}
-  header{padding:40px 48px 52px}
-  header h1{font-size:32px}
-  header .sub{font-size:13.5px}
-  .hd-wordmark{font-size:13px}
-  main{max-width:1180px;padding:36px 40px 60px}
+  header .inner{max-width:1180px;padding:22px 48px 34px}
+  .hd-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px}
+  .hd-crest-row{margin-bottom:0}
+  .hd-title-block{text-align:right}
+  header h1{font-size:28px}
+  header .sub{font-size:13.5px;margin-top:5px}
+  .hd-crest{width:50px;height:50px}
+  .hd-wordmark{font-size:17px}
+  .hd-sub{font-size:11.5px}
+  main{max-width:1180px;padding:36px 48px 60px}
   footer{max-width:1180px}
   .updated{font-size:12px}
 
-  .doc-layout{display:grid;grid-template-columns:230px 1fr;gap:40px;align-items:start}
-  .toc{display:block;position:sticky;top:28px;padding-top:4px}
-  .toc-title{font-size:11px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;padding:0 10px}
-  .toc-list{list-style:none;display:flex;flex-direction:column;gap:2px}
-  .toc-list a{display:block;padding:8px 10px;border-radius:9px;font-size:12.5px;font-weight:600;color:var(--body);text-decoration:none;line-height:1.4;transition:background .15s var(--ease),color .15s var(--ease)}
-  .toc-list a:hover{background:var(--blue-tint);color:var(--navy)}
-  .toc-list a.active{background:var(--blue-tint);color:var(--blue-deep)}
+  .doc-layout{display:block}
 
   .card-body{padding:40px 44px}
   .sec{scroll-margin-top:28px}
@@ -134,16 +133,19 @@ footer .links{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin
 
   <header>
     <div class="inner">
-      <a class="back" href="https://fee.lisdnn.org/LSID/">← Back to Fee Payment</a>
-      <div class="hd-crest-row">
-        <div class="hd-crest"><img src="https://raw.githubusercontent.com/lamahajan/UPI-Redirect/main/Logo.png" alt="Logo"/></div>
-        <div>
-          <div class="hd-wordmark">Lotus International School</div>
-          <div class="hd-sub">Fee Payment Portal</div>
+      <div class="hd-row">
+        <div class="hd-crest-row">
+          <div class="hd-crest"><img src="https://raw.githubusercontent.com/lamahajan/UPI-Redirect/main/Logo.png" alt="Logo"/></div>
+          <div>
+            <div class="hd-wordmark">Lotus International School</div>
+            <div class="hd-sub">Alikhan, Pathankot</div>
+          </div>
+        </div>
+        <div class="hd-title-block">
+          <h1>Refund &amp; Cancellation Policy</h1>
+          <div class="sub">How refunds and duplicate payments are handled</div>
         </div>
       </div>
-      <h1>Refund &amp; Cancellation Policy</h1>
-      <div class="sub">How refunds and duplicate payments are handled</div>
     </div>
   </header>
 
@@ -151,27 +153,12 @@ footer .links{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin
     <div class="updated">Last updated: 19 June 2026</div>
 
     <div class="doc-layout">
-      <nav class="toc">
-        <div class="toc-title">On this page</div>
-        <ul class="toc-list">
-          <li><a href="#sec-1" data-sec="sec-1">1. Overview</a></li>
-          <li><a href="#sec-2" data-sec="sec-2">2. General Policy</a></li>
-          <li><a href="#sec-3" data-sec="sec-3">3. Duplicate or Failed Transactions</a></li>
-          <li><a href="#sec-4" data-sec="sec-4">4. How to Request a Refund</a></li>
-          <li><a href="#sec-5" data-sec="sec-5">5. Withdrawal, Transfer Certificate & Advance Fees</a></li>
-          <li><a href="#sec-6" data-sec="sec-6">6. Cancellation by the School</a></li>
-          <li><a href="#sec-7" data-sec="sec-7">7. Payment Gateway Charges</a></li>
-          <li><a href="#sec-8" data-sec="sec-8">8. Changes to This Policy</a></li>
-        </ul>
-      </nav>
-
-      <div>
     <div class="card">
       <div class="card-body">
 
         <div class="sec" id="sec-1">
           <h2><span class="sec-num">1</span>Overview</h2>
-          <p>This Refund &amp; Cancellation Policy applies to fee payments made online through the Lotus International School Fee Payment Portal. School fees are charged for educational services and seat reservation, and are therefore largely non-refundable except in the specific cases described below.</p>
+          <p>This Refund &amp; Cancellation Policy applies to fee payments made online through Fee DigiMitra, the Lotus International School Fee Payment Portal. School fees are charged for educational services and seat reservation, and are therefore largely non-refundable except in the specific cases described below.</p>
           <div class="note"><strong>Note:</strong> Online payment via card, UPI, or NetBanking is currently being set up and is not yet active on this portal. This policy will apply once online payments go live. Until then, all fee payments are handled directly through the school office, subject to the school's standard fee rules.</div>
         </div>
 
@@ -234,13 +221,12 @@ footer .links{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin
       </div>
     </div>
 
-      </div>
     </div>
 
     <div class="contact-box">
       <h2>📞 Need help with a refund?</h2>
       <p>Lotus International School</p>
-      <p>Near Chhotu Nath Mandir, Taragarh Road, Dinanagar, Punjab</p>
+      <p>Near Chhotu Nath Mandir, Taragarh Road, Vill-Alikhan - 143534</p>
       <p>📞 9463714640 · 9463714650 · 9872760880</p>
     </div>
   </main>
@@ -251,7 +237,7 @@ footer .links{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin
       <a href="privacy-policy.html">Privacy Policy</a>
       <a href="terms-conditions.html">Terms &amp; Conditions</a>
     </div>
-    Lotus International School · Fee Payment Portal
+    Lotus International School · Fee DigiMitra
   </footer>
 </div>
 
