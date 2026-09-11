@@ -81,6 +81,7 @@ body{font-family:var(--sans);background:#eaf2fd;color:var(--ink);height:100%;ove
   .fp-hero-divider{margin:22px 0 0}
   .fp-hero-eyebrow{margin-top:22px}
   .fp-hero-title{font-size:27px;margin-top:8px}
+  .fp-hero-mid{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;width:100%;transform:translateY(-40px)}
   .fp-features{display:flex;flex-direction:column;gap:20px;margin-top:40px;width:100%;max-width:280px}
   .fp-feat{display:flex;align-items:flex-start;gap:11px;text-align:left}
   .fp-feat .fico2{flex:none;width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.1);color:#fff;display:flex;align-items:center;justify-content:center}
@@ -249,21 +250,23 @@ input.inp::placeholder{color:#a7adb8;font-weight:400}
       </div>
     </div>
     <div class="fp-hero-divider"></div>
-    <div class="fp-hero-eyebrow"><span class="fp-eyebrow-dot"></span>Secure Portal</div>
-    <div class="fp-hero-title">Fee DigiMitra</div>
+    <div class="fp-hero-mid">
+      <div class="fp-hero-eyebrow"><span class="fp-eyebrow-dot"></span>Secure Portal</div>
+      <div class="fp-hero-title">DigiFee Mitra</div>
 
-    <div class="fp-features">
-      <div class="fp-feat">
-        <span class="fico2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg></span>
-        <p>Encrypted lookup — nothing is stored on this device</p>
-      </div>
-      <div class="fp-feat">
-        <span class="fico2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
-        <p>Verified directly against the school office records</p>
-      </div>
-      <div class="fp-feat">
-        <span class="fico2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m13 2-9 12h7l-1 8 9-12h-7l1-8Z"/></svg></span>
-        <p>Instant balance, statement and payment</p>
+      <div class="fp-features">
+        <div class="fp-feat">
+          <span class="fico2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg></span>
+          <p>Encrypted lookup — nothing is stored on this device</p>
+        </div>
+        <div class="fp-feat">
+          <span class="fico2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <p>Verified directly against the school office records</p>
+        </div>
+        <div class="fp-feat">
+          <span class="fico2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m13 2-9 12h7l-1 8 9-12h-7l1-8Z"/></svg></span>
+          <p>Instant balance, statement and payment</p>
+        </div>
       </div>
     </div>
     <div class="fp-tagline">Nurturing Minds. Building Future.</div>
