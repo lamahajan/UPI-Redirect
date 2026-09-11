@@ -206,7 +206,7 @@ body{
   background:rgba(255,59,48,.08);border:1px solid rgba(255,59,48,.15);
   border-radius:20px;padding:4px 12px;
   font-size:10px;font-weight:700;color:#ff3b30;letter-spacing:1.2px;text-transform:uppercase;
-  margin-bottom: var(--sp-md);
+  margin-top:-6px;margin-bottom: var(--sp-md);
 }
 .err-icon-wrap{
   width: clamp(54px,14vw,68px);height: clamp(54px,14vw,68px);border-radius:20px;
@@ -225,7 +225,7 @@ body{
 .err-msg{font-size: clamp(16px,4vw,19px);font-weight:800;color:#1d1d1f;letter-spacing:-.5px;margin-bottom: var(--sp-xs);text-align:center;}
 .err-sub{font-size: clamp(11.5px,2.9vw,13px);color:#6e6e73;line-height:1.6;margin: 0 auto clamp(20px,4vh,30px);max-width:260px;text-align:center;width:100%;}
 .err-divider{width:100%;height:1px;background:#f0f0f0;margin: 0 0 clamp(20px,4vh,30px);}
-.err-actions{margin-top:auto;width:100%;display:flex;flex-direction:column;gap: var(--sp-sm);}
+.err-actions{position:absolute;left:20px;right:20px;bottom: clamp(18px,3.5vh,26px);display:flex;flex-direction:column;gap: var(--sp-sm);}
 .err-cta{
   display:flex;align-items:center;justify-content:center;gap:9px;
   background:linear-gradient(135deg,#0071e3,#0077ed);color:#fff;
@@ -252,7 +252,7 @@ body{
   background:rgba(52,199,89,.1);border:1px solid rgba(52,199,89,.2);
   border-radius:20px;padding:4px 12px;
   font-size:10px;font-weight:700;color:#34c759;letter-spacing:1.2px;text-transform:uppercase;
-  margin-bottom:var(--sp-md);
+  margin-top:-6px;margin-bottom:var(--sp-md);
 }
 .suc-icon-wrap{
   width:clamp(64px,16vw,80px);height:clamp(64px,16vw,80px);border-radius:24px;
@@ -280,7 +280,7 @@ body{
 .suc-amount-label{font-size:11px;font-weight:600;color:#16a34a;letter-spacing:.8px;text-transform:uppercase;}
 .suc-amount-val{font-size:clamp(22px,5.5vw,27px);font-weight:800;color:#15803d;letter-spacing:-1px;}
 .suc-divider{width:100%;height:1px;background:#f0f0f0;margin:0 0 clamp(16px,3vh,22px);}
-.suc-actions{margin-top:auto;width:100%;}
+.suc-actions{position:absolute;left:20px;right:20px;bottom: clamp(18px,3.5vh,26px);}
 .suc-cta{
   display:flex;align-items:center;justify-content:center;
   background:#34c759;color:#fff;
@@ -372,10 +372,10 @@ body{
     </div>
 
     <div id="state-error">
-      <div class="err-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/></svg> Invalid Link</div>
+      <div class="err-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/></svg> <span id="err-badge-text">Invalid Link</span></div>
       <div class="err-icon-wrap"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ff3b30" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15 15 9"/><path d="M10.5 6.5 12 5a3.5 3.5 0 0 1 5 5l-1.5 1.5"/><path d="M13.5 17.5 12 19a3.5 3.5 0 0 1-5-5l1.5-1.5"/></svg></div>
-      <div class="err-msg">Payment Link Invalid</div>
-      <div class="err-sub">This link is invalid or may have expired. Please contact the school office to get a valid payment link.</div>
+      <div class="err-msg" id="err-msg">Payment Link Invalid</div>
+      <div class="err-sub" id="err-sub">This link is invalid or may have expired. Please contact the school office to get a valid payment link.</div>
       <div class="err-divider"></div>
       <div class="err-actions">
         <a class="err-cta" href="tel:+919872760880">
@@ -403,50 +403,90 @@ body{
   var proxyUrl = PROXY_URL;
 
   if(!qrId){
-    showState("error"); return;
+    showState("error","invalid"); return;
   }
 
   showState("redirecting");
+
+  // Fills the success card from any record that has amount/name/adm/payment_id
+  // fields — used whether the record came from qr_map, the Transactions
+  // Firebase, or the Google Sheet fallback.
+  function fillSuccessInfo(rec){
+    var am = (Number(rec.amount)||0) / 100;
+    document.getElementById("suc-am").textContent   = am ? ("₹"+am.toLocaleString("en-IN")) : "—";
+    document.getElementById("suc-name").textContent = rec.name || rec.adm || "—";
+    var subEl = document.querySelector("#state-success .suc-sub");
+    if(subEl) subEl.textContent = "Your fee payment has been received and confirmed by the school.";
+    var txnRow = document.getElementById("suc-txn-row");
+    if(txnRow){
+      if(rec.payment_id){
+        txnRow.style.display = "";
+        document.getElementById("suc-txn-id").textContent = rec.payment_id;
+      } else {
+        txnRow.style.display = "none";
+      }
+    }
+  }
+
+  // Last-resort check: neither Firebase qr_map nor the Transactions Firebase
+  // had this qr_id. Before calling it genuinely invalid, check the Google
+  // Sheet backup log too (via the worker's /sheet-lookup endpoint).
+  function checkSheetFallback(){
+    fetch(proxyUrl+"/sheet-lookup/"+encodeURIComponent(qrId))
+      .then(function(r){ return r.ok ? r.json() : { found: false }; })
+      .then(function(s){
+        if(s && s.found){
+          fillSuccessInfo(s);
+          showState("success");
+        } else {
+          // No trace anywhere — Firebase, Transactions Firebase, or the
+          // Sheet — this qr_id never existed. Genuinely "Invalid Link".
+          showState("error","invalid");
+        }
+      })
+      .catch(function(){ showState("error","invalid"); });
+  }
 
   fetch(proxyUrl+"/payment-status/"+encodeURIComponent(qrId))
     .then(function(r){ return r.ok ? r.json() : { status: "not_found" }; })
     .then(function(d){
       if(!d || d.status === "not_found"){
         // QR record is gone (monthly cleanup already ran, or it was closed
-        // and later cleared). Before deciding what to show, check the
-        // SEPARATE Transactions Firebase (never wiped) for a matching
-        // qr_id — that tells us whether this was a real, already-paid
-        // link, or a qr_id that never actually existed.
+        // and later cleared). Check the SEPARATE Transactions Firebase
+        // (never wiped) first, then the Google Sheet backup, before
+        // deciding this link is genuinely invalid.
         fetch(proxyUrl+"/txn-by-qr/"+encodeURIComponent(qrId))
           .then(function(r){ return r.ok ? r.json() : { found: false }; })
           .then(function(t){
             if(t && t.found){
               // Genuinely paid, just cleared from the QR node — show a real
               // success screen with the transaction number as proof.
-              var am = (Number(t.amount)||0) / 100;
-              document.getElementById("suc-am").textContent   = am ? ("₹"+am.toLocaleString("en-IN")) : "—";
-              document.getElementById("suc-name").textContent = t.name || t.adm || "—";
-              var subEl = document.querySelector("#state-success .suc-sub");
-              if(subEl) subEl.textContent = "Your fee payment has been received and confirmed by the school.";
-              var txnRow = document.getElementById("suc-txn-row");
-              if(txnRow){
-                txnRow.style.display = "";
-                document.getElementById("suc-txn-id").textContent = t.payment_id || "—";
-              }
+              fillSuccessInfo(t);
               showState("success");
             } else {
-              // No trace of this qr_id anywhere — it never existed, or was
-              // closed without ever being paid. Show a real "expired" page
-              // instead of a misleading success message.
-              showState("error");
+              checkSheetFallback();
             }
           })
-          .catch(function(){ showState("error"); });
+          .catch(function(){ checkSheetFallback(); });
+        return;
+      }
+
+      // Record exists in qr_map but was manually/auto closed (or failed)
+      // and never actually paid → "Expired Link", not a generic invalid one.
+      if(d.status === "closed" || d.status === "cancelled" || d.status === "failed"){
+        if(d.payment_id){
+          // Edge case: closed right after a successful capture — still a
+          // real success, not an expiry.
+          fillSuccessInfo(d);
+          showState("success");
+        } else {
+          showState("error","expired");
+        }
         return;
       }
 
       if(!d.short_url && d.status !== "captured"){
-        showState("error"); return;
+        showState("error","invalid"); return;
       }
 
       var adm  = String(d.adm||"");
@@ -502,7 +542,7 @@ body{
       startPolling();
     })
     .catch(function(){
-      showState("error");
+      showState("error","invalid");
     });
 
   // ── Poll worker for payment confirmation ──
@@ -559,7 +599,7 @@ body{
 
 })();
 
-function showState(state){
+function showState(state, errorVariant){
   ["redirecting","success","error"].forEach(function(s){
     var el = document.getElementById("state-"+s);
     if(!el) return;
@@ -571,6 +611,26 @@ function showState(state){
       el.classList.remove("active");
     }
   });
+
+  if(state === "error"){
+    var texts = (errorVariant === "expired")
+      ? {
+          badge: "Expired Link",
+          msg  : "Payment Link Expired",
+          sub  : "This payment link is no longer active. Please contact the school office to get a new link."
+        }
+      : {
+          badge: "Invalid Link",
+          msg  : "Payment Link Invalid",
+          sub  : "This link is invalid or may have expired. Please contact the school office to get a valid payment link."
+        };
+    var b = document.getElementById("err-badge-text");
+    var m = document.getElementById("err-msg");
+    var s2 = document.getElementById("err-sub");
+    if(b)  b.textContent  = texts.badge;
+    if(m)  m.textContent  = texts.msg;
+    if(s2) s2.textContent = texts.sub;
+  }
 }
 </script>
 </body>
