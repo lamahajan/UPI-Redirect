@@ -348,8 +348,8 @@ body{
     </div>
 
     <div id="state-success">
-      <div class="suc-badge">✓ Payment Confirmed</div>
-      <div class="suc-icon-wrap">✅</div>
+      <div class="suc-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Payment Confirmed</div>
+      <div class="suc-icon-wrap"><svg width="38" height="38" viewBox="0 0 38 38"><rect width="38" height="38" rx="11" fill="#22c55e"/><path d="M11 19.5 16 25 27 13" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <div class="suc-msg">Payment Successful!</div>
       <div class="suc-sub">Your fee payment has been received and confirmed by the school.</div>
       <div class="suc-amount-card">
@@ -362,6 +362,9 @@ body{
           <div style="font-size:13px;font-weight:700;color:#15803d;" id="suc-name">—</div>
         </div>
       </div>
+      <div id="suc-txn-row" style="display:none;margin-top:10px;font-size:11.5px;color:#6e6e73;text-align:center">
+        Transaction ID: <span id="suc-txn-id" style="font-weight:600;color:#1d1d1f;font-family:monospace">—</span>
+      </div>
       <div class="suc-divider"></div>
       <div class="suc-actions">
         <button class="suc-cta" onclick="window.close()">Done</button>
@@ -369,8 +372,8 @@ body{
     </div>
 
     <div id="state-error">
-      <div class="err-badge">⚠ Invalid Link</div>
-      <div class="err-icon-wrap">🔗</div>
+      <div class="err-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/></svg> Invalid Link</div>
+      <div class="err-icon-wrap"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ff3b30" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15 15 9"/><path d="M10.5 6.5 12 5a3.5 3.5 0 0 1 5 5l-1.5 1.5"/><path d="M13.5 17.5 12 19a3.5 3.5 0 0 1-5-5l1.5-1.5"/></svg></div>
       <div class="err-msg">Payment Link Invalid</div>
       <div class="err-sub">This link is invalid or may have expired. Please contact the school office to get a valid payment link.</div>
       <div class="err-divider"></div>
@@ -409,16 +412,36 @@ body{
     .then(function(r){ return r.ok ? r.json() : { status: "not_found" }; })
     .then(function(d){
       if(!d || d.status === "not_found"){
-        // Record is gone — either the monthly cleanup wiped it, or it was
-        // already closed and later cleared. Either way, double payment is
-        // impossible (the Razorpay link itself is auto-cancelled right after
-        // capture), so we show a calm "already processed" success screen
-        // instead of an alarming error that might make the parent retry.
-        var amtCard = document.querySelector("#state-success .suc-amount-card");
-        if(amtCard) amtCard.style.display = "none";
-        var subEl = document.querySelector("#state-success .suc-sub");
-        if(subEl) subEl.textContent = "This payment link has already been processed. If you have any questions, please contact the school office.";
-        showState("success");
+        // QR record is gone (monthly cleanup already ran, or it was closed
+        // and later cleared). Before deciding what to show, check the
+        // SEPARATE Transactions Firebase (never wiped) for a matching
+        // qr_id — that tells us whether this was a real, already-paid
+        // link, or a qr_id that never actually existed.
+        fetch(proxyUrl+"/txn-by-qr/"+encodeURIComponent(qrId))
+          .then(function(r){ return r.ok ? r.json() : { found: false }; })
+          .then(function(t){
+            if(t && t.found){
+              // Genuinely paid, just cleared from the QR node — show a real
+              // success screen with the transaction number as proof.
+              var am = (Number(t.amount)||0) / 100;
+              document.getElementById("suc-am").textContent   = am ? ("₹"+am.toLocaleString("en-IN")) : "—";
+              document.getElementById("suc-name").textContent = t.name || t.adm || "—";
+              var subEl = document.querySelector("#state-success .suc-sub");
+              if(subEl) subEl.textContent = "Your fee payment has been received and confirmed by the school.";
+              var txnRow = document.getElementById("suc-txn-row");
+              if(txnRow){
+                txnRow.style.display = "";
+                document.getElementById("suc-txn-id").textContent = t.payment_id || "—";
+              }
+              showState("success");
+            } else {
+              // No trace of this qr_id anywhere — it never existed, or was
+              // closed without ever being paid. Show a real "expired" page
+              // instead of a misleading success message.
+              showState("error");
+            }
+          })
+          .catch(function(){ showState("error"); });
         return;
       }
 
@@ -446,6 +469,10 @@ body{
       // Pre-fill success card
       document.getElementById("suc-am").textContent   = amtFormatted;
       document.getElementById("suc-name").textContent = name||adm;
+      if(d.payment_id){
+        document.getElementById("suc-txn-row").style.display = "";
+        document.getElementById("suc-txn-id").textContent = d.payment_id;
+      }
 
       setTimeout(function(){ document.getElementById("prog-bar").style.width="100%"; }, 50);
 
@@ -504,7 +531,13 @@ body{
       fetch(proxyUrl+"/payment-status/"+qrId)
         .then(function(r){ return r.json(); })
         .then(function(d){
-          if(d && d.status === "captured") confirmPayment();
+          if(d && d.status === "captured"){
+            if(d.payment_id){
+              document.getElementById("suc-txn-row").style.display = "";
+              document.getElementById("suc-txn-id").textContent = d.payment_id;
+            }
+            confirmPayment();
+          }
         })
         .catch(function(){});
     }
