@@ -424,8 +424,39 @@ input.inp::placeholder{color:#a7adb8;font-weight:400}
             <div class="title">Complete your payment</div>
             <div class="hint">Powered by Razorpay</div>
           </div>
-          <button class="btn btn-primary" style="width:100%" onclick="payNow()">Pay now</button>
+          <div class="btn-wrap">
+            <button class="btn btn-primary" style="width:100%" onclick="payNow()" id="pay-btn">Pay now</button>
+            <div id="pay-msg" class="msg"></div>
+          </div>
           <div class="pay-methods">Debit card · NetBanking · UPI · QR · BHIM</div>
+        </div>
+
+        <div id="pay-success" class="stat-block-paid" style="display:none">
+          <div class="paid-stamp">
+            <svg width="98" height="98" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <filter id="stampInk2" x="-30%" y="-30%" width="160%" height="160%">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="noise"/>
+                  <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.6"/>
+                </filter>
+                <path id="stampArcTop2" d="M 16 74 A 54 54 0 0 1 124 74" fill="none"/>
+                <path id="stampArcBot2" d="M 22 88 A 54 54 0 0 0 118 88" fill="none"/>
+              </defs>
+              <g filter="url(#stampInk2)">
+                <circle cx="70" cy="70" r="63" fill="none" stroke="#1f9d55" stroke-width="4.5"/>
+                <circle cx="70" cy="70" r="53" fill="none" stroke="#1f9d55" stroke-width="1.5"/>
+                <text font-family="Inter,sans-serif" font-size="12.5" font-weight="800" letter-spacing="3.2" fill="#1f9d55">
+                  <textPath href="#stampArcTop2" startOffset="50%" text-anchor="middle">PAYMENT DONE</textPath>
+                </text>
+                <path d="M43 71 L61 89 L98 48" fill="none" stroke="#1f9d55" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <text font-family="Inter,sans-serif" font-size="9" font-weight="700" letter-spacing="3" fill="#1f9d55">
+                  <textPath href="#stampArcBot2" startOffset="50%" text-anchor="middle">★ VERIFIED ★</textPath>
+                </text>
+              </g>
+            </svg>
+          </div>
+          <div class="rc-lbl">Payment successful</div>
+          <div class="rc-psub" id="pay-success-sub">Your fee payment has been received.</div>
         </div>
 
         <div class="back-row">
@@ -446,12 +477,13 @@ input.inp::placeholder{color:#a7adb8;font-weight:400}
 <div id="modal-overlay" class="modal-overlay" onclick="if(event.target===this)closeModal()">
   <div class="modal-box">
     <div class="modal-ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg></div>
-    <div class="modal-title">Online payments coming soon</div>
-    <div class="modal-text">We are currently setting up secure online payments for this portal. In the meantime, please visit or contact the school office to complete your fee payment.</div>
+    <div class="modal-title" id="modal-title">Something went wrong</div>
+    <div class="modal-text" id="modal-text">Please try again in a moment.</div>
     <button class="btn btn-primary" onclick="closeModal()">Got it</button>
   </div>
 </div>
 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
 var CFG={
   workerBase: 'https://rzp-proxy.due-4a8.workers.dev',
@@ -515,6 +547,9 @@ window.checkFee=async function(){
   document.getElementById('r-amount').textContent='₹'+Math.round(bal).toLocaleString('en-IN');
   var payBlock=document.getElementById('pay-block');
   var amountBlock=document.getElementById('amount-block'), paidHero=document.getElementById('paid-hero');
+  document.getElementById('pay-success').style.display='none';
+  var payBtn=document.getElementById('pay-btn');
+  payBtn.disabled=false; payBtn.textContent='Pay now';
   if(bal>0){
     payBlock.style.display='';
     amountBlock.style.display='';
@@ -535,13 +570,113 @@ window.setStep=function(n){
   }
 };
 
-window.payNow=function(){
-  setStep(3);
+window.openModal=function(title, text){
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-text').textContent = text;
   document.getElementById('modal-overlay').classList.add('show');
 };
 
 window.closeModal=function(){
   document.getElementById('modal-overlay').classList.remove('show');
+};
+
+window.payNow=async function(){
+  if(!current || !current.adm){ return; }
+  if(typeof Razorpay==='undefined'){
+    openModal('Payment unavailable', 'Payment could not be loaded. Please check your internet connection and reload the page.');
+    return;
+  }
+
+  var mobDigits=(document.getElementById('mob-inp').value||'').replace(/\D/g,'');
+  var btn=document.getElementById('pay-btn');
+  var origHtml=btn.innerHTML;
+  btn.disabled=true;
+  btn.innerHTML='<span class="spin"></span>';
+
+  var order=null, errMsg='Could not start payment. Please try again.';
+  try{
+    var r=await fetch(CFG.workerBase+'/create-order',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({adm:current.adm, mobile:mobDigits})
+    });
+    var data=await r.json();
+    if(r.ok && data && data.order_id){
+      order=data;
+    }else if(data && data.error){
+      errMsg = (typeof data.error==='string') ? data.error
+             : (data.error.description || data.error.error || errMsg);
+    }
+  }catch(e){
+    errMsg='We are unable to connect at the moment. Please check your internet connection and try again.';
+  }
+
+  btn.disabled=false;
+  btn.innerHTML=origHtml;
+
+  if(!order){
+    openModal('Could not start payment', errMsg);
+    return;
+  }
+
+  setStep(3);
+
+  var rzp=new Razorpay({
+    key        : order.key_id,
+    amount     : order.amount,
+    currency   : order.currency,
+    name       : order.school || CFG.school,
+    description: 'Fee payment — '+(order.name || current.name || ''),
+    order_id   : order.order_id,
+    prefill    : { contact: mobDigits, name: order.name || current.name || '' },
+    theme      : { color: '#1656d6' },
+    modal      : { ondismiss: function(){ setStep(2); } },
+    handler    : function(response){ verifyPayment(response, order); }
+  });
+
+  rzp.on('payment.failed', function(resp){
+    setStep(2);
+    openModal('Payment failed', (resp && resp.error && resp.error.description) || 'The payment could not be completed. Please try again.');
+  });
+
+  rzp.open();
+};
+
+window.verifyPayment=async function(response, order){
+  var btn=document.getElementById('pay-btn');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spin"></span>';
+
+  var ok=false;
+  try{
+    var r=await fetch(CFG.workerBase+'/verify-payment',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        razorpay_order_id  : response.razorpay_order_id,
+        razorpay_payment_id: response.razorpay_payment_id,
+        razorpay_signature : response.razorpay_signature,
+        adm: order.adm
+      })
+    });
+    var res=await r.json();
+    ok = !!(r.ok && res && res.verified);
+  }catch(e){}
+
+  if(!ok){
+    btn.disabled=false;
+    btn.textContent='Pay now';
+    openModal(
+      'Payment received, confirming…',
+      'Your payment went through but we could not confirm it instantly. Please contact the school office with your payment reference '+(response.razorpay_payment_id||'')+' if your balance does not update shortly.'
+    );
+    return;
+  }
+
+  document.getElementById('pay-block').style.display='none';
+  document.getElementById('amount-block').style.display='none';
+  document.getElementById('pay-success-sub').textContent='Payment ref: '+response.razorpay_payment_id;
+  document.getElementById('pay-success').style.display='flex';
 };
 
 window.resetSearch=function(){
