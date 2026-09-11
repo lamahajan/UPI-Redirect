@@ -193,6 +193,9 @@ input.inp::placeholder{color:#a7adb8;font-weight:400}
 .btn-outline{background:#eaf2fd;border:none;color:var(--ink);font-weight:600}
 .btn-outline:hover{background:#d9e8fb}
 .btn-outline:active{background:#d9e8fb}
+.btn-plain{background:transparent;border:none;color:rgb(22,86,214);font-weight:600;padding:14px 22px}
+.btn-plain:hover{color:var(--blue-deep);text-decoration:underline}
+.btn-plain:active{opacity:.7}
 .btn-wrap{position:relative}
 .msg{font-size:12.5px;line-height:1.5;position:absolute;top:calc(100% + 8px);left:0;right:0;text-align:center}
 .msg.err{color:var(--warn)}
@@ -200,7 +203,7 @@ input.inp::placeholder{color:#a7adb8;font-weight:400}
 .msg.inf{color:var(--mut)}
 
 /* ── Result: stat + info rows ── */
-.amount-row{margin-top:clamp(10px,1.8vh,14px);display:flex;align-items:center;gap:11px;background:linear-gradient(160deg,var(--blue-tint) 0%,var(--blue-tint-soft) 100%);border-radius:var(--r-md);padding:13px 16px}
+.amount-row{margin-top:clamp(20px,3.4vh,28px);display:flex;align-items:center;gap:11px;background:linear-gradient(160deg,var(--blue-tint) 0%,var(--blue-tint-soft) 100%);border-radius:var(--r-md);padding:13px 16px}
 .amount-row .iico{flex:none;width:30px;height:30px;border-radius:9px;background:#fff;color:var(--blue);display:flex;align-items:center;justify-content:center}
 .amount-row .ik{flex:1;font-size:12.5px;font-weight:600;color:var(--navy)}
 .amount-row .iv-amount{font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
@@ -426,7 +429,7 @@ input.inp::placeholder{color:#a7adb8;font-weight:400}
         </div>
 
         <div class="back-row">
-          <button class="btn btn-outline" style="width:100%" onclick="resetSearch()">Search another student</button>
+          <button class="btn btn-plain" style="width:100%" onclick="resetSearch()">Search another student</button>
         </div>
       </div>
 
