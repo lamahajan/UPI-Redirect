@@ -675,7 +675,7 @@ window.verifyPayment=async function(response, order){
 
   document.getElementById('pay-block').style.display='none';
   document.getElementById('amount-block').style.display='none';
-  document.getElementById('pay-success-sub').textContent='Payment ref: '+response.razorpay_payment_id;
+  document.getElementById('pay-success-sub').textContent='Payment ref: '+response.razorpay_payment_id+' · Request number: '+(order.order_id||'');
   document.getElementById('pay-success').style.display='flex';
 };
 
