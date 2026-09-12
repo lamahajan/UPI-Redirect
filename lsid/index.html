@@ -376,7 +376,7 @@ input.inp::placeholder{color:#a7adb8;font-weight:400}
 
         <div class="amount-row" id="amount-block">
           <span class="iico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5h4.5a2 2 0 0 1 0 4H9m0 0h5"/></svg></span>
-          <span class="ik">Amount due</span>
+          <span class="ik" id="amount-label">Amount due</span>
           <span class="iv iv-amount" id="r-amount">—</span>
         </div>
 
@@ -584,6 +584,7 @@ window.checkFee=async function(){
   document.getElementById('r-cls').textContent=s.cls||'—';
   document.getElementById('r-adm').textContent=s.adm||'—';
   document.getElementById('r-amount').textContent='₹'+Math.round(bal).toLocaleString('en-IN');
+  document.getElementById('amount-label').textContent='Amount due';
   var payBlock=document.getElementById('pay-block');
   var amountBlock=document.getElementById('amount-block'), paidHero=document.getElementById('paid-hero');
   document.getElementById('pay-success').style.display='none';
@@ -731,8 +732,10 @@ window.verifyPayment=async function(response, order){
   }
 
   document.getElementById('pay-block').style.display='none';
-  document.getElementById('amount-block').style.display='none';
-  document.getElementById('pay-success-sub').textContent='Payment ref: '+response.razorpay_payment_id+' · Request number: '+(order.order_id||'');
+  document.getElementById('amount-label').textContent='Amount paid';
+  var paidAmount='₹'+Math.round((order.amount||0)/100).toLocaleString('en-IN');
+  document.getElementById('r-amount').textContent=paidAmount;
+  document.getElementById('pay-success-sub').innerHTML='Amount: '+paidAmount+' · Payment ref: <span style="color:var(--ink);font-weight:700">'+response.razorpay_payment_id+'</span> · Request Number: <span style="color:var(--ink);font-weight:700">'+(order.order_id||'')+'</span>';
   document.getElementById('pay-success').style.display='flex';
 };
 
