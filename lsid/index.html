@@ -227,6 +227,13 @@ input.inp::placeholder{color:#a7adb8;font-weight:400}
 .stat-block-paid .rc-lbl{font-size:14.5px;color:var(--ok);font-weight:800;letter-spacing:.1px;margin-top:4px;position:relative}
 .stat-block-paid .rc-psub{font-size:clamp(10.5px,2.6vw,12.5px);color:var(--body);line-height:1.5;white-space:nowrap;position:relative}
 
+.stat-block-failed{margin-top:clamp(10px,1.8vh,14px);background:linear-gradient(160deg,var(--warn-tint) 0%,#fff8f7 100%);border-radius:var(--r-md);padding:24px 18px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;overflow:hidden}
+.stat-block-failed::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,59,48,.035) 0 2px,transparent 2px 7px);pointer-events:none}
+.fail-stamp{position:relative;transform:rotate(-8deg);filter:drop-shadow(0 4px 8px rgba(255,59,48,.18));animation:stampThud .55s cubic-bezier(.2,1.5,.4,1) both}
+.fail-stamp svg{display:block}
+.stat-block-failed .rc-lbl{font-size:14.5px;color:var(--warn);font-weight:800;letter-spacing:.1px;margin-top:4px;position:relative}
+.stat-block-failed .rc-psub{font-size:clamp(10.5px,2.6vw,12.5px);color:var(--body);line-height:1.5;position:relative}
+
 .pay-block{margin-top:22px}
 .pay-block .sec-hdr{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px}
 .pay-block .title{font-size:12.5px;font-weight:700;color:var(--navy)}
@@ -459,9 +466,41 @@ input.inp::placeholder{color:#a7adb8;font-weight:400}
           <div class="rc-psub" id="pay-success-sub">Your fee payment has been received.</div>
         </div>
 
+        <div id="pay-failed" class="stat-block-failed" style="display:none">
+          <div class="fail-stamp">
+            <svg width="98" height="98" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <filter id="stampInk3" x="-30%" y="-30%" width="160%" height="160%">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="noise"/>
+                  <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.6"/>
+                </filter>
+                <path id="stampArcTop3" d="M 16 74 A 54 54 0 0 1 124 74" fill="none"/>
+                <path id="stampArcBot3" d="M 22 88 A 54 54 0 0 0 118 88" fill="none"/>
+              </defs>
+              <g filter="url(#stampInk3)">
+                <circle cx="70" cy="70" r="63" fill="none" stroke="#ff3b30" stroke-width="4.5"/>
+                <circle cx="70" cy="70" r="53" fill="none" stroke="#ff3b30" stroke-width="1.5"/>
+                <text font-family="Inter,sans-serif" font-size="12.5" font-weight="800" letter-spacing="3.2" fill="#ff3b30">
+                  <textPath href="#stampArcTop3" startOffset="50%" text-anchor="middle">PAYMENT FAILED</textPath>
+                </text>
+                <path d="M50 50 L90 90 M90 50 L50 90" fill="none" stroke="#ff3b30" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <text font-family="Inter,sans-serif" font-size="9" font-weight="700" letter-spacing="3" fill="#ff3b30">
+                  <textPath href="#stampArcBot3" startOffset="50%" text-anchor="middle">★ TRY AGAIN ★</textPath>
+                </text>
+              </g>
+            </svg>
+          </div>
+          <div class="rc-lbl">Payment failed</div>
+          <div class="rc-psub" id="pay-failed-sub">The payment could not be completed.</div>
+          <div class="btn-wrap" style="width:100%;margin-top:14px">
+            <button class="btn btn-primary" style="width:100%" onclick="retryPayment()" id="retry-pay-btn">Try again</button>
+          </div>
+        </div>
+
         <div class="back-row">
           <button class="btn btn-plain" style="width:100%" onclick="resetSearch()">Search another student</button>
         </div>
+
       </div>
 
     </div>
@@ -548,6 +587,7 @@ window.checkFee=async function(){
   var payBlock=document.getElementById('pay-block');
   var amountBlock=document.getElementById('amount-block'), paidHero=document.getElementById('paid-hero');
   document.getElementById('pay-success').style.display='none';
+  document.getElementById('pay-failed').style.display='none';
   var payBtn=document.getElementById('pay-btn');
   payBtn.disabled=false; payBtn.textContent='Pay now';
   if(bal>0){
@@ -630,16 +670,33 @@ window.payNow=async function(){
     order_id   : order.order_id,
     prefill    : { contact: mobDigits, name: order.name || current.name || '' },
     theme      : { color: '#1656d6' },
-    modal      : { ondismiss: function(){ setStep(2); } },
+    modal      : { ondismiss: function(){
+      setStep(2);
+      openModal('Payment cancelled', 'You closed the payment window before completing the payment. You can try again anytime.');
+    } },
     handler    : function(response){ verifyPayment(response, order); }
   });
 
   rzp.on('payment.failed', function(resp){
     setStep(2);
-    openModal('Payment failed', (resp && resp.error && resp.error.description) || 'The payment could not be completed. Please try again.');
+    showFailedScreen(order, (resp && resp.error && resp.error.description) || 'The payment could not be completed. Please try again.');
   });
 
   rzp.open();
+};
+
+window.showFailedScreen=function(order, reason){
+  document.getElementById('pay-block').style.display='none';
+  document.getElementById('amount-block').style.display='none';
+  document.getElementById('pay-failed-sub').textContent=reason+(order && order.order_id ? ' · Request number: '+order.order_id : '');
+  document.getElementById('pay-failed').style.display='flex';
+};
+
+window.retryPayment=function(){
+  document.getElementById('pay-failed').style.display='none';
+  document.getElementById('pay-block').style.display='';
+  document.getElementById('amount-block').style.display='';
+  payNow();
 };
 
 window.verifyPayment=async function(response, order){
