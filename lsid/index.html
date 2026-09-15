@@ -779,18 +779,20 @@ window.checkFee=async function(){
       body:JSON.stringify({adm:raw, mobile:mobDigits})
     });
     var data=await r.json();
-    if(data&&data.found){ s=data; }
+    if(r.ok && data && data.found){
+      s=data;
+    }else if(data && data.error){
+      errText=data.error;
+    }
   }catch(e){
-    errText=e.message;
+    errText='Unable to connect to school server. Please verify your connection.';
   }
 
   btn.textContent='Continue';
 
   if(!s){
     msg.className='msg err';
-    msg.textContent = errText
-      ? 'Unable to connect to school server. Please verify your connection.'
-      : 'No student record found matching these details. Please re-check.';
+    msg.textContent = errText || 'No student record found matching these details. Please re-check.';
     resultEl.style.display='none'; emptyEl.style.display='';
     return;
   }
