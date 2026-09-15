@@ -2,270 +2,177 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <meta name="theme-color" content="#001848"/>
-<title>Privacy Policy — Lotus International School Fee Payment</title>
+<title>Privacy Policy — DigiFee Mitra | Lotus International School</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
   --navy:#0d2a6e;--navy-deep:#001848;
-  --blue:#0071e3;--blue-deep:#005bbf;--blue-tint:#eaf1fd;--blue-tint-soft:#eaf2fd;
-  --ink:#1d1d1f;--body:#6e6e73;--mut:#aeaeb2;
-  --line:rgba(0,0,0,.08);--line-soft:rgba(0,0,0,.05);
-  --ok:#34c759;--ok-tint:#eafaf0;
-  --warn:#ff3b30;--warn-tint:#fff1f0;
-  --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  --ease:cubic-bezier(.4,0,.2,1);
-  --r-lg:22px;--r-md:14px;--r-sm:10px;
+  --blue:#0071e3;--blue-deep:#005bbf;--blue-tint:#eaf1fd;
+  --ink:#1d1d1f;--body:#515154;--mut:#86868b;
+  --line:rgba(0,0,0,.08);
+  --sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display','Plus Jakarta Sans','Inter',sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
 }
-html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
-body{font-family:var(--sans);background:#eaf2fd;color:var(--ink);min-height:100vh;letter-spacing:-.01em;display:flex;flex-direction:column}
-#app{max-width:100%;width:100%;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+html{-webkit-font-smoothing:antialiased}
+body{font-family:var(--sans);background:#fbfbfd;color:var(--ink);letter-spacing:-.015em}
+a{color:inherit}
 
-header{
+.lp-app{display:flex;flex-direction:column;min-height:100vh}
+@media (min-width:960px){.lp-app{flex-direction:row}}
+
+/* ---- Left identity panel ---- */
+.lp-hero{
   background:
     radial-gradient(ellipse 140% 120% at 80% -10%, #0a3d8f 0%, transparent 55%),
     radial-gradient(ellipse 100% 80% at -10% 110%, #082660 0%, transparent 60%),
     radial-gradient(ellipse 80% 60% at 50% 50%, #092e78 0%, transparent 70%),
     linear-gradient(175deg, #0d2a6e 0%, #001848 40%, #092e78 100%);
-  color:#fff;position:relative;overflow:hidden;border-radius:0 0 22px 22px;
+  padding:28px 24px 32px;position:relative;overflow:hidden;flex-shrink:0;
 }
-header::before{content:"";position:absolute;top:-50px;left:50%;transform:translateX(-50%);width:280px;height:180px;background:radial-gradient(ellipse,rgba(255,255,255,.07) 0%,transparent 70%);pointer-events:none}
-header .inner{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:26px 22px 34px}
-header a.back{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.75);opacity:.9;font-size:12px;font-weight:600;text-decoration:none;margin-bottom:16px}
-header a.back:hover{color:#fff}
-.hd-crest-row{display:flex;align-items:center;gap:11px;margin-bottom:16px}
-.hd-crest{width:36px;height:36px;border-radius:50%;overflow:hidden;border:1px solid rgba(255,255,255,.15);flex:none}
-.hd-crest img{width:100%;height:100%;object-fit:contain;display:block}
-.hd-wordmark{font-size:12px;font-weight:700;color:rgba(255,255,255,.92);letter-spacing:.6px}
-.hd-sub{font-size:10px;font-weight:600;color:rgba(255,255,255,.4);letter-spacing:1.1px;text-transform:uppercase;margin-top:1px}
-header h1{font-size:21px;font-weight:800;line-height:1.25;letter-spacing:-.4px}
-header .sub{font-size:12px;opacity:.6;margin-top:6px;letter-spacing:.2px}
-
-@media (min-width:640px){
-  header .inner{padding:34px 36px 42px}
-  header h1{font-size:25px}
-  main{padding-left:36px;padding-right:36px}
+.lp-hero::before{
+  content:"";position:absolute;top:-50px;left:50%;transform:translateX(-50%);
+  width:280px;height:180px;
+  background:radial-gradient(ellipse,rgba(255,255,255,.07) 0%,transparent 70%);
+  pointer-events:none;
+}
+@media (min-width:960px){
+  .lp-hero{
+    flex:0 0 320px;min-height:100vh;position:sticky;top:0;align-self:flex-start;
+    padding:40px 40px 32px;display:flex;flex-direction:column;
+  }
+  .lp-hero::before{top:auto;bottom:-60px;left:50%}
 }
 
-main{flex:1;padding:22px 22px 44px;max-width:900px;margin:0 auto;width:100%}
+.lp-crest-row{display:flex;align-items:center;gap:10px;position:relative;z-index:1}
+.lp-crest{width:40px;height:40px;border-radius:50%;overflow:hidden;border:1px solid rgba(255,255,255,.15);flex:none}
+.lp-crest img{width:100%;height:100%;object-fit:contain;display:block}
+.lp-wordmark{font-size:13px;font-weight:700;color:rgba(255,255,255,.92);letter-spacing:.3px}
+.lp-sub{font-size:10.5px;font-weight:600;color:rgba(255,255,255,.4);letter-spacing:1px;text-transform:uppercase;margin-top:1px}
 
-.updated{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--mut);margin-bottom:20px;font-weight:600;letter-spacing:.2px}
-
-.card{background:#fff;border:1px solid var(--line-soft);border-radius:var(--r-lg);box-shadow:0 1px 2px rgba(11,42,92,.04),0 18px 40px -22px rgba(11,42,92,.28);overflow:hidden;margin-bottom:16px}
-.card-body{padding:clamp(18px,3.4vh,26px) clamp(18px,3.4vw,26px)}
-
-.sec{margin-bottom:24px}
-.sec:last-child{margin-bottom:0}
-.sec-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:8px;background:var(--blue-tint);color:var(--blue-deep);font-size:12px;font-weight:800;margin-right:9px;flex-shrink:0}
-.sec h2{font-size:14.5px;font-weight:800;color:var(--ink);display:flex;align-items:center;margin-bottom:10px;letter-spacing:-.1px}
-.sec p{font-size:13px;color:var(--body);line-height:1.7;margin-bottom:8px}
-.sec p:last-child{margin-bottom:0}
-.sec ul{margin:8px 0 8px 0;padding-left:0;list-style:none}
-.sec ul li{font-size:13px;color:var(--body);line-height:1.7;padding-left:20px;position:relative;margin-bottom:6px}
-.sec ul li::before{content:'';position:absolute;left:0;top:9px;width:6px;height:6px;border-radius:50%;background:var(--blue)}
-.sec strong{color:var(--ink);font-weight:700}
-.sec a{color:var(--blue-deep);font-weight:700;text-decoration:underline}
-
-.note{background:var(--blue-tint);border:1px solid rgba(0,113,227,.22);border-radius:var(--r-sm);padding:14px 16px;font-size:12.5px;color:var(--navy);line-height:1.6;margin-top:10px}
-.note strong{color:var(--navy)}
-
-.contact-box{
-  background:
-    radial-gradient(ellipse 140% 120% at 80% -10%, #0a3d8f 0%, transparent 55%),
-    linear-gradient(175deg, #0d2a6e 0%, #001848 100%);
-  border-radius:var(--r-lg);padding:22px 24px;color:#fff;position:relative;overflow:hidden;
+.lp-back{
+  display:inline-flex;align-items:center;gap:6px;margin-top:22px;position:relative;z-index:1;
+  font-size:12.5px;font-weight:600;color:rgba(255,255,255,.6);text-decoration:none;width:fit-content;
+  transition:color .2s var(--ease);
 }
-.contact-box::after{content:'';position:absolute;top:-26px;right:-26px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.12) 0%,transparent 70%)}
-.contact-box h2{font-size:14.5px;font-weight:800;margin-bottom:10px;position:relative;z-index:1}
-.contact-box p{font-size:12.5px;color:rgba(255,255,255,.75);line-height:1.7;position:relative;z-index:1;margin-bottom:4px}
+.lp-back:hover{color:#fff}
+.lp-back svg{flex:none}
 
-footer{text-align:center;padding:20px 18px;font-size:10.5px;color:var(--mut);max-width:900px;margin:0 auto;width:100%}
-footer a{color:var(--body);text-decoration:none;font-weight:600}
-footer a:hover{color:var(--blue-deep);text-decoration:underline}
-footer .links{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:8px}
-.toc{display:none}
+.lp-hero-divider{width:28px;height:1px;background:rgba(255,255,255,.15);margin:22px 0;position:relative;z-index:1}
 
-/* ── Desktop optimization: wider layout + TOC sidebar ── */
-@media (min-width:1024px){
-  header .inner{max-width:1180px;padding:22px 48px 34px}
-  .hd-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px}
-  .hd-crest-row{margin-bottom:0}
-  .hd-title-block{text-align:right}
-  header h1{font-size:28px}
-  header .sub{font-size:13.5px;margin-top:5px}
-  .hd-crest{width:50px;height:50px}
-  .hd-wordmark{font-size:17px}
-  .hd-sub{font-size:11.5px}
-  main{max-width:1180px;padding:36px 48px 60px}
-  footer{max-width:1180px}
-  .updated{font-size:12px}
+.lp-title{font-size:22px;font-weight:800;color:#fff;letter-spacing:-.5px;line-height:1.25;position:relative;z-index:1}
 
-  .doc-layout{display:block}
-
-  .card-body{padding:40px 44px}
-  .sec{scroll-margin-top:28px}
-  .sec h2{font-size:16.5px}
-  .sec p,.sec ul li{font-size:14px;line-height:1.75}
-  .sec-num{width:26px;height:26px;font-size:12.5px}
-
-  .contact-box{padding:26px 30px}
-  .contact-box h2{font-size:16px}
-  .contact-box p{font-size:13.5px}
-
-  table th,table td{font-size:13px;padding:13px 15px}
+.lp-nav{display:flex;flex-direction:column;gap:2px;margin-top:26px;position:relative;z-index:1}
+.lp-nav a{
+  display:block;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:600;
+  color:rgba(255,255,255,.55);text-decoration:none;transition:all .2s var(--ease);
 }
+.lp-nav a:hover{color:#fff;background:rgba(255,255,255,.06)}
+.lp-nav a.active{color:#fff;background:rgba(255,255,255,.12)}
+
+.lp-hero-foot{margin-top:auto;padding-top:24px;position:relative;z-index:1}
+.lp-tagline{font-size:12px;font-weight:600;color:rgba(255,255,255,.75);letter-spacing:.2px}
+.lp-contact{margin-top:10px;font-size:11.5px;color:rgba(255,255,255,.4)}
+.lp-contact a{color:rgba(255,255,255,.6);text-decoration:none}
+.lp-contact a:hover{color:#fff}
+
+/* ---- Right document panel ---- */
+.lp-content{flex:1;min-width:0;padding:40px 22px 72px}
+@media (min-width:960px){.lp-content{padding:64px 72px 96px}}
+
+.lp-doc{max-width:660px;margin:0 auto}
+.lp-doc h1{font-size:clamp(26px,4vw,36px);font-weight:800;letter-spacing:-.03em;color:var(--ink);line-height:1.15}
+.lp-updated{font-size:13px;color:var(--mut);margin-top:10px}
+.lp-intro{font-size:15.5px;line-height:1.7;color:var(--body);margin-top:22px;padding-bottom:26px;border-bottom:1px solid var(--line)}
+
+.lp-doc article{margin-top:8px}
+.lp-doc h2{font-size:18.5px;font-weight:700;letter-spacing:-.01em;color:var(--ink);margin:34px 0 12px;display:flex;gap:10px;align-items:baseline}
+.lp-doc h2 .num{font-size:14px;font-weight:700;color:var(--blue);flex:none}
+.lp-doc p{font-size:15px;line-height:1.75;color:var(--body);margin-bottom:13px}
+.lp-doc ul{margin:0 0 13px 20px}
+.lp-doc li{font-size:15px;line-height:1.75;color:var(--body);margin-bottom:7px}
+.lp-doc a.inline{color:var(--blue);text-decoration:none;font-weight:600}
+.lp-doc a.inline:hover{text-decoration:underline}
+.lp-doc strong{color:var(--ink);font-weight:600}
+
+.lp-card{
+  margin-top:44px;padding:22px 24px;border-radius:18px;background:var(--blue-tint);
+  display:flex;flex-direction:column;gap:6px;
+}
+.lp-card .lp-card-title{font-size:14.5px;font-weight:700;color:var(--navy-deep)}
+.lp-card p{font-size:13.5px;color:#3a4f7a;margin:0}
+.lp-card a{color:var(--blue-deep);font-weight:700;text-decoration:none}
+.lp-card a:hover{text-decoration:underline}
+
+.lp-foot{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--mut)}
+
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 </style>
 </head>
 <body>
-<div id="app">
-
-  <header>
-    <div class="inner">
-      <div class="hd-row">
-        <div class="hd-crest-row">
-          <div class="hd-crest"><img src="https://raw.githubusercontent.com/lamahajan/UPI-Redirect/main/Logo.png" alt="Logo"/></div>
-          <div>
-            <div class="hd-wordmark">Lotus International School</div>
-            <div class="hd-sub">Alikhan, Pathankot</div>
-          </div>
-        </div>
-        <div class="hd-title-block">
-          <h1>Privacy Policy</h1>
-          <div class="sub">How your information is collected and used</div>
-        </div>
+<div class="lp-app">
+  <aside class="lp-hero">
+    <div class="lp-crest-row">
+      <div class="lp-crest"><img src="https://raw.githubusercontent.com/lamahajan/UPI-Redirect/main/Logo.png" alt="Logo"/></div>
+      <div>
+        <div class="lp-wordmark">Lotus International School</div>
+        <div class="lp-sub">Alikhan, Pathankot</div>
       </div>
     </div>
-  </header>
-
-  <main>
-    <div class="updated">Last updated: 12 September 2026</div>
-
-    <div class="doc-layout">
-    <div class="card">
-      <div class="card-body">
-
-        <div class="sec" id="sec-1">
-          <h2><span class="sec-num">1</span>Overview</h2>
-          <p>This Privacy Policy explains how Fee DigiMitra, the Lotus International School Fee Payment Portal ("this portal", "we", "us"), collects, uses, and protects information when you check or pay your school fees online. This policy applies only to this fee payment portal and not to the school's other websites, apps, or services.</p>
-        </div>
-
-        <div class="sec" id="sec-2">
-          <h2><span class="sec-num">2</span>Information We Collect</h2>
-          <p>To look up and display your fee details, we collect:</p>
-          <ul>
-            <li><strong>Admission number</strong> — used to identify the student record.</li>
-            <li><strong>Registered mobile number</strong> — used to verify that the request comes from the student's family.</li>
-            <li><strong>Fee and payment data</strong> — including class, outstanding balance, and payment status, retrieved from school records to display on this portal.</li>
-          </ul>
-          <p>We do not ask for or store passwords, email addresses, or any information beyond what is needed to verify and display fee status.</p>
-        </div>
-
-        <div class="sec" id="sec-3">
-          <h2><span class="sec-num">3</span>How We Use Your Information</h2>
-          <ul>
-            <li>To match your admission number and mobile number against school records.</li>
-            <li>To display your current fee balance and payment status.</li>
-            <li>To generate a payment request (amount, admission number, student name) when you choose to pay.</li>
-          </ul>
-          <p>Your information is used only to complete the task you initiate on this page. It is not used for marketing, profiling, or any unrelated purpose.</p>
-        </div>
-
-        <div class="sec" id="sec-4">
-          <h2><span class="sec-num">4</span>How Your Information Is Handled</h2>
-          <p>When you submit your admission number and mobile number, this information is sent securely to our backend service to look up your record. Only the matching student's record is returned to your browser — no other student's data is ever fetched, shown, or stored on this page.</p>
-          <p>We do not store your admission number or mobile number in your browser. Once you close or refresh this page, the displayed fee details are cleared from your device.</p>
-          <div class="note"><strong>Note:</strong> Online payment via card, UPI, or NetBanking is available on this portal through HDFC CollectNow bcked by Razorpay's secure checkout.</div>
-        </div>
-
-        <div class="sec" id="sec-5">
-          <h2><span class="sec-num">5</span>Payment Information</h2>
-          <p>Online payments made on this portal are processed by a third-party, RBI-authorised payment gateway (Razorpay). We do not collect or store your card, UPI, or banking details on this portal — these are handled directly and securely by the payment provider in line with their own security standards (PCI-DSS compliance). We only receive and store the payment confirmation (transaction/payment ID, amount, method, and status) needed to update your fee record.</p>
-        </div>
-
-        <div class="sec" id="sec-6">
-          <h2><span class="sec-num">6</span>Data Sharing</h2>
-          <p>We do not sell, rent, or share your information with advertisers or unrelated third parties. Your data may only be shared with:</p>
-          <ul>
-            <li>The school's administrative records system, to verify and update fee status.</li>
-            <li>A licensed payment gateway provider, solely to process a payment you initiate.</li>
-            <li>Authorities, if required by law.</li>
-          </ul>
-        </div>
-
-        <div class="sec" id="sec-7">
-          <h2><span class="sec-num">7</span>Data Security</h2>
-          <p>This portal uses encrypted connections (HTTPS) and a secured backend to handle fee lookups. School fee records are not exposed directly to the browser — all lookups happen through a protected server-side service.</p>
-        </div>
-
-        <div class="sec" id="sec-8">
-          <h2><span class="sec-num">8</span>Your Rights</h2>
-          <p>You may contact the school office at any time to:</p>
-          <ul>
-            <li>Confirm or correct your admission number or registered mobile number on record.</li>
-            <li>Ask questions about any fee or payment entry shown on this portal.</li>
-            <li>Request removal of payment confirmation screenshots shared with the office, once no longer needed.</li>
-          </ul>
-        </div>
-
-        <div class="sec" id="sec-9">
-          <h2><span class="sec-num">9</span>Children's Privacy</h2>
-          <p>This portal is intended for use by parents and guardians on behalf of students. We do not knowingly collect information directly from minors through this page; all information entered (admission number, mobile number) is provided by a parent or guardian for the purpose of fee verification.</p>
-        </div>
-
-        <div class="sec" id="sec-10">
-          <h2><span class="sec-num">10</span>Related Policies</h2>
-          <p>Your use of this portal is also governed by our <a href="terms-and-conditions.html">Terms &amp; Conditions</a> and our <a href="refund-policy.html">Refund &amp; Cancellation Policy</a>.</p>
-        </div>
-
-        <div class="sec" id="sec-11">
-          <h2><span class="sec-num">11</span>Changes to This Policy</h2>
-          <p>We may update this Privacy Policy from time to time as the portal's features change, for example when online payments go live. The "Last updated" date at the top of this page will reflect the most recent revision.</p>
-        </div>
-
+    <a class="lp-back" href="https://fee.lisdnn.org/"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg><span>Back to Fee Portal</span></a>
+    <div class="lp-hero-divider"></div>
+    <div class="lp-title">DigiFee Mitra<br/>Policies</div>
+    <nav class="lp-nav">
+      <a href="privacy-policy.html" class="active">Privacy Policy</a>
+      <a href="terms-and-conditions.html" class="">Terms &amp; Conditions</a>
+      <a href="refund-policy.html" class="">Refund Policy</a>
+    </nav>
+    <div class="lp-hero-foot">
+      <div class="lp-tagline">Nurturing Minds. Building Future.</div>
+      <div class="lp-contact">Questions? <a href="https://wa.me/919872760880?text=Hello%2C%20I%20have%20a%20question%20about%20the%20fee%20portal%20policies." target="_blank" rel="noopener">WhatsApp the school office</a></div>
+    </div>
+  </aside>
+  <main class="lp-content">
+    <div class="lp-doc">
+      <h1>Privacy Policy</h1>
+      <div class="lp-updated">Last updated: 13 September 2026</div>
+      <p class="lp-intro">How DigiFee Mitra collects, uses and protects information when you look up or pay a student's school fees.</p>
+      <article>
+      <h2><span class="num">01</span>Overview</h2>
+<p>This Privacy Policy explains how DigiFee Mitra, the fee lookup and payment portal operated by Lotus International School, Alikhan, Pathankot ("the School", "we", "us"), handles information when a parent or guardian ("you") uses the portal to check fee status or make a payment.</p>
+      <h2><span class="num">02</span>Information you provide</h2>
+<p>To look up a student's fee record, you enter the student's admission number and, where asked, a registered mobile number. This information is sent directly to our secure server for verification and is used only to match your request against the School's own office records &mdash; it is not stored on your device.</p>
+      <h2><span class="num">03</span>How we use school office records</h2>
+<p>Fee balances, due dates and receipt details shown on the portal are read directly from the School's official records at the moment of your request. We do not maintain a separate public copy of student fee data outside the School's own systems.</p>
+      <h2><span class="num">04</span>Payment information</h2>
+<p>All payments are processed by <strong>Razorpay</strong>, a PCI-DSS compliant payment gateway. Card, UPI and net-banking details are entered directly on Razorpay's secure checkout and are never seen, transmitted through, or stored by DigiFee Mitra or the School.</p>
+<p>The amount payable is fixed on our server before checkout opens, so it cannot be changed from a shared link or by editing the page.</p>
+      <h2><span class="num">05</span>Data storage &amp; retention</h2>
+<p>Successful transaction records (amount, date, payment reference) are retained in the School's Firebase-backed database for reconciliation and receipt purposes, in line with the School's standard record-keeping requirements.</p>
+      <h2><span class="num">06</span>Cookies &amp; local storage</h2>
+<p>The lookup portal does not use tracking cookies and does not save your admission number, mobile number or fee details in your browser's local storage. Each visit performs a fresh, encrypted lookup.</p>
+      <h2><span class="num">07</span>Third-party services</h2>
+<p>The portal relies on a small number of trusted service providers to operate:</p>
+<ul><li><strong>Razorpay</strong> &mdash; payment processing</li><li><strong>Google Firebase</strong> &mdash; secure data storage</li><li><strong>Cloudflare</strong> &mdash; request verification and abuse protection</li><li><strong>WhatsApp</strong> &mdash; optional support conversations you choose to start</li></ul>
+<p>Each provider processes data only to the extent needed to deliver its part of the service, under its own privacy and security terms.</p>
+      <h2><span class="num">08</span>Children's information</h2>
+<p>Fee records relate to students, most of whom are minors. The portal is designed to be used by a parent or guardian on the student's behalf, and no student is asked to enter information directly.</p>
+      <h2><span class="num">09</span>Your rights</h2>
+<p>You may ask the School office to review, correct or explain any fee record shown on the portal. Since data originates from the School's own systems, requests are handled by the office rather than through the portal itself.</p>
+      <h2><span class="num">10</span>Changes to this policy</h2>
+<p>We may update this policy as the portal evolves. The "Last updated" date at the top of this page reflects the most recent revision.</p>
+      </article>
+      <div class="lp-card">
+        <div class="lp-card-title">Have a privacy question?</div>
+        <p>Write to the school office or message us on <a href="https://wa.me/919872760880" target="_blank" rel="noopener">WhatsApp</a> and we'll get back to you.</p>
       </div>
-    </div>
-
-    </div>
-
-    <div class="contact-box">
-      <h2>📞 Questions about this policy?</h2>
-      <p>Lotus International School</p>
-      <p>Near Chhotu Nath Mandir, Taragarh Road, Vill-Alikhan - 143534</p>
-      <p>📞 9463714640 · 9463714650 · 9872760880</p>
+      <div class="lp-foot">© 2026 Lotus International School, Alikhan, Pathankot. DigiFee Mitra is the school's official fee lookup and payment portal, secured with encrypted, server-verified transactions.</div>
     </div>
   </main>
-
-  <footer>
-    <div class="links">
-      <a href="https://fee.lisdnn.org/LSID/">Fee Payment</a>
-      <a href="terms-and-conditions.html">Terms &amp; Conditions</a>
-      <a href="refund-policy.html">Refund Policy</a>
-    </div>
-    Lotus International School · Fee DigiMitra
-  </footer>
 </div>
-
-<script>
-(function(){
-  var links = document.querySelectorAll('.toc-list a');
-  if(!links.length) return;
-  var secs = Array.prototype.map.call(links, function(a){ return document.getElementById(a.getAttribute('data-sec')); });
-  function onScroll(){
-    var pos = window.scrollY + 80;
-    var current = secs[0];
-    for(var i=0;i<secs.length;i++){ if(secs[i] && secs[i].offsetTop <= pos) current = secs[i]; }
-    links.forEach(function(a){
-      a.classList.toggle('active', current && a.getAttribute('data-sec') === current.id);
-    });
-  }
-  window.addEventListener('scroll', onScroll, {passive:true});
-  onScroll();
-})();
-</script>
 </body>
 </html>
