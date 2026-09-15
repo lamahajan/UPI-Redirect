@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -401,13 +400,10 @@ body{
   var PROXY_URL = 'https://rzp-proxy.due-4a8.workers.dev';
   var p        = new URLSearchParams(window.location.search);
   var qrId     = (p.get("qr_id")||"").trim();
+  var orderId  = (p.get("order_id")||"").trim();
+  var cbStatus = (p.get("status")||"").trim();   // "failed" on decline (see checkout-callback)
+  var cbReason = (p.get("reason")||"").trim();
   var proxyUrl = PROXY_URL;
-
-  if(!qrId){
-    showState("error","invalid"); return;
-  }
-
-  showState("redirecting");
 
   // Fills the success card from any record that has amount/name/adm/payment_id
   // fields — used whether the record came from qr_map, the Transactions
@@ -428,6 +424,74 @@ body{
       }
     }
   }
+
+  // ── order_id branch — this is where the worker's /checkout-callback
+  //   redirects the browser after Hosted Checkout (Razorpay Orders API
+  //   flow), NOT the WhatsApp qr_id flow below. The URL only ever carries
+  //   status + order_id (+ reason on failure) on purpose — the real
+  //   student/amount/payment_id always comes from /receipt/:order_id,
+  //   never from the query string itself. ──
+  if(orderId){
+    showState("redirecting");
+
+    // Razorpay declined/cancelled the payment — no signature was ever
+    // posted to checkout-callback, so nothing was written to Firebase.
+    if(cbStatus === "failed"){
+      showState("error","invalid");
+      var s2 = document.getElementById("err-sub");
+      if(s2) s2.textContent = cbReason || "This payment could not be completed. Please contact the school office if any amount was debited.";
+      return;
+    }
+
+    var _orderPollTimer = null;
+    var _orderPollCount = 0;
+    var _orderMaxPolls  = 40;   // 40 × 3s = 2 minutes
+
+    function checkReceipt(){
+      fetch(proxyUrl+"/receipt/"+encodeURIComponent(orderId))
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          if(d && d.status === "success"){
+            if(_orderPollTimer) clearInterval(_orderPollTimer);
+            fillSuccessInfo(d);
+            showState("success");
+            return;
+          }
+          if(d && d.status === "pending"){
+            // Order/payment not settled yet (webhook/callback still
+            // finishing up) — keep polling, don't show an error.
+            if(!_orderPollTimer){
+              _orderPollTimer = setInterval(checkReceipt, 3000);
+            }
+            _orderPollCount++;
+            if(_orderPollCount > _orderMaxPolls){
+              clearInterval(_orderPollTimer);
+              showState("error","invalid");
+            }
+            return;
+          }
+          // status === "not_found" — nothing in Firebase or the Sheet.
+          if(_orderPollTimer) clearInterval(_orderPollTimer);
+          showState("error","invalid");
+        })
+        .catch(function(){
+          // Network hiccup — don't fail permanently on one bad request,
+          // let the poll loop (if running) try again.
+          if(!_orderPollTimer && _orderPollCount === 0){
+            showState("error","invalid");
+          }
+        });
+    }
+
+    checkReceipt();
+    return;
+  }
+
+  if(!qrId){
+    showState("error","invalid"); return;
+  }
+
+  showState("redirecting");
 
   // Last-resort check: neither Firebase qr_map nor the Transactions Firebase
   // had this qr_id. Before calling it genuinely invalid, check the Google
