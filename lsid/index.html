@@ -8,27 +8,27 @@
 <title>Fee Payment — Lotus International School</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
   --navy:#0d2a6e;--navy-deep:#001848;
   --blue:#0071e3;--blue-deep:#005bbf;--blue-tint:#eaf1fd;--blue-tint-soft:#eaf2fd;
   --white:#ffffff;
-  --ink:#1d1d1f;--body:#6e6e73;--mut:#aeaeb2;
-  --line:rgba(0,0,0,.08);--line-soft:rgba(0,0,0,.05);
+  --ink:#1d1d1f;--body:#515154;--mut:#86868b;
+  --line:rgba(0,0,0,.08);--line-soft:rgba(0,0,0,.04);
   --ok:#34c759;--ok-tint:#eafaf0;
   --warn:#ff3b30;--warn-tint:#fff1f0;
-  --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  --ease:cubic-bezier(.4,0,.2,1);
-  --r-lg:22px;--r-md:14px;--r-sm:10px;
+  --sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display','Plus Jakarta Sans','Inter',sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --r-2xl:32px;--r-xl:24px;--r-lg:18px;--r-md:14px;
 }
 html{-webkit-font-smoothing:antialiased;height:100%}
-body{font-family:var(--sans);background:#eaf2fd;color:var(--ink);height:100%;overflow:hidden;letter-spacing:-.01em}
+body{font-family:var(--sans);background:#fbfbfd;color:var(--ink);height:100%;overflow:hidden;letter-spacing:-.015em}
 
 #app{height:100vh;height:100svh;display:flex;flex-direction:column}
 
-/* ── Desktop / large screens: true side-by-side split, full page ── */
+/* ── Split Ratio strictly 35% : 65% on Desktop ── */
 @media (min-width:860px){
   #app{
     flex-direction:row;
@@ -38,7 +38,7 @@ body{font-family:var(--sans);background:#eaf2fd;color:var(--ink);height:100%;ove
   }
 }
 
-/* ── Hero: navy gradient header, matching index.html ── */
+/* ── Left Hero Panel (Exact Original from index.html) ── */
 .fp-hero{
   background:
     radial-gradient(ellipse 140% 120% at 80% -10%, #0a3d8f 0%, transparent 55%),
@@ -55,15 +55,32 @@ body{font-family:var(--sans);background:#eaf2fd;color:var(--ink);height:100%;ove
   background:radial-gradient(ellipse,rgba(255,255,255,.07) 0%,transparent 70%);
   pointer-events:none;
 }
+
+/* Smooth color transitions for left panel background */
+.fp-hero-overlay{position:absolute;inset:0;opacity:0;transition:opacity .6s cubic-bezier(.4,0,.2,1);pointer-events:none;z-index:0;border-radius:inherit}
+.fp-hero-overlay.ov-success{background:
+    radial-gradient(ellipse 140% 120% at 80% -10%, #22c55e 0%, transparent 55%),
+    radial-gradient(ellipse 100% 80% at -10% 110%, #064e3b 0%, transparent 60%),
+    radial-gradient(ellipse 80% 60% at 50% 50%, #0f7a4d 0%, transparent 70%),
+    linear-gradient(175deg, #14532d 0%, #052e1c 40%, #0f6b3f 100%)}
+.fp-hero-overlay.ov-failed{background:
+    radial-gradient(ellipse 140% 120% at 80% -10%, #f87171 0%, transparent 55%),
+    radial-gradient(ellipse 100% 80% at -10% 110%, #450a0a 0%, transparent 60%),
+    radial-gradient(ellipse 80% 60% at 50% 50%, #7f1d1d 0%, transparent 70%),
+    linear-gradient(175deg, #7f1d1d 0%, #3f0a0a 40%, #7f1d1d 100%)}
+#app[data-hero-state="success"] .fp-hero-overlay.ov-success{opacity:1}
+#app[data-hero-state="failed"] .fp-hero-overlay.ov-failed{opacity:1}
+
 .fp-hero-logo{display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;z-index:1}
 .fp-crest{width:46px;height:46px;border-radius:50%;overflow:hidden;border:1px solid rgba(255,255,255,.15)}
 .fp-crest img{width:100%;height:100%;object-fit:contain;display:block}
 .fp-hero-wordmark{font-size:clamp(11px,2.8vw,13.5px);font-weight:700;color:rgba(255,255,255,.92);letter-spacing:1.2px}
 .fp-hero-sub{font-size:clamp(9px,2.2vw,10.5px);font-weight:600;color:rgba(255,255,255,.4);letter-spacing:1.4px;text-transform:uppercase;margin-top:1px}
 .fp-hero-divider{width:28px;height:1px;background:rgba(255,255,255,.15);margin:clamp(10px,2vh,14px) auto 0;position:relative;z-index:1}
-.fp-hero-eyebrow{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:600;color:rgba(255,255,255,.45);letter-spacing:1.8px;text-transform:uppercase;margin-top:clamp(10px,2vh,14px);position:relative;z-index:1}
-.fp-eyebrow-dot{width:5px;height:5px;border-radius:50%;background:#4ade80;flex-shrink:0}
-.fp-hero-title{font-size:clamp(17px,4.5vw,20px);font-weight:800;color:#fff;letter-spacing:-.5px;margin-top:4px;position:relative;z-index:1}
+.fp-hero-eyebrow{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:600;color:rgba(255,255,255,.45);letter-spacing:1.8px;text-transform:uppercase;margin-top:clamp(10px,2vh,14px);position:relative;top:-4px;z-index:1}
+.fp-eyebrow-dot{width:5px;height:5px;border-radius:50%;background:#4ade80;flex-shrink:0;transition:background .3s var(--ease)}
+#app[data-hero-state="failed"] .fp-eyebrow-dot{background:#fca5a5}
+.fp-hero-title{font-size:clamp(17px,4.5vw,20px);font-weight:800;color:#fff;letter-spacing:-.5px;margin-top:4px;position:relative;top:-4px;z-index:1}
 
 .fp-features{display:none}
 
@@ -83,14 +100,14 @@ body{font-family:var(--sans);background:#eaf2fd;color:var(--ink);height:100%;ove
   .fp-hero-title{font-size:27px;margin-top:8px}
   .fp-hero-mid{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;width:100%;transform:translateY(-40px)}
   .fp-features{display:flex;flex-direction:column;gap:20px;margin-top:40px;width:100%;max-width:280px}
-  .fp-feat{display:flex;align-items:flex-start;gap:11px;text-align:left}
+  .fp-feat{display:flex;align-items:center;gap:11px;text-align:left}
   .fp-feat .fico2{flex:none;width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.1);color:#fff;display:flex;align-items:center;justify-content:center}
-  .fp-feat p{font-size:12px;color:rgba(255,255,255,.65);line-height:1.5;padding-top:4px}
+  .fp-feat p{font-size:12px;color:rgba(255,255,255,.65);line-height:1.5}
 }
 
 .fp-tagline{display:none}
 .fp-legal{display:none}
-.stage-help{display:none}
+
 @media (min-width:860px){
   .fp-hero{position:relative}
   .fp-tagline{
@@ -104,167 +121,299 @@ body{font-family:var(--sans);background:#eaf2fd;color:var(--ink);height:100%;ove
   .fp-legal a{color:rgba(255,255,255,.55);text-decoration:none}
   .fp-legal a:hover{color:#fff}
   .fp-legal .dot{width:2.5px;height:2.5px;border-radius:50%;background:rgba(255,255,255,.35)}
-  .stage-help{
-    display:flex;align-items:center;gap:6px;
-    font-size:12px;color:var(--mut);
-  }
-  .stage-help a{color:rgb(22,86,214);font-weight:600;text-decoration:none}
-  .stage-help a:hover{text-decoration:underline}
 }
 
-/* ── Stage ── */
-.stage{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:clamp(18px,3.6vh,30px) 18px;overflow:auto;background:#eaf2fd}
+/* ── Right Stage (65% Width) ── */
+.stage{
+  flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  padding:clamp(16px,2.8vh,30px) clamp(20px,4vw,44px);overflow:hidden;background:#ffffff;position:relative;
+}
 
 @media (min-width:860px){
   .stage{
-    flex:0 0 65%;height:100%;padding:44px 40px 44px;position:relative;justify-content:flex-start;
-    background:#ffffff;
+    flex:0 0 65%;height:100%;
+    padding:clamp(24px,3.8vh,40px) clamp(30px,4.5vw,64px) clamp(20px,3vh,32px);
+    position:relative;justify-content:center;
   }
-  .stage-help{position:absolute;right:40px;bottom:22px;margin-top:0}
 }
 
-.hero{width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2vh,16px);margin-top:-8px}
-
+/* ── Corner Stage Help ── */
+.stage-help{
+  display:none;
+}
 @media (min-width:860px){
-  .hero{flex:1;min-height:0;justify-content:flex-start;margin-top:0}
+  .stage-help{
+    display:flex;align-items:center;gap:6px;
+    font-size:12px;color:var(--mut);
+    position:absolute;right:40px;bottom:22px;margin-top:0;
+    z-index:10;
+  }
+  .stage-help a{color:rgb(22,86,214);font-weight:600;text-decoration:none;cursor:pointer}
+  .stage-help a:hover{text-decoration:underline}
 }
 
-.badge{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);color:var(--navy);font-size:11.5px;font-weight:600;padding:6px 13px;border-radius:999px;box-shadow:0 1px 2px rgba(11,42,92,.05);margin-bottom:clamp(10px,2vh,16px)}
-.badge svg{flex:none;color:var(--blue)}
-
-@media (min-width:860px){
-  .badge{margin-bottom:16px;margin-top:-22px}
+.stage-inner{
+  width:100%;max-width:620px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;margin:auto 0;
 }
 
-/* ── Card ── */
-.panel{width:100%;background:#fff;border-radius:var(--r-lg);box-shadow:0 1px 2px rgba(11,42,92,.04),0 18px 40px -22px rgba(11,42,92,.28);border:1px solid var(--line-soft);padding:clamp(18px,3.4vh,30px) clamp(20px,4vw,30px);position:relative;overflow:hidden}
-.panel::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue) 0%,#57a2ff 100%)}
-.eyebrow{font-size:10.5px;font-weight:700;color:rgb(22,86,214);margin-bottom:6px;letter-spacing:1.4px;text-transform:uppercase}
-.ci-title{font-size:clamp(19px,3vh,23px);font-weight:800;color:var(--ink);letter-spacing:-.02em}
-.ci-sub{font-size:12.5px;color:var(--mut);margin-top:5px;line-height:1.5}
-
-.card-head{display:flex;align-items:flex-start;gap:14px}
-.card-head .chead-ico{flex:none;width:44px;height:44px;border-radius:12px;background:var(--blue-tint);color:rgb(22,86,214);display:flex;align-items:center;justify-content:center}
-
-@media (min-width:860px){
-  .hero{max-width:640px;gap:20px}
-  .panel{background:transparent;border:none;box-shadow:none;border-radius:0;padding:0}
-  .panel::before{display:none}
-  .badge{box-shadow:0 4px 14px -6px rgba(11,42,92,.15)}
+/* ── Stepper ── */
+.apple-stepper{
+  display:inline-flex;align-items:center;gap:11px;
+  padding:8px 22px;background:#f5f5f7;border-radius:999px;flex-shrink:0;
+  margin-bottom:clamp(16px,2.8vh,28px);
 }
-
-/* ── Form: always vertical, bigger fields ── */
-.form-stack{display:flex;flex-direction:column;gap:12px;margin-top:clamp(14px,2.2vh,20px)}
-.field+.field{margin-top:0}
-.field{width:100%}
-.lbl{font-size:12px;font-weight:600;color:var(--navy);display:block;margin-bottom:8px}
-.field .inp-wrap{position:relative;display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid rgba(0,113,227,.35);border-radius:var(--r-md);padding:0 14px;transition:border-color .18s var(--ease),background .18s var(--ease)}
-.field .inp-wrap:focus-within{border-color:var(--blue);background:#fff;box-shadow:0 0 0 4px rgba(22,86,214,.08)}
-.field .fico{flex:none;width:30px;height:30px;border-radius:9px;background:var(--blue-tint);color:var(--blue);display:flex;align-items:center;justify-content:center}
-.field .inp-wrap:focus-within .fico{background:var(--blue);color:#fff}
-input.inp{width:100%;background:transparent;border:none;color:var(--ink);padding:20px 4px;font-size:17px;font-weight:500;font-family:var(--sans);outline:none}
-input.inp::placeholder{color:#a7adb8;font-weight:400}
-
-.trust-line{display:flex;align-items:center;justify-content:center;gap:7px;font-size:11.5px;color:var(--mut);margin-top:14px}
-.trust-line svg{flex:none;color:var(--blue)}
-
-.steps-bar{width:100%;max-width:320px;margin:22px auto 0}
-.step-row{display:flex;align-items:center}
-.step-num{flex:none;width:24px;height:24px;border-radius:50%;background:#eaf2fd;color:var(--mut);font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--line);transition:all .18s var(--ease)}
-.step-num.active{background:rgb(22,86,214);color:#fff;border-color:rgb(22,86,214)}
-.step-line{flex:1;height:1.5px;background:var(--line);margin:0 6px}
-.step-labels{display:flex;align-items:flex-start;margin-top:5px}
-.step-lbl{flex:none;width:24px;text-align:center;overflow:visible;white-space:nowrap;font-size:10.5px;font-weight:600;color:var(--mut)}
-.step-lbl.active{color:var(--navy)}
-.step-lbl-spacer{flex:1;margin:0 6px}
-
-@media (min-width:860px){
-  .card-head{gap:20px;margin-top:28px}
-  .ci-sub{margin-top:14px}
-  .form-stack{gap:32px;margin-top:28px}
-  .field+.field{margin-top:0}
-  .trust-line{margin-top:20px}
+.step-dot{
+  width:8px;height:8px;border-radius:50%;background:rgba(0,0,0,.15);
+  transition:all .3s var(--ease);
 }
+.step-dot.active{background:var(--blue);width:24px;border-radius:999px}
+.step-text{font-size:13px;font-weight:600;color:var(--ink);letter-spacing:.2px}
 
-.btn{border:none;border-radius:var(--r-md);padding:19px 22px;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--sans);transition:all .18s var(--ease);display:inline-flex;align-items:center;justify-content:center;gap:8px;letter-spacing:-.005em}
-.btn-primary{background:rgb(22,86,214);color:#fff}
-.btn-primary:hover{filter:brightness(1.04)}
-.btn-primary:active{background:rgb(14,66,166);transform:scale(.985)}
-.btn-outline{background:#eaf2fd;border:none;color:var(--ink);font-weight:600}
-.btn-outline:hover{background:#d9e8fb}
-.btn-outline:active{background:#d9e8fb}
-.btn-plain{background:transparent;border:none;color:rgb(22,86,214);font-weight:600;padding:14px 22px}
-.btn-plain:hover{color:var(--blue-deep);text-decoration:underline}
-.btn-plain:active{opacity:.7}
-.btn-wrap{position:relative}
-.msg{font-size:12.5px;line-height:1.5;position:absolute;top:calc(100% + 8px);left:0;right:0;text-align:center}
+/* ── Search Form ── */
+.search-container{width:100%;max-width:580px;text-align:center}
+.search-header{margin-bottom:clamp(34px,5vh,48px)}
+.search-header .eyebrow{font-size:13px;font-weight:700;color:var(--blue);letter-spacing:1.3px;text-transform:uppercase;margin-bottom:10px}
+.search-header h2{font-size:clamp(30px,4.2vh,36px);font-weight:700;letter-spacing:-.03em;color:var(--ink);line-height:1.2}
+.search-header p{font-size:15.5px;color:var(--mut);margin-top:12px;line-height:1.45}
+
+.apple-input-group{width:100%;display:flex;flex-direction:column;gap:22px;text-align:left}
+.apple-field label{font-size:14.5px;font-weight:600;color:var(--ink);display:block;margin-bottom:8px;padding-left:2px}
+.apple-field .inp-wrap{
+  display:flex;align-items:center;background:#f5f5f7;border:1.5px solid rgba(0,0,0,.06);
+  border-radius:var(--r-md);padding:0 22px;transition:all .2s var(--ease);
+}
+.apple-field .inp-wrap:focus-within{
+  background:#fff;border-color:var(--blue);box-shadow:0 0 0 4px rgba(0,113,227,.12);
+}
+.apple-field input{
+  width:100%;background:transparent;border:none;color:var(--ink);
+  padding:20px 0;font-size:18px;font-weight:500;font-family:var(--sans);outline:none;
+}
+.apple-field input::placeholder{color:#a1a1a6}
+
+/* ── Primary Action Button ── */
+.btn-apple{
+  width:100%;border:none;border-radius:999px;padding:19px 30px;font-size:17px;
+  font-weight:600;cursor:pointer;font-family:var(--sans);
+  letter-spacing:-.01em;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--blue);color:#fff;box-shadow:0 4px 18px rgba(0,113,227,.28);
+  transition:all .2s var(--ease);outline:none;
+}
+.btn-apple:hover{background:var(--blue-deep)}
+.btn-apple:active{transform:scale(.985)}
+
+/* ── Blue Apple Capsule for "Check Another Student" ── */
+.btn-another-student{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:rgba(0,113,227,.08);border:1px solid rgba(0,113,227,.18);
+  color:var(--blue);border-radius:999px;padding:13px 26px;
+  font-family:var(--sans);
+  font-size:14.5px;font-weight:600;letter-spacing:-.015em;
+  cursor:pointer;transition:all .2s var(--ease);outline:none;
+  box-shadow:0 2px 8px rgba(0,113,227,.06);
+}
+.btn-another-student:hover{
+  background:rgba(0,113,227,.14);color:var(--blue-deep);
+  border-color:rgba(0,113,227,.3);transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(0,113,227,.12);
+}
+.btn-another-student:active{transform:scale(.98)}
+.btn-another-student svg{transition:transform .2s ease;stroke:currentColor}
+.btn-another-student:hover svg{transform:translateX(-2px)}
+
+.msg{font-size:13.5px;line-height:1.4;margin-top:12px;text-align:center}
 .msg.err{color:var(--warn)}
-.msg.ok{color:var(--ok)}
-.msg.inf{color:var(--mut)}
 
-/* ── Result: stat + info rows ── */
-.amount-row{margin-top:clamp(26px,4.4vh,38px);display:flex;align-items:center;gap:11px;background:linear-gradient(160deg,var(--blue-tint) 0%,var(--blue-tint-soft) 100%);border-radius:var(--r-md);padding:18px 16px}
-.amount-row .iico{flex:none;width:30px;height:30px;border-radius:9px;background:#fff;color:var(--blue);display:flex;align-items:center;justify-content:center}
-.amount-row .ik{flex:1;font-size:12.5px;font-weight:600;color:var(--navy)}
-.amount-row .iv-amount{font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-
-.info-rows{margin-top:16px;display:flex;flex-direction:column;gap:0}
-.info-row{display:flex;align-items:center;gap:11px;padding:13px 0;border-top:1px solid var(--line-soft)}
-.info-row .iico{flex:none;width:30px;height:30px;border-radius:9px;background:var(--blue-tint);color:var(--blue);display:flex;align-items:center;justify-content:center}
-.info-row .ik{flex:1;font-size:11.5px;color:var(--mut)}
-.info-row .iv{font-size:13.5px;color:var(--ink);font-weight:600}
-
-.stat-block-paid{margin-top:clamp(10px,1.8vh,14px);background:linear-gradient(160deg,var(--ok-tint) 0%,#f6fbf8 100%);border-radius:var(--r-md);padding:24px 18px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;overflow:hidden}
-.stat-block-paid::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(31,157,85,.035) 0 2px,transparent 2px 7px);pointer-events:none}
-.paid-stamp{position:relative;transform:rotate(-8deg);filter:drop-shadow(0 4px 8px rgba(31,157,85,.18));animation:stampThud .55s cubic-bezier(.2,1.5,.4,1) both}
-.paid-stamp svg{display:block}
-@keyframes stampThud{
-  0%{transform:rotate(-8deg) scale(2.6);opacity:0}
-  55%{opacity:1}
-  75%{transform:rotate(-8deg) scale(.94)}
-  100%{transform:rotate(-8deg) scale(1);opacity:1}
+/* ── Apple States ── */
+.apple-state-view{
+  width:100%;display:flex;flex-direction:column;align-items:center;
+  text-align:center;animation:applePop .45s cubic-bezier(.16,1,.3,1) both;
 }
-.stat-block-paid .rc-lbl{font-size:14.5px;color:var(--ok);font-weight:800;letter-spacing:.1px;margin-top:4px;position:relative}
-.stat-block-paid .rc-psub{font-size:clamp(10.5px,2.6vw,12.5px);color:var(--body);line-height:1.5;white-space:nowrap;position:relative}
+@keyframes applePop{
+  0%{opacity:0;transform:scale(.96) translateY(12px)}
+  100%{opacity:1;transform:scale(1) translateY(0)}
+}
 
-.stat-block-failed{margin-top:clamp(10px,1.8vh,14px);background:linear-gradient(160deg,var(--warn-tint) 0%,#fff8f7 100%);border-radius:var(--r-md);padding:24px 18px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;overflow:hidden}
-.stat-block-failed::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,59,48,.035) 0 2px,transparent 2px 7px);pointer-events:none}
-.fail-stamp{position:relative;transform:rotate(-8deg);filter:drop-shadow(0 4px 8px rgba(255,59,48,.18));animation:stampThud .55s cubic-bezier(.2,1.5,.4,1) both}
-.fail-stamp svg{display:block}
-.stat-block-failed .rc-lbl{font-size:14.5px;color:var(--warn);font-weight:800;letter-spacing:.1px;margin-top:4px;position:relative}
-.stat-block-failed .rc-psub{font-size:clamp(10.5px,2.6vw,12.5px);color:var(--body);line-height:1.5;position:relative}
+.apple-glyph-seal{
+  width:80px;height:80px;border-radius:50%;display:flex;
+  align-items:center;justify-content:center;margin-bottom:18px;
+  position:relative;flex-shrink:0;
+}
+.apple-glyph-seal.seal-success{
+  background:#34c759;color:#fff;
+  box-shadow:0 12px 34px -4px rgba(52,199,89,.45);
+}
+.apple-glyph-seal.seal-failed{
+  background:#ff3b30;color:#fff;
+  box-shadow:0 12px 34px -4px rgba(255,59,48,.38);
+}
+.apple-glyph-seal.seal-calm{
+  background:#f5f5f7;color:var(--blue);
+  box-shadow:0 8px 24px rgba(0,0,0,.06);
+}
+.apple-glyph-seal svg{display:block}
+.apple-glyph-seal .ring{stroke-dasharray:170;stroke-dashoffset:170;animation:glyphDraw .45s ease-out .08s forwards}
+.apple-glyph-seal .tick{stroke-dasharray:40;stroke-dashoffset:40;animation:glyphDraw .32s ease-out .35s forwards}
+.apple-glyph-seal .cross-a{stroke-dasharray:30;stroke-dashoffset:30;animation:glyphDraw .28s ease-out .32s forwards}
+.apple-glyph-seal .cross-b{stroke-dasharray:30;stroke-dashoffset:30;animation:glyphDraw .28s ease-out .42s forwards}
+@keyframes glyphDraw{to{stroke-dashoffset:0}}
 
-.pay-block{margin-top:22px}
-.pay-block .sec-hdr{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px}
-.pay-block .title{font-size:12.5px;font-weight:700;color:var(--navy)}
-.pay-block .hint{font-size:11px;color:var(--mut)}
-.pay-methods{font-size:11.5px;color:var(--mut);text-align:center;margin-top:10px}
+.apple-micro-pill{
+  font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+  padding:5.5px 16px;border-radius:999px;margin-bottom:10px;display:inline-flex;
+}
+.pill-green{background:rgba(52,199,89,.12);color:#248a3d}
+.pill-red{background:rgba(255,59,48,.12);color:#d70015}
 
-.back-row{margin-top:10px}
+.state-big-title{font-size:clamp(28px,4.2vh,34px);font-weight:700;color:var(--ink);letter-spacing:-.03em;line-height:1.2}
+.state-hint-desc{font-size:14.5px;color:var(--mut);margin-top:8px;line-height:1.5;max-width:480px}
 
-.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
+.state-hero-price{
+  margin:14px 0 20px;display:flex;flex-direction:column;align-items:center;
+}
+.state-hero-price .curr-lbl{font-size:12px;font-weight:600;color:var(--mut);letter-spacing:.6px;text-transform:uppercase}
+.state-hero-price .curr-val{font-size:clamp(46px,6.5vh,58px);font-weight:800;color:var(--ink);letter-spacing:-.035em;line-height:1.08;font-variant-numeric:tabular-nums}
+
+.apple-receipt-plate{
+  width:100%;background:#f5f5f7;border-radius:var(--r-xl);
+  padding:16px 28px;margin-bottom:22px;display:flex;flex-direction:column;
+}
+.rec-entry{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12.5px 0;border-bottom:1px solid rgba(0,0,0,.05);
+}
+.rec-entry:last-child{border-bottom:none}
+.rec-entry .label{font-size:14px;color:var(--mut);font-weight:500}
+.rec-entry .value{font-size:15.5px;color:var(--ink);font-weight:600;text-align:right}
+.rec-entry .value.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;letter-spacing:-.2px}
+
+.apple-clip-trigger{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;background:rgba(0,0,0,.04);
+  border:none;color:var(--ink);padding:10px 22px;border-radius:999px;
+  font-size:13.5px;font-weight:600;cursor:pointer;font-family:var(--sans);
+  transition:all .18s var(--ease);margin-bottom:14px;
+}
+.apple-clip-trigger:hover{background:rgba(0,0,0,.07);transform:translateY(-.5px)}
+.apple-clip-trigger.copied{background:rgba(52,199,89,.15);color:#1e7e34}
+
+.allpaid-feature-box{
+  width:100%;background:#f5f5f7;border-radius:var(--r-xl);
+  padding:32px 34px;display:flex;flex-direction:column;gap:12px;text-align:center;
+  margin:24px 0 28px;
+}
+.allpaid-feature-box .f-title{
+  font-size:16px;font-weight:700;color:#248a3d;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.allpaid-feature-box .f-desc{
+  font-size:14px;color:var(--body);line-height:1.55;max-width:480px;margin:0 auto;
+}
+
+/* ── Failed State Elements ── */
+.apple-fail-plate{
+  width:100%;background:rgba(255,59,48,.05);border:1px solid rgba(255,59,48,.12);
+  border-radius:var(--r-lg);padding:16px 22px;margin:18px 0 16px;
+  font-size:14px;color:#c9261f;line-height:1.45;word-break:break-word;text-align:center;
+}
+
+/* ── Review Fee Mode ── */
+.review-container{
+  width:100%;display:flex;flex-direction:column;align-items:center;
+}
+.review-hero-due{text-align:center;margin:clamp(8px,1.8vh,16px) 0 clamp(16px,2.8vh,24px)}
+.review-hero-due .due-label{font-size:13px;font-weight:600;color:var(--mut);text-transform:uppercase;letter-spacing:.6px}
+.review-hero-due .due-value{font-size:clamp(46px,6.5vh,58px);font-weight:800;color:var(--ink);letter-spacing:-.035em;margin-top:4px;font-variant-numeric:tabular-nums}
+
+.spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 
-/* ── Modal ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(7,27,61,.45);display:flex;align-items:center;justify-content:center;padding:20px;z-index:999;opacity:0;pointer-events:none;transition:opacity .2s var(--ease)}
+/* ── Redesigned Apple Abort / Modal Sheet ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.38);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  display:flex;align-items:center;justify-content:center;padding:24px;z-index:9999;
+  opacity:0;pointer-events:none;transition:opacity .25s var(--ease);
+}
 .modal-overlay.show{opacity:1;pointer-events:auto}
-.modal-box{background:#fff;border-radius:var(--r-lg);max-width:340px;width:100%;box-shadow:0 30px 70px rgba(7,27,61,.3);padding:28px 24px 24px;text-align:center;transform:translateY(14px) scale(.97);transition:transform .2s var(--ease)}
-.modal-overlay.show .modal-box{transform:translateY(0) scale(1)}
-.modal-ico{width:44px;height:44px;border-radius:50%;background:var(--warn-tint);color:var(--warn);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
-.modal-title{font-size:17px;font-weight:800;color:var(--ink);margin-bottom:8px}
-.modal-text{font-size:13px;color:var(--body);line-height:1.6;margin-bottom:20px}
-.modal-box .btn{width:100%}
+.modal-sheet{
+  background:#ffffff;border-radius:var(--r-2xl);max-width:400px;width:100%;
+  box-shadow:0 30px 80px -10px rgba(0,0,0,.25), 0 0 0 1px rgba(0,0,0,.04);
+  padding:32px 28px 26px;text-align:center;transform:translateY(16px) scale(.96);
+  transition:all .28s var(--ease);display:flex;flex-direction:column;align-items:center;
+  font-family:var(--sans);
+  -webkit-font-smoothing:antialiased;
+}
+.modal-overlay.show .modal-sheet{transform:translateY(0) scale(1)}
+.modal-glyph{
+  width:56px;height:56px;border-radius:50%;background:#f5f5f7;
+  color:var(--ink);display:flex;align-items:center;justify-content:center;margin-bottom:14px;
+}
+.modal-badge{
+  font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+  padding:4px 12px;border-radius:999px;background:rgba(0,0,0,.05);color:var(--mut);margin-bottom:8px;
+}
+.modal-title{
+  font-size:21px;font-weight:700;color:var(--ink);letter-spacing:-.025em;margin-bottom:8px;
+}
+.modal-text{
+  font-size:14px;color:var(--body);line-height:1.5;margin-bottom:20px;
+}
 
-@media (max-height:680px){
-  .badge{display:none}
-  .steps-bar{margin-bottom:10px}
+/* Inset Number Card inside Modal */
+.modal-info-tile{
+  width:100%;background:#f5f5f7;border-radius:var(--r-md);
+  padding:12px 16px;margin-bottom:22px;display:flex;flex-direction:column;gap:3px;text-align:center;
+}
+.modal-info-tile .tile-lbl{
+  font-size:11px;font-weight:600;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;
+}
+.modal-info-tile .tile-num{
+  font-size:17px;font-weight:700;color:var(--ink);letter-spacing:.3px;
+  font-family:ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-feature-settings:'tnum';
+}
+
+.modal-actions{
+  display:flex;flex-direction:column;gap:10px;width:100%;
+}
+.modal-btn-wa{
+  width:100%;border:none;border-radius:999px;padding:14px 20px;font-size:14.5px;font-weight:600;
+  cursor:pointer;font-family:var(--sans);
+  background:#25D366;color:#fff;letter-spacing:-.01em;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 4px 14px rgba(37,211,102,.28);transition:all .2s var(--ease);text-decoration:none;
+}
+.modal-btn-wa:hover{background:#1ebe57;transform:translateY(-1px)}
+.modal-btn-wa:active{transform:scale(.98)}
+.modal-btn-sec{
+  width:100%;border:none;border-radius:999px;padding:12px;font-size:14px;font-weight:600;
+  cursor:pointer;font-family:var(--sans);
+  background:transparent;color:var(--mut);transition:all .15s ease;
+  letter-spacing:-.01em;
+}
+.modal-btn-sec:hover{color:var(--ink);background:#f5f5f7}
+
+@media (max-height:720px){
+  .stage{padding:18px 24px}
+  .apple-stepper{margin-bottom:8px}
+  .apple-glyph-seal{width:62px;height:62px;margin-bottom:10px}
+  .state-big-title{font-size:24px}
+  .state-hero-price .curr-val{font-size:38px}
+  .state-hero-price{margin:6px 0 10px}
+  .apple-receipt-plate{padding:10px 18px;margin-bottom:12px}
+  .rec-entry{padding:8px 0}
+  .allpaid-feature-box{padding:20px 22px;margin:14px 0 18px}
+  .apple-field input{padding:15px 0;font-size:16.5px}
+  .search-header{margin-bottom:26px}
 }
 </style>
 </head>
 <body>
 <div id="app">
 
+  <!-- LEFT HERO PANEL (Exact Original from index.html) -->
   <div class="fp-hero">
+    <div class="fp-hero-overlay ov-success"></div>
+    <div class="fp-hero-overlay ov-failed"></div>
     <div class="fp-hero-logo">
       <div class="fp-crest"><img src="https://raw.githubusercontent.com/lamahajan/UPI-Redirect/main/Logo.png" alt="Logo"/></div>
       <div>
@@ -274,8 +423,8 @@ input.inp::placeholder{color:#a7adb8;font-weight:400}
     </div>
     <div class="fp-hero-divider"></div>
     <div class="fp-hero-mid">
-      <div class="fp-hero-eyebrow"><span class="fp-eyebrow-dot"></span>Secure Portal</div>
-      <div class="fp-hero-title">DigiFee Mitra</div>
+      <div class="fp-hero-eyebrow"><span class="fp-eyebrow-dot" id="fp-eyebrow-dot"></span><span id="fp-eyebrow-text">Secure Portal</span></div>
+      <div class="fp-hero-title" id="fp-hero-title">DigiFee Mitra</div>
 
       <div class="fp-features">
         <div class="fp-feat">
@@ -302,227 +451,237 @@ input.inp::placeholder{color:#a7adb8;font-weight:400}
     </div>
   </div>
 
+  <!-- RIGHT STAGE -->
   <main class="stage">
-    <div class="badge">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
-      Verified by the school office
+    
+    <div class="apple-stepper" id="steps-bar">
+      <div class="step-dot active" id="step-dot-1"></div>
+      <div class="step-dot" id="step-dot-2"></div>
+      <div class="step-dot" id="step-dot-3"></div>
+      <span class="step-text" id="step-text">Student Verification</span>
     </div>
 
-    <div class="steps-bar" id="steps-bar">
-      <div class="step-row">
-        <div class="step-num active" id="step-num-1">1</div>
-        <div class="step-line"></div>
-        <div class="step-num" id="step-num-2">2</div>
-        <div class="step-line"></div>
-        <div class="step-num" id="step-num-3">3</div>
-      </div>
-      <div class="step-labels">
-        <span class="step-lbl active" id="step-lbl-1">Check</span>
-        <span class="step-lbl-spacer"></span>
-        <span class="step-lbl" id="step-lbl-2">Review</span>
-        <span class="step-lbl-spacer"></span>
-        <span class="step-lbl" id="step-lbl-3">Pay</span>
-      </div>
-    </div>
+    <div class="stage-inner">
 
-    <div class="hero">
-
-      <div id="search-card" class="panel">
-        <div class="card-head">
-          <div class="chead-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2.5"/><path d="M2 10h20"/><path d="M6 15h4"/></svg></div>
-          <div>
-            <div class="eyebrow">Student portal</div>
-            <div class="ci-title">Check your fee balance</div>
-          </div>
+      <!-- 1. SEARCH FORM -->
+      <div id="search-card" class="search-container">
+        <div class="search-header">
+          <div class="eyebrow">Fee Management</div>
+          <h2>Check Fee Balance</h2>
+          <p>Enter the student credentials to access active statements.</p>
         </div>
-        <div class="ci-sub">Enter the admission number and registered mobile number to look up dues.</div>
 
-        <div class="form-stack">
-          <div class="field">
-            <label class="lbl" for="adm-inp">Admission number</label>
+        <div class="apple-input-group">
+          <div class="apple-field">
+            <label for="adm-inp">Admission number</label>
             <div class="inp-wrap">
-              <span class="fico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg></span>
-              <input id="adm-inp" class="inp" placeholder="e.g. 2024001" autocomplete="off" inputmode="text" onkeydown="if(event.key==='Enter')document.getElementById('mob-inp').focus()"/>
+              <input id="adm-inp" placeholder="e.g. 2024001" autocomplete="off" inputmode="text" onkeydown="if(event.key==='Enter')document.getElementById('mob-inp').focus()"/>
             </div>
           </div>
-          <div class="field">
-            <label class="lbl" for="mob-inp">Registered mobile number</label>
+          <div class="apple-field">
+            <label for="mob-inp">Registered phone number</label>
             <div class="inp-wrap">
-              <span class="fico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg></span>
-              <input id="mob-inp" class="inp" placeholder="10-digit mobile number" autocomplete="off" inputmode="numeric" maxlength="10" onkeydown="if(event.key==='Enter')checkFee()"/>
+              <input id="mob-inp" placeholder="10-digit mobile number" autocomplete="off" inputmode="numeric" maxlength="10" onkeydown="if(event.key==='Enter')checkFee()"/>
             </div>
           </div>
-          <div class="btn-wrap">
-            <button class="btn btn-primary" onclick="checkFee()" id="check-btn" style="width:100%">Check fee</button>
-            <div id="msg" class="msg"></div>
-          </div>
-          <div class="trust-line">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg>
-            Your information stays private and secure
-          </div>
+          <button class="btn-apple" onclick="checkFee()" id="check-btn" style="margin-top:6px">Continue</button>
+          <div id="msg" class="msg"></div>
         </div>
       </div>
 
       <div id="empty"></div>
 
-      <div id="result" class="panel" style="display:none">
-        <div class="card-head">
-          <div class="chead-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v5h5"/><path d="M6 3h8l5 5v13H6z"/><path d="M9 13h6M9 17h6"/></svg></div>
-          <div>
-            <div class="eyebrow">Student portal</div>
-            <div class="ci-title">Review your fees</div>
+      <!-- 2. RESULT WRAPPER -->
+      <div id="result" style="display:none;width:100%">
+        
+        <!-- ── REVIEW FEE MODE ── -->
+        <div id="review-content" class="review-container">
+          <div class="review-hero-due" id="amount-block">
+            <div class="due-label" id="amount-label">Amount due</div>
+            <div class="due-value" id="r-amount">—</div>
           </div>
-        </div>
 
-        <div class="amount-row" id="amount-block">
-          <span class="iico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5h4.5a2 2 0 0 1 0 4H9m0 0h5"/></svg></span>
-          <span class="ik" id="amount-label">Amount due</span>
-          <span class="iv iv-amount" id="r-amount">—</span>
-        </div>
+          <div class="apple-receipt-plate" id="info-rows">
+            <div class="rec-entry">
+              <span class="label">Student Name</span>
+              <span class="value" id="r-name">—</span>
+            </div>
+            <div class="rec-entry">
+              <span class="label">Class &amp; Section</span>
+              <span class="value" id="r-cls">—</span>
+            </div>
+            <div class="rec-entry">
+              <span class="label">Admission Number</span>
+              <span class="value" id="r-adm">—</span>
+            </div>
+          </div>
 
-        <div class="stat-block-paid" id="paid-hero" style="display:none">
-          <div class="paid-stamp">
-            <svg width="98" height="98" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <filter id="stampInk" x="-30%" y="-30%" width="160%" height="160%">
-                  <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="noise"/>
-                  <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.6"/>
-                </filter>
-                <path id="stampArcTop" d="M 16 74 A 54 54 0 0 1 124 74" fill="none"/>
-                <path id="stampArcBot" d="M 22 88 A 54 54 0 0 0 118 88" fill="none"/>
-              </defs>
-              <g filter="url(#stampInk)">
-                <circle cx="70" cy="70" r="63" fill="none" stroke="#1f9d55" stroke-width="4.5"/>
-                <circle cx="70" cy="70" r="53" fill="none" stroke="#1f9d55" stroke-width="1.5"/>
-                <text font-family="Inter,sans-serif" font-size="12.5" font-weight="800" letter-spacing="3.2" fill="#1f9d55">
-                  <textPath href="#stampArcTop" startOffset="50%" text-anchor="middle">ALL PAID UP</textPath>
-                </text>
-                <path d="M43 71 L61 89 L98 48" fill="none" stroke="#1f9d55" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <text font-family="Inter,sans-serif" font-size="9" font-weight="700" letter-spacing="3" fill="#1f9d55">
-                  <textPath href="#stampArcBot" startOffset="50%" text-anchor="middle">★ VERIFIED ★</textPath>
-                </text>
-              </g>
-            </svg>
+          <div class="apple-field" style="width:100%;text-align:left">
+            <label for="email-inp">Email for receipt (optional)</label>
+            <div class="inp-wrap">
+              <input id="email-inp" type="email" placeholder="parent@example.com" autocomplete="off"/>
+            </div>
           </div>
-          <div class="rc-lbl">All paid up</div>
-          <div class="rc-psub">There's no pending fee for this student right now.</div>
-        </div>
 
-        <div class="info-rows">
-          <div class="info-row">
-            <span class="iico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg></span>
-            <span class="ik">Student</span>
-            <span class="iv" id="r-name">—</span>
-          </div>
-          <div class="info-row">
-            <span class="iico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg></span>
-            <span class="ik">Class</span>
-            <span class="iv" id="r-cls">—</span>
-          </div>
-          <div class="info-row">
-            <span class="iico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 3v3M16 3v3"/></svg></span>
-            <span class="ik">Admission no.</span>
-            <span class="iv" id="r-adm">—</span>
-          </div>
-        </div>
-
-        <div id="pay-block" class="pay-block">
-          <div class="sec-hdr">
-            <div class="title">Complete your payment</div>
-            <div class="hint">Powered by Razorpay</div>
-          </div>
-          <div class="btn-wrap">
-            <button class="btn btn-primary" style="width:100%" onclick="payNow()" id="pay-btn">Pay now</button>
+          <div id="pay-block" style="width:100%;display:flex;flex-direction:column;gap:16px">
+            <button class="btn-apple" onclick="payNow()" id="pay-btn">Proceed to Pay</button>
             <div id="pay-msg" class="msg"></div>
+            <div style="font-size:13px;color:var(--mut);text-align:center">Cards · UPI · NetBanking · QR</div>
+            <div style="text-align:center;margin-top:4px">
+              <button class="btn-another-student" onclick="resetSearch()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Check Another Student
+              </button>
+            </div>
           </div>
-          <div class="pay-methods">Debit card · NetBanking · UPI · QR · BHIM</div>
         </div>
 
-        <div id="pay-success" class="stat-block-paid" style="display:none">
-          <div class="paid-stamp">
-            <svg width="98" height="98" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <filter id="stampInk2" x="-30%" y="-30%" width="160%" height="160%">
-                  <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="noise"/>
-                  <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.6"/>
-                </filter>
-                <path id="stampArcTop2" d="M 16 74 A 54 54 0 0 1 124 74" fill="none"/>
-                <path id="stampArcBot2" d="M 22 88 A 54 54 0 0 0 118 88" fill="none"/>
-              </defs>
-              <g filter="url(#stampInk2)">
-                <circle cx="70" cy="70" r="63" fill="none" stroke="#1f9d55" stroke-width="4.5"/>
-                <circle cx="70" cy="70" r="53" fill="none" stroke="#1f9d55" stroke-width="1.5"/>
-                <text font-family="Inter,sans-serif" font-size="12.5" font-weight="800" letter-spacing="3.2" fill="#1f9d55">
-                  <textPath href="#stampArcTop2" startOffset="50%" text-anchor="middle">PAYMENT DONE</textPath>
-                </text>
-                <path d="M43 71 L61 89 L98 48" fill="none" stroke="#1f9d55" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <text font-family="Inter,sans-serif" font-size="9" font-weight="700" letter-spacing="3" fill="#1f9d55">
-                  <textPath href="#stampArcBot2" startOffset="50%" text-anchor="middle">★ VERIFIED ★</textPath>
-                </text>
-              </g>
+        <!-- ── STATE 1: ALL PAID UP ── -->
+        <div id="paid-hero" class="apple-state-view" style="display:none">
+          <div class="apple-glyph-seal seal-calm">
+            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="m9 12 2 2 4-4"/>
             </svg>
           </div>
-          <div class="rc-lbl">Payment successful</div>
-          <div class="rc-psub" id="pay-success-sub">Your fee payment has been received.</div>
+          <div class="apple-micro-pill pill-green">Zero Balance</div>
+          <div class="state-big-title">All Paid Up</div>
+          <div class="state-hint-desc">There are no outstanding fee dues or pending payments on this student's account.</div>
+          
+          <div class="allpaid-feature-box">
+            <div class="f-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Account in Good Standing
+            </div>
+            <div class="f-desc">Verified directly with the Lotus International School accounts office. Your fee statement is fully cleared for the current academic session.</div>
+          </div>
+
+          <button class="btn-another-student" onclick="resetSearch()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Check Another Student
+          </button>
         </div>
 
-        <div id="pay-failed" class="stat-block-failed" style="display:none">
-          <div class="fail-stamp">
-            <svg width="98" height="98" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <filter id="stampInk3" x="-30%" y="-30%" width="160%" height="160%">
-                  <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="noise"/>
-                  <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.6"/>
-                </filter>
-                <path id="stampArcTop3" d="M 16 74 A 54 54 0 0 1 124 74" fill="none"/>
-                <path id="stampArcBot3" d="M 22 88 A 54 54 0 0 0 118 88" fill="none"/>
-              </defs>
-              <g filter="url(#stampInk3)">
-                <circle cx="70" cy="70" r="63" fill="none" stroke="#ff3b30" stroke-width="4.5"/>
-                <circle cx="70" cy="70" r="53" fill="none" stroke="#ff3b30" stroke-width="1.5"/>
-                <text font-family="Inter,sans-serif" font-size="12.5" font-weight="800" letter-spacing="3.2" fill="#ff3b30">
-                  <textPath href="#stampArcTop3" startOffset="50%" text-anchor="middle">PAYMENT FAILED</textPath>
-                </text>
-                <path d="M50 50 L90 90 M90 50 L50 90" fill="none" stroke="#ff3b30" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <text font-family="Inter,sans-serif" font-size="9" font-weight="700" letter-spacing="3" fill="#ff3b30">
-                  <textPath href="#stampArcBot3" startOffset="50%" text-anchor="middle">★ TRY AGAIN ★</textPath>
-                </text>
-              </g>
+        <!-- ── STATE 2: PAYMENT SUCCESS ── -->
+        <div id="pay-success" class="apple-state-view" style="display:none">
+          <div class="apple-glyph-seal seal-success">
+            <svg width="40" height="40" viewBox="0 0 60 60" fill="none">
+              <circle class="ring" cx="30" cy="30" r="27" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round"/>
+              <path class="tick" d="M19 31 L26.5 38.5 L41.5 21.5" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </div>
-          <div class="rc-lbl">Payment failed</div>
-          <div class="rc-psub" id="pay-failed-sub">The payment could not be completed.</div>
-          <div class="btn-wrap" style="width:100%;margin-top:14px">
-            <button class="btn btn-primary" style="width:100%" onclick="retryPayment()" id="retry-pay-btn">Try again</button>
+          <div class="apple-micro-pill pill-green">Settled &amp; Verified</div>
+          <div class="state-big-title">Payment Successful</div>
+
+          <div class="state-hero-price">
+            <span class="curr-lbl">Amount Transferred</span>
+            <span class="curr-val" id="ps-amount">—</span>
+          </div>
+
+          <div class="apple-receipt-plate">
+            <div class="rec-entry">
+              <span class="label">Student</span>
+              <span class="value" id="ps-name">—</span>
+            </div>
+            <div class="rec-entry">
+              <span class="label">Class &amp; Section</span>
+              <span class="value" id="ps-cls">—</span>
+            </div>
+            <div class="rec-entry">
+              <span class="label">Admission Number</span>
+              <span class="value" id="ps-adm">—</span>
+            </div>
+            <div class="rec-entry">
+              <span class="label">Transaction Ref</span>
+              <span class="value mono" id="ps-ref">—</span>
+            </div>
+            <div class="rec-entry">
+              <span class="label">Order Reference</span>
+              <span class="value mono" id="ps-reqno">—</span>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;align-items:center;gap:12px;width:100%">
+            <button type="button" class="apple-clip-trigger" id="success-copy-btn" onclick="copyPaymentDetails()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span id="success-copy-label">Copy Receipt Details</span>
+            </button>
+
+            <button class="btn-another-student" onclick="resetSearch()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+              Check Another Student
+            </button>
           </div>
         </div>
 
-        <div class="back-row">
-          <button class="btn btn-plain" style="width:100%" onclick="resetSearch()">Search another student</button>
+        <!-- ── STATE 3: PAYMENT FAILED (With Request / Order ID) ── -->
+        <div id="pay-failed" class="apple-state-view" style="display:none">
+          <div class="apple-glyph-seal seal-failed">
+            <svg width="40" height="40" viewBox="0 0 60 60" fill="none">
+              <circle class="ring" cx="30" cy="30" r="27" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round"/>
+              <path class="cross-a" d="M22 22 L38 38" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+              <path class="cross-b" d="M38 22 L22 38" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="apple-micro-pill pill-red">Authorization Incomplete</div>
+          <div class="state-big-title">Payment Failed</div>
+          <div class="state-hint-desc">The transaction could not be authorized. No amount was debited from your account.</div>
+
+          <div class="apple-fail-plate" id="pay-failed-sub">
+            The transaction was declined by the issuing bank.
+          </div>
+
+          <div class="apple-receipt-plate" style="margin-bottom:18px">
+            <div class="rec-entry">
+              <span class="label">Status</span>
+              <span class="value" style="color:var(--warn)">Failed</span>
+            </div>
+            <div class="rec-entry">
+              <span class="label">Request / Order ID</span>
+              <span class="value mono" id="pf-reqno">—</span>
+            </div>
+          </div>
+
+          <div style="width:100%;display:flex;flex-direction:column;gap:14px;align-items:center">
+            <button class="btn-apple" onclick="retryPayment()" id="retry-pay-btn">Try Again</button>
+            <button class="btn-another-student" onclick="resetSearch()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+              Check Another Student
+            </button>
+          </div>
         </div>
 
       </div>
 
     </div>
 
+    <!-- Exact Original Corner Link from index.html with Dynamic Hours Protection -->
     <div class="stage-help">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 0 1 4.9.8c0 1.7-2.4 2-2.4 3.5"/><path d="M12 17h.01"/></svg>
-      Need help? <a href="tel:+919872760880">Call the school office</a>
+      Need help? <a onclick="handleOfficeCall(event)">Call the school office</a>
     </div>
   </main>
 
 </div>
 
+<!-- ── REDESIGNED APPLE ABORT / MODAL SHEET ── -->
 <div id="modal-overlay" class="modal-overlay" onclick="if(event.target===this)closeModal()">
-  <div class="modal-box">
-    <div class="modal-ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg></div>
-    <div class="modal-title" id="modal-title">Something went wrong</div>
-    <div class="modal-text" id="modal-text">Please try again in a moment.</div>
-    <button class="btn btn-primary" onclick="closeModal()">Got it</button>
+  <div class="modal-sheet">
+    <div class="modal-glyph" id="modal-glyph">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+    </div>
+    <div class="modal-badge" id="modal-badge">Notice</div>
+    <div class="modal-title" id="modal-title">Payment Cancelled</div>
+    <div class="modal-text" id="modal-text">You closed the payment dialog before completing the transaction. No funds were debited.</div>
+    
+    <div id="modal-info-slot"></div>
+
+    <div class="modal-actions" id="modal-actions">
+      <button class="btn-apple" style="padding:14px" onclick="closeModal()">Dismiss</button>
+    </div>
   </div>
 </div>
 
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
 var CFG={
   workerBase: 'https://rzp-proxy.due-4a8.workers.dev',
@@ -532,6 +691,64 @@ var CFG={
 };
 
 var current=null;
+
+/* ── Office Call Hours Gatekeeper (Mon-Sat 9:00 - 14:00 IST) ── */
+window.handleOfficeCall=function(e){
+  if(e) e.preventDefault();
+  
+  var now = new Date();
+  var utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+  var istDate = new Date(utc + (3600000 * 5.5));
+  
+  var day = istDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  var hours = istDate.getHours();
+  var minutes = istDate.getMinutes();
+  var decimalTime = hours + (minutes / 60);
+
+  // Monday to Saturday (1 to 6) AND between 9:00 AM (9.0) and 2:00 PM (14.0)
+  var isWorkingDay = (day >= 1 && day <= 6);
+  var isWorkingHours = (decimalTime >= 9.0 && decimalTime < 14.0);
+
+  if(isWorkingDay && isWorkingHours){
+    window.location.href = 'tel:+919872760880';
+  } else {
+    openOfficeClosedModal();
+  }
+};
+
+window.openOfficeClosedModal=function(){
+  document.getElementById('modal-badge').textContent = 'Office Timing';
+  document.getElementById('modal-title').textContent = 'Office Currently Closed';
+  document.getElementById('modal-text').textContent = 'Calling hours are Monday to Saturday, 9:00 AM to 2:00 PM IST. You can message us anytime on WhatsApp.';
+  
+  document.getElementById('modal-info-slot').innerHTML = 
+    '<div class="modal-info-tile">' +
+      '<span class="tile-lbl">School Office WhatsApp</span>' +
+      '<span class="tile-num">+91 98727-60880</span>' +
+    '</div>';
+
+  document.getElementById('modal-actions').innerHTML = 
+    '<a class="modal-btn-wa" href="https://wa.me/919872760880?text=Hello%2C%20I%20have%20an%20inquiry%20regarding%20school%20fees." target="_blank" rel="noopener">' +
+      '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>' +
+      'Message on WhatsApp' +
+    '</a>' +
+    '<button class="modal-btn-sec" onclick="closeModal()">Dismiss</button>';
+
+  document.getElementById('modal-overlay').classList.add('show');
+};
+
+window.openModal=function(title, text){
+  document.getElementById('modal-badge').textContent = 'Notice';
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-text').textContent = text;
+  document.getElementById('modal-info-slot').innerHTML = '';
+  document.getElementById('modal-actions').innerHTML = '<button class="btn-apple" style="padding:14px" onclick="closeModal()">Dismiss</button>';
+  document.getElementById('modal-overlay').classList.add('show');
+};
+
+window.closeModal=function(){
+  document.getElementById('modal-overlay').classList.remove('show');
+};
 
 window.checkFee=async function(){
   var raw=(document.getElementById('adm-inp').value||'').trim();
@@ -562,21 +779,31 @@ window.checkFee=async function(){
     errText=e.message;
   }
 
-  btn.textContent='Check fee';
+  btn.textContent='Continue';
 
   if(!s){
     msg.className='msg err';
     msg.textContent = errText
-      ? 'We are unable to connect at the moment. Please check your internet connection and try again.'
-      : 'We could not find a record matching these details. Please verify the admission number and mobile number, or contact the school office for assistance.';
+      ? 'Unable to connect to school server. Please verify your connection.'
+      : 'No student record found matching these details. Please re-check.';
     resultEl.style.display='none'; emptyEl.style.display='';
     return;
   }
 
   msg.textContent=''; msg.className='msg';
+  renderStudentResult(s);
+};
+
+// Pulled out of checkFee() so the Hosted-Checkout-cancel return path can
+// redraw the same review screen without re-hitting /fee-lookup — the full
+// page navigation to Razorpay's hosted page and back wipes all JS state,
+// so this gets called again from handleCheckoutReturn() using the copy of
+// `s` that was stashed in sessionStorage right before payNow() navigated
+// away.
+function renderStudentResult(s){
   current=s;
-  emptyEl.style.display='none';
-  resultEl.style.display='';
+  document.getElementById('empty').style.display='none';
+  document.getElementById('result').style.display='block';
   document.getElementById('search-card').style.display='none';
   setStep(2);
   var bal=Number(s.balance)||0;
@@ -585,35 +812,62 @@ window.checkFee=async function(){
   document.getElementById('r-adm').textContent=s.adm||'—';
   document.getElementById('r-amount').textContent='₹'+Math.round(bal).toLocaleString('en-IN');
   document.getElementById('amount-label').textContent='Amount due';
-  var payBlock=document.getElementById('pay-block');
-  var amountBlock=document.getElementById('amount-block'), paidHero=document.getElementById('paid-hero');
+
+  var reviewBlock=document.getElementById('review-content');
+  var paidHero=document.getElementById('paid-hero');
   document.getElementById('pay-success').style.display='none';
   document.getElementById('pay-failed').style.display='none';
+  document.getElementById('success-copy-label').textContent='Copy Receipt Details';
+  document.getElementById('success-copy-btn').classList.remove('copied');
+  setHeroState('idle');
+
   var payBtn=document.getElementById('pay-btn');
-  payBtn.disabled=false; payBtn.textContent='Pay now';
+  payBtn.disabled=false; payBtn.textContent='Proceed to Pay';
   if(bal>0){
-    payBlock.style.display='';
-    amountBlock.style.display='';
+    reviewBlock.style.display='flex';
     paidHero.style.display='none';
   }else{
-    payBlock.style.display='none';
-    amountBlock.style.display='none';
+    reviewBlock.style.display='none';
     paidHero.style.display='flex';
+  }
+}
+
+window.setHeroState=function(state){
+  document.getElementById('app').setAttribute('data-hero-state', state);
+  var eyebrow=document.getElementById('fp-eyebrow-text');
+  var title=document.getElementById('fp-hero-title');
+  if(state==='success'){
+    eyebrow.textContent='Payment confirmed';
+    title.textContent='Payment successful';
+  }else if(state==='failed'){
+    eyebrow.textContent='Action needed';
+    title.textContent='Payment failed';
+  }else{
+    eyebrow.textContent='Secure Portal';
+    title.textContent='DigiFee Mitra';
   }
 };
 
 window.setStep=function(n){
+  var label = document.getElementById('step-text');
   for(var i=1;i<=3;i++){
-    var num=document.getElementById('step-num-'+i), lbl=document.getElementById('step-lbl-'+i);
-    if(!num) continue;
-    if(i<=n){ num.classList.add('active'); lbl.classList.add('active'); }
-    else { num.classList.remove('active'); lbl.classList.remove('active'); }
+    var dot = document.getElementById('step-dot-'+i);
+    if(dot){
+      if(i === n) dot.classList.add('active');
+      else dot.classList.remove('active');
+    }
   }
+  if(n===1) label.textContent = 'Student Verification';
+  else if(n===2) label.textContent = 'Statement Review';
+  else if(n===3) label.textContent = 'Direct Payment';
 };
 
 window.openModal=function(title, text){
+  document.getElementById('modal-badge').textContent = 'Notice';
   document.getElementById('modal-title').textContent = title;
   document.getElementById('modal-text').textContent = text;
+  document.getElementById('modal-info-slot').innerHTML = '';
+  document.getElementById('modal-actions').innerHTML = '<button class="btn-apple" style="padding:14px" onclick="closeModal()">Dismiss</button>';
   document.getElementById('modal-overlay').classList.add('show');
 };
 
@@ -621,20 +875,25 @@ window.closeModal=function(){
   document.getElementById('modal-overlay').classList.remove('show');
 };
 
+// ── Hosted Checkout ──
+// Per Razorpay/CollectNow's compliance requirement, this no longer opens the
+// checkout.js pop-up (Standard Checkout). Instead payNow() submits a plain
+// HTML form straight to Razorpay's Hosted Checkout endpoint, which takes
+// the browser away to a Razorpay-controlled page. That's a full navigation,
+// so ALL in-page JS state is lost — before submitting, the current student
+// record is stashed in sessionStorage so it can be restored when the
+// browser comes back (see handleCheckoutReturn() below).
 window.payNow=async function(){
   if(!current || !current.adm){ return; }
-  if(typeof Razorpay==='undefined'){
-    openModal('Payment unavailable', 'Payment could not be loaded. Please check your internet connection and reload the page.');
-    return;
-  }
 
   var mobDigits=(document.getElementById('mob-inp').value||'').replace(/\D/g,'');
+  var emailVal=(document.getElementById('email-inp').value||'').trim();
   var btn=document.getElementById('pay-btn');
   var origHtml=btn.innerHTML;
   btn.disabled=true;
   btn.innerHTML='<span class="spin"></span>';
 
-  var order=null, errMsg='Could not start payment. Please try again.';
+  var order=null, errMsg='Could not initiate order. Please try again.';
   try{
     var r=await fetch(CFG.workerBase+'/create-order',{
       method:'POST',
@@ -649,100 +908,170 @@ window.payNow=async function(){
              : (data.error.description || data.error.error || errMsg);
     }
   }catch(e){
-    errMsg='We are unable to connect at the moment. Please check your internet connection and try again.';
+    errMsg='Network error. Please check your internet connection.';
   }
 
-  btn.disabled=false;
-  btn.innerHTML=origHtml;
-
   if(!order){
-    openModal('Could not start payment', errMsg);
+    btn.disabled=false;
+    btn.innerHTML=origHtml;
+    openModal('Checkout Error', errMsg);
     return;
   }
 
+  // Hosted Checkout requires an email in the prefill — fall back to a
+  // placeholder built from the admission number if the parent left it
+  // blank, so the payment isn't blocked on a field most parents won't
+  // have handy.
+  var email = emailVal || ((current.adm||'student').replace(/[^a-zA-Z0-9]/g,'') + '@lisdnn.org');
+
+  try{ sessionStorage.setItem('df_pending', JSON.stringify(current)); }catch(e){}
+
   setStep(3);
-
-  var rzp=new Razorpay({
-    key        : order.key_id,
-    amount     : order.amount,
-    currency   : order.currency,
-    name       : order.school || CFG.school,
-    description: 'Fee payment — '+(order.name || current.name || ''),
-    order_id   : order.order_id,
-    prefill    : { contact: mobDigits, name: order.name || current.name || '' },
-    theme      : { color: '#1656d6' },
-    modal      : { ondismiss: function(){
-      setStep(2);
-      openModal('Payment cancelled', 'You closed the payment window before completing the payment. You can try again anytime.');
-    } },
-    handler    : function(response){ verifyPayment(response, order); }
-  });
-
-  rzp.on('payment.failed', function(resp){
-    setStep(2);
-    showFailedScreen(order, (resp && resp.error && resp.error.description) || 'The payment could not be completed. Please try again.');
-  });
-
-  rzp.open();
+  submitHostedCheckout(order, email, mobDigits);
+  // No need to re-enable the button — the page is about to navigate away.
 };
 
+// Builds and submits the hidden form Hosted Checkout requires. Razorpay
+// takes it from here: the browser is redirected to a Razorpay-hosted page,
+// and once the parent finishes (or cancels), Razorpay redirects the browser
+// back to callback_url (POST, handled server-side by the Worker) or
+// cancel_url (GET, straight back to this page).
+function submitHostedCheckout(order, email, mobDigits){
+  var returnBase = window.location.origin + window.location.pathname;
+
+  var form=document.createElement('form');
+  form.method='POST';
+  form.action='https://api.razorpay.com/v1/checkout/embedded';
+  form.style.display='none';
+
+  function addField(name, value){
+    var inp=document.createElement('input');
+    inp.type='hidden'; inp.name=name; inp.value = (value==null ? '' : value);
+    form.appendChild(inp);
+  }
+
+  addField('key_id', order.key_id);
+  addField('order_id', order.order_id);
+  addField('name', order.school || CFG.school);
+  addField('description', 'Fee payment — '+(order.name || current.name || ''));
+  addField('prefill[name]', order.name || current.name || '');
+  addField('prefill[email]', email);
+  addField('prefill[contact]', mobDigits);
+  addField('callback_url', CFG.workerBase+'/checkout-callback');
+  addField('cancel_url', returnBase+'?status=cancelled');
+
+  document.body.appendChild(form);
+  form.submit();
+}
+
 window.showFailedScreen=function(order, reason){
-  document.getElementById('pay-block').style.display='none';
-  document.getElementById('amount-block').style.display='none';
-  document.getElementById('pay-failed-sub').textContent=reason+(order && order.order_id ? ' · Request number: '+order.order_id : '');
+  document.getElementById('review-content').style.display='none';
+  document.getElementById('pay-failed-sub').textContent=reason;
+  document.getElementById('pf-reqno').textContent=(order && order.order_id) ? order.order_id : '—';
   document.getElementById('pay-failed').style.display='flex';
+  setHeroState('failed');
 };
 
 window.retryPayment=function(){
   document.getElementById('pay-failed').style.display='none';
-  document.getElementById('pay-block').style.display='';
-  document.getElementById('amount-block').style.display='';
+  document.getElementById('review-content').style.display='flex';
+  setHeroState('idle');
   payNow();
 };
 
-window.verifyPayment=async function(response, order){
-  var btn=document.getElementById('pay-btn');
-  btn.disabled=true;
-  btn.innerHTML='<span class="spin"></span>';
+// ── Return from Hosted Checkout ──
+// After the round-trip to Razorpay's hosted page, the browser lands back
+// here with ?status=success|failed|cancelled (and, on success/failure, the
+// details the Worker's /checkout-callback attached to the redirect). This
+// runs once on page load and rebuilds whichever screen the outcome calls
+// for, using the sessionStorage copy of `current` to fill in anything the
+// query string didn't carry.
+function handleCheckoutReturn(){
+  var params=new URLSearchParams(window.location.search);
+  var status=params.get('status');
+  if(!status) return;
 
-  var ok=false;
-  try{
-    var r=await fetch(CFG.workerBase+'/verify-payment',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        razorpay_order_id  : response.razorpay_order_id,
-        razorpay_payment_id: response.razorpay_payment_id,
-        razorpay_signature : response.razorpay_signature,
-        adm: order.adm
-      })
-    });
-    var res=await r.json();
-    ok = !!(r.ok && res && res.verified);
-  }catch(e){}
+  var saved=null;
+  try{ saved=JSON.parse(sessionStorage.getItem('df_pending')||'null'); }catch(e){}
 
-  if(!ok){
-    btn.disabled=false;
-    btn.textContent='Pay now';
-    openModal(
-      'Payment received, confirming…',
-      'Your payment went through but we could not confirm it instantly. Please contact the school office with your payment reference '+(response.razorpay_payment_id||'')+' if your balance does not update shortly.'
-    );
-    return;
+  if(status==='success'){
+    if(saved) current=saved;
+    document.getElementById('empty').style.display='none';
+    document.getElementById('result').style.display='block';
+    document.getElementById('search-card').style.display='none';
+    document.getElementById('review-content').style.display='none';
+    document.getElementById('paid-hero').style.display='none';
+    setStep(3);
+
+    var amountParam=params.get('amount');
+    var paidAmount = amountParam ? ('₹'+Math.round(Number(amountParam)).toLocaleString('en-IN')) : '—';
+    document.getElementById('ps-amount').textContent=paidAmount;
+    document.getElementById('ps-name').textContent=params.get('name')||(saved&&saved.name)||'—';
+    document.getElementById('ps-cls').textContent=params.get('cls')||(saved&&saved.cls)||'—';
+    document.getElementById('ps-adm').textContent=params.get('adm')||(saved&&saved.adm)||'—';
+    document.getElementById('ps-ref').textContent=params.get('payment_id')||'—';
+    document.getElementById('ps-reqno').textContent=params.get('order_id')||'—';
+    document.getElementById('pay-success').style.display='flex';
+    setHeroState('success');
+    sessionStorage.removeItem('df_pending');
+
+  }else if(status==='failed'){
+    if(saved){
+      renderStudentResult(saved);
+    }
+    showFailedScreen({ order_id: params.get('order_id') }, params.get('reason') || 'The transaction could not be completed.');
+    sessionStorage.removeItem('df_pending');
+
+  }else if(status==='cancelled'){
+    if(saved){
+      renderStudentResult(saved);
+    }else{
+      resetSearch();
+    }
+    openModal('Payment Aborted', 'Payment window was closed before completion. You can retry whenever you are ready.');
+    sessionStorage.removeItem('df_pending');
   }
 
-  document.getElementById('pay-block').style.display='none';
-  document.getElementById('amount-label').textContent='Amount paid';
-  var paidAmount='₹'+Math.round((order.amount||0)/100).toLocaleString('en-IN');
-  document.getElementById('r-amount').textContent=paidAmount;
-  document.getElementById('pay-success-sub').innerHTML='Amount: '+paidAmount+' · Payment ref: <span style="color:var(--ink);font-weight:700">'+response.razorpay_payment_id+'</span> · Request Number: <span style="color:var(--ink);font-weight:700">'+(order.order_id||'')+'</span>';
-  document.getElementById('pay-success').style.display='flex';
+  // Strip the status query string so a page refresh doesn't replay it.
+  window.history.replaceState({}, document.title, returnBase());
+}
+function returnBase(){ return window.location.origin + window.location.pathname; }
+
+window.copyPaymentDetails=function(){
+  var amount=document.getElementById('ps-amount').textContent;
+  var name=document.getElementById('ps-name').textContent;
+  var cls=document.getElementById('ps-cls').textContent;
+  var adm=document.getElementById('ps-adm').textContent;
+  var ref=document.getElementById('ps-ref').textContent;
+  var reqNo=document.getElementById('ps-reqno').textContent;
+  var text='Receipt - Lotus International School\nAmount: '+amount+'\nStudent: '+name+' ('+cls+')\nAdm: '+adm+'\nPayment Ref: '+ref+'\nOrder: '+reqNo;
+  var label=document.getElementById('success-copy-label');
+  var btn=document.getElementById('success-copy-btn');
+  function done(){
+    label.textContent='Receipt Copied';
+    btn.classList.add('copied');
+    setTimeout(function(){ label.textContent='Copy Receipt Details'; btn.classList.remove('copied'); },1600);
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(function(){ fallbackCopyText(text); done(); });
+  }else{
+    fallbackCopyText(text); done();
+  }
 };
+
+function fallbackCopyText(text){
+  var ta=document.createElement('textarea');
+  ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); }catch(e){}
+  document.body.removeChild(ta);
+}
 
 window.resetSearch=function(){
   current=null;
   setStep(1);
-  document.getElementById('search-card').style.display='';
+  setHeroState('idle');
+  document.getElementById('search-card').style.display='block';
   document.getElementById('result').style.display='none';
   document.getElementById('empty').style.display='';
   document.getElementById('msg').textContent='';
@@ -753,6 +1082,7 @@ window.resetSearch=function(){
 };
 window.addEventListener('load',function(){
   document.getElementById('school-title').textContent=CFG.school;
+  handleCheckoutReturn();
 });
 </script>
 </body>
