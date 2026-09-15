@@ -1008,7 +1008,20 @@ window.retryPayment=function(){
 function handleCheckoutReturn(){
   var params=new URLSearchParams(window.location.search);
   var status=params.get('status');
-  if(!status) return;
+
+  if(!status){
+    // No completion redirect landed at all. If we're mid-checkout
+    // (df_pending_order_id still set) this is most likely the parent
+    // hitting the browser's own Back button on Razorpay's hosted page —
+    // that's a pure client-side history navigation, so Razorpay never
+    // calls our cancel_url or callback_url and no ?status= ever arrives.
+    var pendingOrderId=null;
+    try{ pendingOrderId=sessionStorage.getItem('df_pending_order_id'); }catch(e){}
+    if(pendingOrderId){
+      handleAbandonedCheckout(pendingOrderId);
+    }
+    return;
+  }
 
   var saved=null;
   try{ saved=JSON.parse(sessionStorage.getItem('df_pending')||'null'); }catch(e){}
@@ -1111,6 +1124,44 @@ function renderUnverifiedPayment(orderId, paymentIdHint){
   }, 'We couldn\'t verify this payment against our records. If an amount was debited, please contact the school office with your payment reference.');
 }
 
+// Handles the parent hitting the browser's own Back button while on
+// Razorpay's hosted page (instead of anything Razorpay itself provides).
+// Since that never reaches our /checkout-callback, we don't actually know
+// the outcome — so double-check via /receipt before assuming it was
+// aborted: on the rare chance the payment captured right before the
+// back-navigation, show the real success screen instead of a false
+// "aborted" message.
+async function handleAbandonedCheckout(orderId){
+  var data=null;
+  try{
+    var r=await fetch(CFG.workerBase+'/receipt/'+encodeURIComponent(orderId));
+    data=await r.json();
+  }catch(e){}
+
+  var saved=null;
+  try{ saved=JSON.parse(sessionStorage.getItem('df_pending')||'null'); }catch(e){}
+
+  if(data && data.status==='success'){
+    document.getElementById('empty').style.display='none';
+    document.getElementById('result').style.display='block';
+    document.getElementById('search-card').style.display='none';
+    document.getElementById('review-content').style.display='none';
+    document.getElementById('paid-hero').style.display='none';
+    setStep(3);
+    verifyAndRenderSuccess(orderId, null);
+  }else{
+    if(saved){
+      renderStudentResult(saved);
+    }else{
+      resetSearch();
+    }
+    openModal('Payment Aborted', 'Payment window was closed before completion. You can retry whenever you are ready.');
+  }
+
+  sessionStorage.removeItem('df_pending');
+  sessionStorage.removeItem('df_pending_order_id');
+}
+
 window.copyPaymentDetails=function(){
   var amount=document.getElementById('ps-amount').textContent;
   var name=document.getElementById('ps-name').textContent;
@@ -1157,6 +1208,16 @@ window.resetSearch=function(){
 window.addEventListener('load',function(){
   document.getElementById('school-title').textContent=CFG.school;
   handleCheckoutReturn();
+});
+// Fires when the page is restored from the back/forward cache — the
+// scenario where the parent hit the browser's own Back button on
+// Razorpay's hosted page. 'load' does NOT fire again in that case (the
+// page is restored exactly as it was frozen, not reloaded), so this is
+// the only reliable hook for it.
+window.addEventListener('pageshow',function(e){
+  if(e.persisted){
+    handleCheckoutReturn();
+  }
 });
 </script>
 </body>
