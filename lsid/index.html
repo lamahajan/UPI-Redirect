@@ -994,6 +994,11 @@ window.retryPayment=function(){
 function handleCheckoutReturn(){
   var params=new URLSearchParams(window.location.search);
   var status=params.get('status');
+  // Hitting the browser's own Back button on Razorpay's hosted page (instead
+  // of Razorpay's own cancel/close action) never touches cancel_url — the
+  // browser just pops the history entry, no ?status= query at all. That
+  // case is handled separately by handleAbortedReturn() (see the pageshow
+  // listener below), so just bail here without clearing df_pending.
   if(!status) return;
 
   var saved=null;
@@ -1095,9 +1100,44 @@ window.resetSearch=function(){
   document.getElementById('mob-inp').value='';
   document.getElementById('adm-inp').focus();
 };
+// ── Handle "came back without Razorpay ever telling us anything" ──
+// Covers: pressing the browser's Back button while on Razorpay's hosted
+// page. That's a pure history pop — no cancel_url hit, no ?status= query —
+// so handleCheckoutReturn() alone never sees it. We detect it instead by
+// checking for a leftover df_pending record (stashed right before we
+// navigated to Razorpay) with no status query string on return: that
+// combination only happens when the user left mid-payment and came back
+// without completing it.
+function handleAbortedReturn(){
+  var params=new URLSearchParams(window.location.search);
+  if(params.get('status')) return false; // real callback already handling this
+  var saved=null;
+  try{ saved=JSON.parse(sessionStorage.getItem('df_pending')||'null'); }catch(e){}
+  if(!saved) return false;
+
+  current=saved;
+  renderStudentResult(saved);
+  openModal('Payment Aborted', 'Payment window was closed before completion. You can retry whenever you are ready.');
+  sessionStorage.removeItem('df_pending');
+  sessionStorage.removeItem('df_pending_order_id');
+  return true;
+}
+
 window.addEventListener('load',function(){
   document.getElementById('school-title').textContent=CFG.school;
   handleCheckoutReturn();
+  // Fresh network load (not a bfcache restore) landing back with no status —
+  // e.g. some browsers reload instead of restoring from cache after Back.
+  handleAbortedReturn();
+});
+
+// Back-button restores from Razorpay's page typically come back via the
+// browser's back/forward cache, which fires 'pageshow' with persisted=true
+// instead of 'load'. Catch that path here too.
+window.addEventListener('pageshow',function(e){
+  if(e.persisted){
+    handleAbortedReturn();
+  }
 });
 </script>
 </body>
