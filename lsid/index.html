@@ -916,6 +916,14 @@ window.payNow=async function(){
   var email = (current.adm||'student').replace(/[^a-zA-Z0-9]/g,'') + '@lisdnn.org';
 
   try{ sessionStorage.setItem('df_pending', JSON.stringify(current)); }catch(e){}
+  // Belt-and-braces: order_id is ALSO baked into callback_url as a query
+  // param (see submitHostedCheckout below), which is the primary way it
+  // comes back. But Razorpay doesn't guarantee callback_url's query string
+  // survives every decline path (some hit our POST handler with it
+  // stripped, some round-trip differently), so we keep our own copy here
+  // too — handleCheckoutReturn() falls back to this if the URL param is
+  // ever missing on return.
+  try{ sessionStorage.setItem('df_pending_order_id', order.order_id||''); }catch(e){}
 
   setStep(3);
   submitHostedCheckout(order, email, mobDigits);
@@ -990,6 +998,13 @@ function handleCheckoutReturn(){
 
   var saved=null;
   try{ saved=JSON.parse(sessionStorage.getItem('df_pending')||'null'); }catch(e){}
+  var savedOrderId=null;
+  try{ savedOrderId=sessionStorage.getItem('df_pending_order_id')||null; }catch(e){}
+  // Prefer whatever Razorpay/our own callback_url query string handed back;
+  // fall back to the sessionStorage copy stashed right before navigating
+  // away, so the Request/Order ID field is never blank just because the
+  // round-trip query param didn't survive.
+  var effectiveOrderId = params.get('order_id') || savedOrderId || '';
 
   if(status==='success'){
     if(saved) current=saved;
@@ -1007,17 +1022,19 @@ function handleCheckoutReturn(){
     document.getElementById('ps-cls').textContent=params.get('cls')||(saved&&saved.cls)||'—';
     document.getElementById('ps-adm').textContent=params.get('adm')||(saved&&saved.adm)||'—';
     document.getElementById('ps-ref').textContent=params.get('payment_id')||'—';
-    document.getElementById('ps-reqno').textContent=params.get('order_id')||'—';
+    document.getElementById('ps-reqno').textContent=effectiveOrderId||'—';
     document.getElementById('pay-success').style.display='flex';
     setHeroState('success');
     sessionStorage.removeItem('df_pending');
+    sessionStorage.removeItem('df_pending_order_id');
 
   }else if(status==='failed'){
     if(saved){
       renderStudentResult(saved);
     }
-    showFailedScreen({ order_id: params.get('order_id') }, params.get('reason') || 'The transaction could not be completed.');
+    showFailedScreen({ order_id: effectiveOrderId }, params.get('reason') || 'The transaction could not be completed.');
     sessionStorage.removeItem('df_pending');
+    sessionStorage.removeItem('df_pending_order_id');
 
   }else if(status==='cancelled'){
     if(saved){
@@ -1027,6 +1044,7 @@ function handleCheckoutReturn(){
     }
     openModal('Payment Aborted', 'Payment window was closed before completion. You can retry whenever you are ready.');
     sessionStorage.removeItem('df_pending');
+    sessionStorage.removeItem('df_pending_order_id');
   }
 
   // Strip the status query string so a page refresh doesn't replay it.
