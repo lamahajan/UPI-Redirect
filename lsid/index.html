@@ -516,13 +516,6 @@ body{font-family:var(--sans);background:#fbfbfd;color:var(--ink);height:100%;ove
             </div>
           </div>
 
-          <div class="apple-field" style="width:100%;text-align:left">
-            <label for="email-inp">Email for receipt (optional)</label>
-            <div class="inp-wrap">
-              <input id="email-inp" type="email" placeholder="parent@example.com" autocomplete="off"/>
-            </div>
-          </div>
-
           <div id="pay-block" style="width:100%;display:flex;flex-direction:column;gap:16px">
             <button class="btn-apple" onclick="payNow()" id="pay-btn">Proceed to Pay</button>
             <div id="pay-msg" class="msg"></div>
@@ -637,7 +630,19 @@ body{font-family:var(--sans);background:#fbfbfd;color:var(--ink);height:100%;ove
               <span class="value" style="color:var(--warn)">Failed</span>
             </div>
             <div class="rec-entry">
-              <span class="label">Request / Order ID</span>
+              <span class="label">Student</span>
+              <span class="value" id="pf-name">—</span>
+            </div>
+            <div class="rec-entry">
+              <span class="label">Class &amp; Section</span>
+              <span class="value" id="pf-cls">—</span>
+            </div>
+            <div class="rec-entry">
+              <span class="label">Admission Number</span>
+              <span class="value mono" id="pf-adm">—</span>
+            </div>
+            <div class="rec-entry">
+              <span class="label">Order Reference</span>
               <span class="value mono" id="pf-reqno">—</span>
             </div>
           </div>
@@ -774,18 +779,20 @@ window.checkFee=async function(){
       body:JSON.stringify({adm:raw, mobile:mobDigits})
     });
     var data=await r.json();
-    if(data&&data.found){ s=data; }
+    if(r.ok && data && data.found){
+      s=data;
+    }else if(data && data.error){
+      errText=data.error;
+    }
   }catch(e){
-    errText=e.message;
+    errText='Unable to connect to school server. Please verify your connection.';
   }
 
   btn.textContent='Continue';
 
   if(!s){
     msg.className='msg err';
-    msg.textContent = errText
-      ? 'Unable to connect to school server. Please verify your connection.'
-      : 'No student record found matching these details. Please re-check.';
+    msg.textContent = errText || 'No student record found matching these details. Please re-check.';
     resultEl.style.display='none'; emptyEl.style.display='';
     return;
   }
@@ -887,7 +894,6 @@ window.payNow=async function(){
   if(!current || !current.adm){ return; }
 
   var mobDigits=(document.getElementById('mob-inp').value||'').replace(/\D/g,'');
-  var emailVal=(document.getElementById('email-inp').value||'').trim();
   var btn=document.getElementById('pay-btn');
   var origHtml=btn.innerHTML;
   btn.disabled=true;
@@ -918,13 +924,16 @@ window.payNow=async function(){
     return;
   }
 
-  // Hosted Checkout requires an email in the prefill — fall back to a
-  // placeholder built from the admission number if the parent left it
-  // blank, so the payment isn't blocked on a field most parents won't
-  // have handy.
-  var email = emailVal || ((current.adm||'student').replace(/[^a-zA-Z0-9]/g,'') + '@lisdnn.org');
+  // Hosted Checkout requires an email in the prefill, but the pay page no
+  // longer asks the parent for one — a placeholder built from the
+  // admission number satisfies the mandatory field silently.
+  var email = (current.adm||'student').replace(/[^a-zA-Z0-9]/g,'') + '@lisdnn.org';
 
   try{ sessionStorage.setItem('df_pending', JSON.stringify(current)); }catch(e){}
+  // Stashed separately from `current` (which is the student record) so the
+  // failed-return path has an order_id to fall back on even if Razorpay's
+  // error POST doesn't include error[metadata][order_id].
+  try{ sessionStorage.setItem('df_pending_order_id', order.order_id||''); }catch(e){}
 
   setStep(3);
   submitHostedCheckout(order, email, mobDigits);
@@ -967,6 +976,9 @@ function submitHostedCheckout(order, email, mobDigits){
 window.showFailedScreen=function(order, reason){
   document.getElementById('review-content').style.display='none';
   document.getElementById('pay-failed-sub').textContent=reason;
+  document.getElementById('pf-name').textContent=(order && order.name) ? order.name : '—';
+  document.getElementById('pf-cls').textContent=(order && order.cls) ? order.cls : '—';
+  document.getElementById('pf-adm').textContent=(order && order.adm) ? order.adm : '—';
   document.getElementById('pf-reqno').textContent=(order && order.order_id) ? order.order_id : '—';
   document.getElementById('pay-failed').style.display='flex';
   setHeroState('failed');
@@ -981,46 +993,88 @@ window.retryPayment=function(){
 
 // ── Return from Hosted Checkout ──
 // After the round-trip to Razorpay's hosted page, the browser lands back
-// here with ?status=success|failed|cancelled (and, on success/failure, the
-// details the Worker's /checkout-callback attached to the redirect). This
-// runs once on page load and rebuilds whichever screen the outcome calls
-// for, using the sessionStorage copy of `current` to fill in anything the
-// query string didn't carry.
+// here with ?status=success|failed|cancelled&order_id=...&payment_id=....
+// The redirect URL deliberately carries ONLY status/order_id/payment_id/
+// reason — never the student name, class, admission number or amount —
+// because query-string params sit in plain text in the address bar and
+// anyone can hand-edit them. If we trusted a `name`/`amount` param to
+// paint a green "Payment Successful" screen, someone could craft a fake
+// success link and use it as bogus proof of payment.
+//
+// So instead: for a 'success' status, this calls the Worker's /receipt
+// endpoint, which looks the order_id up directly in Firebase and returns
+// the real captured amount/name/cls — that response, not the URL, is
+// what gets rendered. The URL is also left in place (not stripped) once
+// rendered, so the same link keeps working if bookmarked, refreshed, or
+// re-opened later — reopening it just re-runs this same verified lookup.
 function handleCheckoutReturn(){
   var params=new URLSearchParams(window.location.search);
   var status=params.get('status');
-  if(!status) return;
+  var directOrderId=params.get('order_id');
 
-  var saved=null;
-  try{ saved=JSON.parse(sessionStorage.getItem('df_pending')||'null'); }catch(e){}
-
-  if(status==='success'){
-    if(saved) current=saved;
+  // A URL carrying only ?order_id=... (no ?status=...) is NOT a Hosted
+  // Checkout redirect — it's someone opening/reopening/bookmarking a
+  // plain order_id link (e.g. a shared or saved link). Previously this
+  // fell straight into the "no status" branch below, which only checks
+  // sessionStorage and does nothing on a fresh tab/device — so the page
+  // stayed on the empty state with no error and no data. Instead, treat
+  // a bare order_id the same as a return trip: ask the Worker's /receipt
+  // endpoint (Firebase-verified, never trusts the URL) and render
+  // whatever it says — success, pending, or "couldn't verify".
+  if(!status && directOrderId){
     document.getElementById('empty').style.display='none';
     document.getElementById('result').style.display='block';
     document.getElementById('search-card').style.display='none';
     document.getElementById('review-content').style.display='none';
     document.getElementById('paid-hero').style.display='none';
     setStep(3);
+    verifyAndRenderSuccess(directOrderId, params.get('payment_id'));
+    return;
+  }
 
-    var amountParam=params.get('amount');
-    var paidAmount = amountParam ? ('₹'+Math.round(Number(amountParam)).toLocaleString('en-IN')) : '—';
-    document.getElementById('ps-amount').textContent=paidAmount;
-    document.getElementById('ps-name').textContent=params.get('name')||(saved&&saved.name)||'—';
-    document.getElementById('ps-cls').textContent=params.get('cls')||(saved&&saved.cls)||'—';
-    document.getElementById('ps-adm').textContent=params.get('adm')||(saved&&saved.adm)||'—';
-    document.getElementById('ps-ref').textContent=params.get('payment_id')||'—';
-    document.getElementById('ps-reqno').textContent=params.get('order_id')||'—';
-    document.getElementById('pay-success').style.display='flex';
-    setHeroState('success');
+  if(!status){
+    // No completion redirect landed at all. If we're mid-checkout
+    // (df_pending_order_id still set) this is most likely the parent
+    // hitting the browser's own Back button on Razorpay's hosted page —
+    // that's a pure client-side history navigation, so Razorpay never
+    // calls our cancel_url or callback_url and no ?status= ever arrives.
+    var pendingOrderId=null;
+    try{ pendingOrderId=sessionStorage.getItem('df_pending_order_id'); }catch(e){}
+    if(pendingOrderId){
+      handleAbandonedCheckout(pendingOrderId);
+    }
+    return;
+  }
+
+  var saved=null;
+  try{ saved=JSON.parse(sessionStorage.getItem('df_pending')||'null'); }catch(e){}
+
+  if(status==='success'){
+    var orderId=params.get('order_id');
+    document.getElementById('empty').style.display='none';
+    document.getElementById('result').style.display='block';
+    document.getElementById('search-card').style.display='none';
+    document.getElementById('review-content').style.display='none';
+    document.getElementById('paid-hero').style.display='none';
+    setStep(3);
+    verifyAndRenderSuccess(orderId, params.get('payment_id'));
     sessionStorage.removeItem('df_pending');
+    sessionStorage.removeItem('df_pending_order_id');
 
   }else if(status==='failed'){
     if(saved){
       renderStudentResult(saved);
     }
-    showFailedScreen({ order_id: params.get('order_id') }, params.get('reason') || 'The transaction could not be completed.');
+    var fallbackOrderId=null;
+    try{ fallbackOrderId=sessionStorage.getItem('df_pending_order_id'); }catch(e){}
+    showFailedScreen({
+      name: (saved && saved.name) || null,
+      cls: (saved && saved.cls) || null,
+      adm: (saved && saved.adm) || null,
+      order_id: params.get('order_id') || fallbackOrderId || null
+    }, params.get('reason') || 'The transaction could not be completed.');
     sessionStorage.removeItem('df_pending');
+    sessionStorage.removeItem('df_pending_order_id');
 
   }else if(status==='cancelled'){
     if(saved){
@@ -1030,12 +1084,106 @@ function handleCheckoutReturn(){
     }
     openModal('Payment Aborted', 'Payment window was closed before completion. You can retry whenever you are ready.');
     sessionStorage.removeItem('df_pending');
+    sessionStorage.removeItem('df_pending_order_id');
   }
 
-  // Strip the status query string so a page refresh doesn't replay it.
-  window.history.replaceState({}, document.title, returnBase());
+  // Cancelled attempts have nothing worth bookmarking, so clear those from
+  // the URL. Success/failed URLs are left in place on purpose — reopening
+  // one just re-runs the same server-verified lookup above, so the link
+  // stays meaningful (and safe) to revisit or share later.
+  if(status==='cancelled'){
+    window.history.replaceState({}, document.title, returnBase());
+  }
 }
 function returnBase(){ return window.location.origin + window.location.pathname; }
+
+// ── Authoritative success verification ──
+// Called only with the order_id from the redirect URL. Never trusts any
+// amount/name/cls that might sit in the query string (there isn't one
+// anymore, but this stays defensive even if that ever changes) — the
+// screen only renders once the Worker's /receipt endpoint confirms a real
+// captured payment against Firebase.
+async function verifyAndRenderSuccess(orderId, paymentIdHint, attempt){
+  attempt = attempt || 0;
+  if(!orderId){
+    renderUnverifiedPayment(null, null);
+    return;
+  }
+  var data=null;
+  try{
+    var r=await fetch(CFG.workerBase+'/receipt/'+encodeURIComponent(orderId));
+    data=await r.json();
+  }catch(e){}
+
+  if(data && data.status==='success'){
+    document.getElementById('ps-amount').textContent='₹'+Math.round(Number(data.amount)||0).toLocaleString('en-IN');
+    document.getElementById('ps-name').textContent=data.name||'—';
+    document.getElementById('ps-cls').textContent=data.cls||'—';
+    document.getElementById('ps-adm').textContent=data.adm||'—';
+    document.getElementById('ps-ref').textContent=data.payment_id||paymentIdHint||'—';
+    document.getElementById('ps-reqno').textContent=orderId;
+    document.getElementById('pay-success').style.display='flex';
+    setHeroState('success');
+    return;
+  }
+
+  if(data && data.status==='pending' && attempt<3){
+    // Webhook / callback settlement may still be finishing — retry a
+    // couple of times before giving up.
+    setTimeout(function(){ verifyAndRenderSuccess(orderId, paymentIdHint, attempt+1); }, 1500);
+    return;
+  }
+
+  renderUnverifiedPayment(orderId, paymentIdHint);
+}
+
+// Shown when /receipt can't confirm a captured payment for this order_id —
+// e.g. an edited/fabricated URL, or a very old link past the monthly
+// Firebase cleanup. Deliberately does NOT show a green success state.
+function renderUnverifiedPayment(orderId, paymentIdHint){
+  document.getElementById('pay-success').style.display='none';
+  showFailedScreen({
+    order_id: orderId || paymentIdHint || null
+  }, 'We couldn\'t verify this payment against our records. If an amount was debited, please contact the school office with your payment reference.');
+}
+
+// Handles the parent hitting the browser's own Back button while on
+// Razorpay's hosted page (instead of anything Razorpay itself provides).
+// Since that never reaches our /checkout-callback, we don't actually know
+// the outcome — so double-check via /receipt before assuming it was
+// aborted: on the rare chance the payment captured right before the
+// back-navigation, show the real success screen instead of a false
+// "aborted" message.
+async function handleAbandonedCheckout(orderId){
+  var data=null;
+  try{
+    var r=await fetch(CFG.workerBase+'/receipt/'+encodeURIComponent(orderId));
+    data=await r.json();
+  }catch(e){}
+
+  var saved=null;
+  try{ saved=JSON.parse(sessionStorage.getItem('df_pending')||'null'); }catch(e){}
+
+  if(data && data.status==='success'){
+    document.getElementById('empty').style.display='none';
+    document.getElementById('result').style.display='block';
+    document.getElementById('search-card').style.display='none';
+    document.getElementById('review-content').style.display='none';
+    document.getElementById('paid-hero').style.display='none';
+    setStep(3);
+    verifyAndRenderSuccess(orderId, null);
+  }else{
+    if(saved){
+      renderStudentResult(saved);
+    }else{
+      resetSearch();
+    }
+    openModal('Payment Aborted', 'Payment window was closed before completion. You can retry whenever you are ready.');
+  }
+
+  sessionStorage.removeItem('df_pending');
+  sessionStorage.removeItem('df_pending_order_id');
+}
 
 window.copyPaymentDetails=function(){
   var amount=document.getElementById('ps-amount').textContent;
@@ -1083,6 +1231,16 @@ window.resetSearch=function(){
 window.addEventListener('load',function(){
   document.getElementById('school-title').textContent=CFG.school;
   handleCheckoutReturn();
+});
+// Fires when the page is restored from the back/forward cache — the
+// scenario where the parent hit the browser's own Back button on
+// Razorpay's hosted page. 'load' does NOT fire again in that case (the
+// page is restored exactly as it was frozen, not reloaded), so this is
+// the only reliable hook for it.
+window.addEventListener('pageshow',function(e){
+  if(e.persisted){
+    handleCheckoutReturn();
+  }
 });
 </script>
 </body>
