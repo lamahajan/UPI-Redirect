@@ -443,11 +443,11 @@ body{font-family:var(--sans);background:#fbfbfd;color:var(--ink);height:100%;ove
     </div>
     <div class="fp-tagline">Nurturing Minds. Building Future.</div>
     <div class="fp-legal">
-      <a href="https://fee.lisdnn.org/privacy-policy">Privacy Policy</a>
+      <a href="https://fee.lisdnn.org/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>
       <span class="dot"></span>
-      <a href="https://fee.lisdnn.org/terms-and-conditions">Terms &amp; Conditions</a>
+      <a href="https://fee.lisdnn.org/terms-and-conditions" target="_blank" rel="noopener">Terms &amp; Conditions</a>
       <span class="dot"></span>
-      <a href="https://fee.lisdnn.org/refund-policy">Refund Policy</a>
+      <a href="https://fee.lisdnn.org/refund-policy" target="_blank" rel="noopener">Refund Policy</a>
     </div>
   </div>
 
@@ -513,6 +513,13 @@ body{font-family:var(--sans);background:#fbfbfd;color:var(--ink);height:100%;ove
             <div class="rec-entry">
               <span class="label">Admission Number</span>
               <span class="value" id="r-adm">—</span>
+            </div>
+          </div>
+
+          <div class="apple-field" style="width:100%;text-align:left">
+            <label for="email-inp">Email for receipt (optional)</label>
+            <div class="inp-wrap">
+              <input id="email-inp" type="email" placeholder="parent@example.com" autocomplete="off"/>
             </div>
           </div>
 
@@ -880,6 +887,7 @@ window.payNow=async function(){
   if(!current || !current.adm){ return; }
 
   var mobDigits=(document.getElementById('mob-inp').value||'').replace(/\D/g,'');
+  var emailVal=(document.getElementById('email-inp').value||'').trim();
   var btn=document.getElementById('pay-btn');
   var origHtml=btn.innerHTML;
   btn.disabled=true;
@@ -910,10 +918,11 @@ window.payNow=async function(){
     return;
   }
 
-  // Hosted Checkout requires an email in the prefill, but the pay page no
-  // longer asks the parent for one — a placeholder built from the
-  // admission number satisfies the mandatory field silently.
-  var email = (current.adm||'student').replace(/[^a-zA-Z0-9]/g,'') + '@lisdnn.org';
+  // Hosted Checkout requires an email in the prefill — fall back to a
+  // placeholder built from the admission number if the parent left it
+  // blank, so the payment isn't blocked on a field most parents won't
+  // have handy.
+  var email = emailVal || ((current.adm||'student').replace(/[^a-zA-Z0-9]/g,'') + '@lisdnn.org');
 
   try{ sessionStorage.setItem('df_pending', JSON.stringify(current)); }catch(e){}
 
