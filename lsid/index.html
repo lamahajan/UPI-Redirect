@@ -630,7 +630,19 @@ body{font-family:var(--sans);background:#fbfbfd;color:var(--ink);height:100%;ove
               <span class="value" style="color:var(--warn)">Failed</span>
             </div>
             <div class="rec-entry">
-              <span class="label">Request / Order ID</span>
+              <span class="label">Student</span>
+              <span class="value" id="pf-name">—</span>
+            </div>
+            <div class="rec-entry">
+              <span class="label">Class &amp; Section</span>
+              <span class="value" id="pf-cls">—</span>
+            </div>
+            <div class="rec-entry">
+              <span class="label">Admission Number</span>
+              <span class="value mono" id="pf-adm">—</span>
+            </div>
+            <div class="rec-entry">
+              <span class="label">Order Reference</span>
               <span class="value mono" id="pf-reqno">—</span>
             </div>
           </div>
@@ -916,6 +928,10 @@ window.payNow=async function(){
   var email = (current.adm||'student').replace(/[^a-zA-Z0-9]/g,'') + '@lisdnn.org';
 
   try{ sessionStorage.setItem('df_pending', JSON.stringify(current)); }catch(e){}
+  // Stashed separately from `current` (which is the student record) so the
+  // failed-return path has an order_id to fall back on even if Razorpay's
+  // error POST doesn't include error[metadata][order_id].
+  try{ sessionStorage.setItem('df_pending_order_id', order.order_id||''); }catch(e){}
 
   setStep(3);
   submitHostedCheckout(order, email, mobDigits);
@@ -958,6 +974,9 @@ function submitHostedCheckout(order, email, mobDigits){
 window.showFailedScreen=function(order, reason){
   document.getElementById('review-content').style.display='none';
   document.getElementById('pay-failed-sub').textContent=reason;
+  document.getElementById('pf-name').textContent=(order && order.name) ? order.name : '—';
+  document.getElementById('pf-cls').textContent=(order && order.cls) ? order.cls : '—';
+  document.getElementById('pf-adm').textContent=(order && order.adm) ? order.adm : '—';
   document.getElementById('pf-reqno').textContent=(order && order.order_id) ? order.order_id : '—';
   document.getElementById('pay-failed').style.display='flex';
   setHeroState('failed');
@@ -1005,13 +1024,22 @@ function handleCheckoutReturn(){
     document.getElementById('pay-success').style.display='flex';
     setHeroState('success');
     sessionStorage.removeItem('df_pending');
+    sessionStorage.removeItem('df_pending_order_id');
 
   }else if(status==='failed'){
     if(saved){
       renderStudentResult(saved);
     }
-    showFailedScreen({ order_id: params.get('order_id') }, params.get('reason') || 'The transaction could not be completed.');
+    var fallbackOrderId=null;
+    try{ fallbackOrderId=sessionStorage.getItem('df_pending_order_id'); }catch(e){}
+    showFailedScreen({
+      name: (saved && saved.name) || null,
+      cls: (saved && saved.cls) || null,
+      adm: (saved && saved.adm) || null,
+      order_id: params.get('order_id') || fallbackOrderId || null
+    }, params.get('reason') || 'The transaction could not be completed.');
     sessionStorage.removeItem('df_pending');
+    sessionStorage.removeItem('df_pending_order_id');
 
   }else if(status==='cancelled'){
     if(saved){
@@ -1021,6 +1049,7 @@ function handleCheckoutReturn(){
     }
     openModal('Payment Aborted', 'Payment window was closed before completion. You can retry whenever you are ready.');
     sessionStorage.removeItem('df_pending');
+    sessionStorage.removeItem('df_pending_order_id');
   }
 
   // Strip the status query string so a page refresh doesn't replay it.
