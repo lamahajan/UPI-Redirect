@@ -1008,6 +1008,27 @@ window.retryPayment=function(){
 function handleCheckoutReturn(){
   var params=new URLSearchParams(window.location.search);
   var status=params.get('status');
+  var directOrderId=params.get('order_id');
+
+  // A URL carrying only ?order_id=... (no ?status=...) is NOT a Hosted
+  // Checkout redirect — it's someone opening/reopening/bookmarking a
+  // plain order_id link (e.g. a shared or saved link). Previously this
+  // fell straight into the "no status" branch below, which only checks
+  // sessionStorage and does nothing on a fresh tab/device — so the page
+  // stayed on the empty state with no error and no data. Instead, treat
+  // a bare order_id the same as a return trip: ask the Worker's /receipt
+  // endpoint (Firebase-verified, never trusts the URL) and render
+  // whatever it says — success, pending, or "couldn't verify".
+  if(!status && directOrderId){
+    document.getElementById('empty').style.display='none';
+    document.getElementById('result').style.display='block';
+    document.getElementById('search-card').style.display='none';
+    document.getElementById('review-content').style.display='none';
+    document.getElementById('paid-hero').style.display='none';
+    setStep(3);
+    verifyAndRenderSuccess(directOrderId, params.get('payment_id'));
+    return;
+  }
 
   if(!status){
     // No completion redirect landed at all. If we're mid-checkout
