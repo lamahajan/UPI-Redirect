@@ -991,11 +991,20 @@ window.retryPayment=function(){
 
 // ── Return from Hosted Checkout ──
 // After the round-trip to Razorpay's hosted page, the browser lands back
-// here with ?status=success|failed|cancelled (and, on success/failure, the
-// details the Worker's /checkout-callback attached to the redirect). This
-// runs once on page load and rebuilds whichever screen the outcome calls
-// for, using the sessionStorage copy of `current` to fill in anything the
-// query string didn't carry.
+// here with ?status=success|failed|cancelled&order_id=...&payment_id=....
+// The redirect URL deliberately carries ONLY status/order_id/payment_id/
+// reason — never the student name, class, admission number or amount —
+// because query-string params sit in plain text in the address bar and
+// anyone can hand-edit them. If we trusted a `name`/`amount` param to
+// paint a green "Payment Successful" screen, someone could craft a fake
+// success link and use it as bogus proof of payment.
+//
+// So instead: for a 'success' status, this calls the Worker's /receipt
+// endpoint, which looks the order_id up directly in Firebase and returns
+// the real captured amount/name/cls — that response, not the URL, is
+// what gets rendered. The URL is also left in place (not stripped) once
+// rendered, so the same link keeps working if bookmarked, refreshed, or
+// re-opened later — reopening it just re-runs this same verified lookup.
 function handleCheckoutReturn(){
   var params=new URLSearchParams(window.location.search);
   var status=params.get('status');
@@ -1005,24 +1014,14 @@ function handleCheckoutReturn(){
   try{ saved=JSON.parse(sessionStorage.getItem('df_pending')||'null'); }catch(e){}
 
   if(status==='success'){
-    if(saved) current=saved;
+    var orderId=params.get('order_id');
     document.getElementById('empty').style.display='none';
     document.getElementById('result').style.display='block';
     document.getElementById('search-card').style.display='none';
     document.getElementById('review-content').style.display='none';
     document.getElementById('paid-hero').style.display='none';
     setStep(3);
-
-    var amountParam=params.get('amount');
-    var paidAmount = amountParam ? ('₹'+Math.round(Number(amountParam)).toLocaleString('en-IN')) : '—';
-    document.getElementById('ps-amount').textContent=paidAmount;
-    document.getElementById('ps-name').textContent=params.get('name')||(saved&&saved.name)||'—';
-    document.getElementById('ps-cls').textContent=params.get('cls')||(saved&&saved.cls)||'—';
-    document.getElementById('ps-adm').textContent=params.get('adm')||(saved&&saved.adm)||'—';
-    document.getElementById('ps-ref').textContent=params.get('payment_id')||'—';
-    document.getElementById('ps-reqno').textContent=params.get('order_id')||'—';
-    document.getElementById('pay-success').style.display='flex';
-    setHeroState('success');
+    verifyAndRenderSuccess(orderId, params.get('payment_id'));
     sessionStorage.removeItem('df_pending');
     sessionStorage.removeItem('df_pending_order_id');
 
@@ -1052,10 +1051,65 @@ function handleCheckoutReturn(){
     sessionStorage.removeItem('df_pending_order_id');
   }
 
-  // Strip the status query string so a page refresh doesn't replay it.
-  window.history.replaceState({}, document.title, returnBase());
+  // Cancelled attempts have nothing worth bookmarking, so clear those from
+  // the URL. Success/failed URLs are left in place on purpose — reopening
+  // one just re-runs the same server-verified lookup above, so the link
+  // stays meaningful (and safe) to revisit or share later.
+  if(status==='cancelled'){
+    window.history.replaceState({}, document.title, returnBase());
+  }
 }
 function returnBase(){ return window.location.origin + window.location.pathname; }
+
+// ── Authoritative success verification ──
+// Called only with the order_id from the redirect URL. Never trusts any
+// amount/name/cls that might sit in the query string (there isn't one
+// anymore, but this stays defensive even if that ever changes) — the
+// screen only renders once the Worker's /receipt endpoint confirms a real
+// captured payment against Firebase.
+async function verifyAndRenderSuccess(orderId, paymentIdHint, attempt){
+  attempt = attempt || 0;
+  if(!orderId){
+    renderUnverifiedPayment(null, null);
+    return;
+  }
+  var data=null;
+  try{
+    var r=await fetch(CFG.workerBase+'/receipt/'+encodeURIComponent(orderId));
+    data=await r.json();
+  }catch(e){}
+
+  if(data && data.status==='success'){
+    document.getElementById('ps-amount').textContent='₹'+Math.round(Number(data.amount)||0).toLocaleString('en-IN');
+    document.getElementById('ps-name').textContent=data.name||'—';
+    document.getElementById('ps-cls').textContent=data.cls||'—';
+    document.getElementById('ps-adm').textContent=data.adm||'—';
+    document.getElementById('ps-ref').textContent=data.payment_id||paymentIdHint||'—';
+    document.getElementById('ps-reqno').textContent=orderId;
+    document.getElementById('pay-success').style.display='flex';
+    setHeroState('success');
+    return;
+  }
+
+  if(data && data.status==='pending' && attempt<3){
+    // Webhook / callback settlement may still be finishing — retry a
+    // couple of times before giving up.
+    setTimeout(function(){ verifyAndRenderSuccess(orderId, paymentIdHint, attempt+1); }, 1500);
+    return;
+  }
+
+  renderUnverifiedPayment(orderId, paymentIdHint);
+}
+
+// Shown when /receipt can't confirm a captured payment for this order_id —
+// e.g. an edited/fabricated URL, or a very old link past the monthly
+// Firebase cleanup. Deliberately does NOT show a green success state.
+function renderUnverifiedPayment(orderId, paymentIdHint){
+  document.getElementById('pay-success').style.display='none';
+  showFailedScreen({
+    order_id: orderId || paymentIdHint || null
+  }, 'We couldn\'t verify this payment against our records. If an amount was debited, please contact the school office with your payment reference.');
+}
 
 window.copyPaymentDetails=function(){
   var amount=document.getElementById('ps-amount').textContent;
