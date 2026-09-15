@@ -948,7 +948,13 @@ function submitHostedCheckout(order, email, mobDigits){
   addField('prefill[name]', order.name || current.name || '');
   addField('prefill[email]', email);
   addField('prefill[contact]', mobDigits);
-  addField('callback_url', CFG.workerBase+'/checkout-callback');
+  // order_id is baked into callback_url ourselves (as a query param) so it's
+  // ALWAYS available on the way back — Razorpay doesn't reliably echo
+  // order_id in its own posted error[metadata][...] fields for every
+  // decline type, which is why order_id was sometimes showing blank on the
+  // failed page even though we knew it all along, before ever redirecting
+  // to Razorpay.
+  addField('callback_url', CFG.workerBase+'/checkout-callback?order_id='+encodeURIComponent(order.order_id));
   addField('cancel_url', returnBase+'?status=cancelled');
 
   document.body.appendChild(form);
