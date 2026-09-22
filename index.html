@@ -334,6 +334,10 @@ body{
         <div class="upi-chip">Paytm</div>
         <div class="upi-chip">BHIM</div>
       </div>
+      <div id="qr-wrap" style="display:none;text-align:center;margin-bottom:16px;">
+        <img id="qr-img" src="" alt="Scan to pay" style="width:170px;height:170px;border-radius:12px;border:1px solid #e8e8ed;"/>
+        <div style="font-size:11px;color:#6e6e73;margin-top:8px;">Scan with any UPI app to pay</div>
+      </div>
       <div class="btn-wrap">
         <a id="pay-btn" class="btn-primary" href="#">Open Payment App</a>
         <a class="btn-secondary" href="tel:+919872760880" style="display:flex;align-items:center;justify-content:center;gap:7px;">
@@ -589,16 +593,31 @@ body{
         return;
       }
 
-      // ── Go to Razorpay's own hosted checkout ──
-      // This is a real Razorpay Payment Link: the amount is locked on
-      // their server, it auto-offers UPI apps on mobile, and it fires a
-      // proper payment_link.paid webhook back to our worker — unlike the
-      // old self-built upi:// link, this payment is fully tracked.
+      // ── Send the parent to pay ──
+      // `short_url` is either:
+      //  a) a raw upi://pay?... deep link (Razorpay QR Codes API,
+      //     image_content) — only works where a UPI app is installed
+      //     (mobile), or
+      //  b) an https rzp.io link (fallback, if qr_image_content isn't
+      //     enabled on the account yet) — works as a normal webpage on any
+      //     device, so auto-redirect is safe there.
+      var isUpiLink = /^upi:\/\//i.test(d.short_url || "");
+      var isMobile  = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
       document.getElementById("pay-btn").href = d.short_url;
 
-      setTimeout(function(){
-        window.location.href = d.short_url;
-      }, 800);
+      if(isUpiLink && !isMobile){
+        // Desktop can't open a upi:// link — show the scannable QR instead
+        // and skip the auto-redirect (it would just fail silently).
+        if(d.image_url){
+          document.getElementById("qr-img").src = d.image_url;
+          document.getElementById("qr-wrap").style.display = "block";
+        }
+      } else {
+        setTimeout(function(){
+          window.location.href = d.short_url;
+        }, 3);
+      }
 
       document.addEventListener("visibilitychange", function(){
         if(document.hidden) window._upiOpened = true;
