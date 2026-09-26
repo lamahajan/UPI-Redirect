@@ -400,6 +400,21 @@ body{
 
 </div>
 <script>
+// ── Real mobile viewport height fix ──
+// Sets --dvh from the actual visible window height (excludes the address
+// bar / browser chrome), and keeps it updated as that chrome shows/hides.
+// Without this, --dvh falls back to 1vh and the layout uses the full
+// (address-bar-included) 100vh, pushing bottom-pinned content like
+// .err-actions below the real visible fold on phones.
+(function setRealVH(){
+  function apply(){
+    document.documentElement.style.setProperty('--dvh', (window.innerHeight * 0.01) + 'px');
+  }
+  apply();
+  window.addEventListener('resize', apply);
+  window.addEventListener('orientationchange', apply);
+})();
+
 (function(){
   // Worker URL hardcoded — parent's link only ever carries ?qr_id=..., which
   // can't be tampered with to change amount/student (that's all re-fetched
