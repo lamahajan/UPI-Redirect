@@ -8,7 +8,11 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://rzp-proxy.due-4a8.workers.dev" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'"/>
+<noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/></noscript>
 <style>
 /* ── Dynamic vh fix: JS sets --dvh, fallback to 1vh ── */
 :root{
@@ -336,7 +340,7 @@ body{
       </div>
     </div>
 
-    <div id="state-loading">
+    <div id="state-loading" class="active" style="display:flex">
       <div class="ld-spin"></div>
       <div class="ld-txt" id="ld-txt">Fetching payment status…</div>
       <div class="ld-sub">Please wait, do not close this page</div>
