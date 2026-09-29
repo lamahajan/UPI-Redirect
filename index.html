@@ -565,7 +565,7 @@ body{
         if(d.payment_id){
           // Edge case: closed right after a successful capture — still a
           // real success, not an expiry.
-          fillSuccessInfo(d);
+          fillSuccessInfo(Object.assign({}, d, { amount: (Number(d.amount)||0) * 100 })); // fillSuccessInfo expects paise
           showState("success");
         } else {
           showState("error","expired");
@@ -580,7 +580,7 @@ body{
       var adm  = String(d.adm||"");
       var name = String(d.name||"");
       var cls  = String(d.cls||"");
-      var am   = (Number(d.amount)||0) / 100; // paise → rupees
+      var am   = Number(d.amount)||0; // /payment-status already returns RUPEES (worker divides by 100)
 
       // ── Fill student info ──
       var amtFormatted = "₹"+am.toLocaleString("en-IN");
@@ -635,7 +635,7 @@ body{
       } else {
         setTimeout(function(){
           window.location.href = d.short_url;
-        }, 300);
+        }, 800);
       }
 
       document.addEventListener("visibilitychange", function(){
