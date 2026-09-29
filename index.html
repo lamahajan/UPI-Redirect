@@ -155,6 +155,12 @@ body{
 .prog-wrap{height:2px;background:#e8e8ed;border-radius:2px;overflow:hidden;margin-bottom: clamp(10px,2vh,16px);}
 .prog-bar{height:100%;background:#0071e3;border-radius:2px;width:0;transition:width .8s linear;}
 
+#state-loading{display:none;}
+#state-loading.active{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;min-height:280px;text-align:center;gap:14px;padding:40px 20px;}
+.ld-spin{width:40px;height:40px;border-radius:50%;border:3px solid #e8e8ed;border-top-color:#0071e3;animation:ld-rot .8s linear infinite;}
+@keyframes ld-rot{to{transform:rotate(360deg);}}
+.ld-txt{font-size:15px;font-weight:700;color:#1d1d1f;letter-spacing:-.2px;}
+.ld-sub{font-size:12px;color:#6e6e73;}
 #state-redirecting{display:none;}
 #state-redirecting.active{display:flex;flex-direction:column;flex:1;position:relative;min-height:0;}
 .btn-wrap{position:absolute;bottom:15px;left:0;right:0;}
@@ -330,6 +336,12 @@ body{
       </div>
     </div>
 
+    <div id="state-loading">
+      <div class="ld-spin"></div>
+      <div class="ld-txt" id="ld-txt">Fetching payment status…</div>
+      <div class="ld-sub">Please wait, do not close this page</div>
+    </div>
+
     <div id="state-redirecting">
       <div class="prog-wrap"><div class="prog-bar" id="prog-bar"></div></div>
       <div class="upi-row">
@@ -455,7 +467,8 @@ body{
   //   student/amount/payment_id always comes from /receipt/:order_id,
   //   never from the query string itself. ──
   if(orderId){
-    showState("redirecting");
+    showState("loading");
+    var _lt = document.getElementById("ld-txt"); if(_lt) _lt.textContent = "Confirming your payment…";
 
     // Razorpay declined/cancelled the payment — no signature was ever
     // posted to checkout-callback, so nothing was written to Firebase.
@@ -514,7 +527,7 @@ body{
     showState("error","invalid"); return;
   }
 
-  showState("redirecting");
+  showState("loading");   // spinner stays until every lookup has finished
 
   // Last-resort check: neither Firebase qr_map nor the Transactions Firebase
   // had this qr_id. Before calling it genuinely invalid, check the Google
@@ -536,8 +549,15 @@ body{
   }
 
   fetch(proxyUrl+"/payment-status/"+encodeURIComponent(qrId))
-    .then(function(r){ return r.ok ? r.json() : { status: "not_found" }; })
+    .then(function(r){
+      // Keep the 404 body too — the worker puts reason:"closed_no_payment" in it
+      return r.json().catch(function(){ return null; }).then(function(j){
+        return r.ok ? j : { status: "not_found", reason: (j && j.reason) || "" };
+      });
+    })
     .then(function(d){
+      // Worker confirmed the QR was closed and never paid → Expired screen
+      if(d && d.reason === "closed_no_payment"){ showState("error","expired"); return; }
       if(!d || d.status === "not_found"){
         // QR record is gone (monthly cleanup already ran, or it was closed
         // and later cleared). Check the SEPARATE Transactions Firebase
@@ -620,6 +640,7 @@ body{
       //  b) an https rzp.io link (fallback, if qr_image_content isn't
       //     enabled on the account yet) — works as a normal webpage on any
       //     device, so auto-redirect is safe there.
+      showState("redirecting");   // lookup finished, QR is payable — leave the loader
       var isUpiLink = /^upi:\/\//i.test(d.short_url || "");
       var isMobile  = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
@@ -703,11 +724,11 @@ body{
 })();
 
 function showState(state, errorVariant){
-  ["redirecting","success","error"].forEach(function(s){
+  ["loading","redirecting","success","error"].forEach(function(s){
     var el = document.getElementById("state-"+s);
     if(!el) return;
     if(s === state){
-      el.style.display = "block";
+      el.style.display = (s === "loading") ? "flex" : "block";
       el.classList.add("active");
     } else {
       el.style.display = "none";
