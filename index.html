@@ -443,6 +443,7 @@ body{
   var cbStatus = (p.get("status")||"").trim();   // "failed" on decline (see checkout-callback)
   var cbReason = (p.get("reason")||"").trim();
   var proxyUrl = PROXY_URL;
+  var pqrId    = (p.get("pqr")||"").trim();      // Part-payment link: permanent QR, parent picks the amount
 
   // Fills the success card from any record that has amount/name/adm/payment_id
   // fields — used whether the record came from qr_map, the Transactions
@@ -524,6 +525,116 @@ body{
     }
 
     checkReceipt();
+    return;
+  }
+
+  // ── "Pay full / pay part" popup ─────────────────────────────────────
+  // Shown only when the worker says this student has a Part QR (it sends
+  // d.part once the Part-payment switch is ON). "Full" carries on exactly as
+  // before; "Part" opens this same page in Part mode (?pqr=…).
+  function showPayChoice(amount, partId, onFull){
+    var ov = document.createElement("div");
+    ov.id = "pay-choice";
+    ov.setAttribute("role","dialog");
+    ov.style.cssText = "position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:9999;display:flex;align-items:flex-end;justify-content:center;padding:14px;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)";
+    ov.innerHTML =
+      '<div style="background:#fff;border-radius:22px;width:100%;max-width:420px;padding:22px 18px 16px;box-shadow:0 12px 40px rgba(0,0,0,.25)">' +
+        '<div style="font-size:17px;font-weight:700;color:#1d1d1f;text-align:center;margin-bottom:4px">How would you like to pay?</div>' +
+        '<div style="font-size:12.5px;color:#6e6e73;text-align:center;margin-bottom:16px">Choose one to continue</div>' +
+        '<button id="pc-full" type="button" style="display:block;width:100%;border:0;border-radius:14px;padding:15px 12px;font-size:15px;font-weight:700;background:#0071e3;color:#fff;margin-bottom:10px;cursor:pointer;font-family:inherit">Pay full fees &middot; \u20B9' + Number(amount||0).toLocaleString("en-IN") + '</button>' +
+        '<button id="pc-part" type="button" style="display:block;width:100%;border:0;border-radius:14px;padding:12px;font-size:15px;font-weight:700;background:#f2f2f7;color:#1d1d1f;cursor:pointer;font-family:inherit">Pay a part amount<div style="font-size:11.5px;font-weight:500;color:#6e6e73;margin-top:3px">You type the amount in your UPI app</div></button>' +
+      '</div>';
+    document.body.appendChild(ov);
+    document.getElementById("pc-full").onclick = function(){ ov.parentNode.removeChild(ov); onFull(); };
+    document.getElementById("pc-part").onclick = function(){ window.location.href = window.location.pathname + "?pqr=" + encodeURIComponent(partId); };
+  }
+
+  // ── Part-payment link (?pqr=…) ───────────────────────────────────────
+  // The QR behind this link is permanent and has NO amount: the parent types
+  // whatever they want to pay in their UPI app. So, unlike a normal fee link,
+  // this page never ends in a "paid / expired" dead-end — it can be reused any
+  // number of times. A new payment is detected by comparing the worker's
+  // "last payment" with what it was when the page opened (no clocks involved).
+  // A removed student's link simply comes back as Invalid.
+  if(pqrId){
+    showState("loading");
+    var _pPollTimer = null, _pPolls = 0, _pBasePid = "", _pDone = false, _pName = "", _pStarted = false;
+
+    function partPoll(){
+      if(_pDone){ clearInterval(_pPollTimer); return; }
+      if(++_pPolls > 60){ clearInterval(_pPollTimer); return; }       // 60 × 5s = 5 minutes
+      fetch(proxyUrl+"/part-status/"+encodeURIComponent(pqrId)+"?lite=1")
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(d){
+          if(!d || !d.last || !d.last.payment_id || d.last.payment_id === _pBasePid) return;
+          _pDone = true; clearInterval(_pPollTimer);
+          fillSuccessInfo({ amount: d.last.amount, name: _pName, payment_id: d.last.payment_id });
+          showState("success");
+        })
+        .catch(function(){});
+    }
+    function partStartPolling(){
+      if(_pStarted || _pDone) return;
+      _pStarted = true;
+      _pPollTimer = setInterval(partPoll, 5000);
+    }
+
+    fetch(proxyUrl+"/part-status/"+encodeURIComponent(pqrId))
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){
+        if(!d || d.status !== "active" || !d.short_url){ showState("error","invalid"); return; }
+
+        _pBasePid = (d.last && d.last.payment_id) || "";
+        var name = String(d.name||""), adm = String(d.adm||""), cls = String(d.cls||"");
+        _pName = name || adm;
+        document.getElementById("disp-name").textContent  = name||"—";
+        document.getElementById("disp-adm").textContent   = adm||"—";
+        document.getElementById("disp-class").textContent = cls||"—";
+        document.getElementById("chip-initials").textContent = name
+          ? name.trim().split(" ").map(function(w){return w[0];}).slice(0,2).join("").toUpperCase()
+          : (adm||"ST").slice(0,2).toUpperCase();
+
+        var bal = Number(d.balance)||0;
+        var lbl  = document.querySelector("#info-box .amount-label");
+        var pill = document.querySelector("#info-box .due-pill");
+        if(lbl)  lbl.textContent  = bal > 0 ? "Total Due" : "Part Payment";
+        if(pill) pill.textContent = "Pay any amount";
+        document.getElementById("disp-am").textContent = bal > 0 ? ("₹"+bal.toLocaleString("en-IN")) : "Any amount";
+        document.getElementById("info-box").style.display = "block";
+
+        var secure = document.querySelector("#state-redirecting .secure span");
+        if(secure) secure.textContent = "256-bit encrypted · Enter the amount in your UPI app";
+        var payBtn = document.getElementById("pay-btn");
+        payBtn.textContent = "Open Payment App";
+        payBtn.href = d.short_url;
+        var btnWrap = document.querySelector("#state-redirecting .btn-wrap");
+        if(btnWrap && !document.getElementById("part-hint")){
+          var hint = document.createElement("div");
+          hint.id = "part-hint";
+          hint.style.cssText = "font-size:12px;color:#6e6e73;text-align:center;margin-bottom:12px;line-height:1.5";
+          hint.textContent = "You can pay any amount — type it in your UPI app.";
+          btnWrap.insertBefore(hint, btnWrap.firstChild);
+        }
+
+        setTimeout(function(){ document.getElementById("prog-bar").style.width="100%"; }, 50);
+        showState("redirecting");
+
+        var isUpiLink = /^upi:\/\//i.test(d.short_url);
+        var isMobile  = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        if(isUpiLink && !isMobile){
+          if(d.image_url){
+            document.getElementById("qr-img").src = d.image_url;
+            document.getElementById("qr-wrap").style.display = "block";
+          }
+        } else {
+          setTimeout(function(){ window.location.href = d.short_url; }, 800);
+        }
+        document.addEventListener("visibilitychange", function(){
+          if(!document.hidden) setTimeout(partStartPolling, 1500);
+        });
+        setTimeout(partStartPolling, 4000);
+      })
+      .catch(function(){ showState("error","invalid"); });
     return;
   }
 
@@ -650,18 +761,24 @@ body{
 
       document.getElementById("pay-btn").href = d.short_url;
 
-      if(isUpiLink && !isMobile){
-        // Desktop can't open a upi:// link — show the scannable QR instead
-        // and skip the auto-redirect (it would just fail silently).
-        if(d.image_url){
-          document.getElementById("qr-img").src = d.image_url;
-          document.getElementById("qr-wrap").style.display = "block";
+      function goFull(){
+        if(isUpiLink && !isMobile){
+          // Desktop can't open a upi:// link — show the scannable QR instead
+          // and skip the auto-redirect (it would just fail silently).
+          if(d.image_url){
+            document.getElementById("qr-img").src = d.image_url;
+            document.getElementById("qr-wrap").style.display = "block";
+          }
+        } else {
+          setTimeout(function(){
+            window.location.href = d.short_url;
+          }, 800);
         }
-      } else {
-        setTimeout(function(){
-          window.location.href = d.short_url;
-        }, 800);
       }
+
+      // Student has a Part QR (and the switch is ON): let the parent choose first.
+      if(d.part && d.part.qr_id){ showPayChoice(am, d.part.qr_id, goFull); }
+      else { goFull(); }
 
       document.addEventListener("visibilitychange", function(){
         if(document.hidden) window._upiOpened = true;
