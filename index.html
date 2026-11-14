@@ -2,7 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="text-scale" content="scale"/>
+<meta name="theme-color" content="#0d2a6e"/>
+<meta name="color-scheme" content="light"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <title>Fee Payment — Lotus International School</title>
 <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
@@ -14,10 +19,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'"/>
 <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/></noscript>
 <style>
-/* ── Dynamic vh fix: JS sets --dvh, fallback to 1vh ── */
+/* ── Dynamic vh fix: fallback to 1vh, updated via JS ── */
 :root{
   --dvh: 1vh;
-  /* spacing scale — shrinks on very small screens */
+  /* spacing scale — shrinks proportionally on very small screens */
   --sp-xs: clamp(3px,  0.8vw, 5px);
   --sp-sm: clamp(6px,  1.5vw, 10px);
   --sp-md: clamp(9px,  2.2vw, 14px);
@@ -26,283 +31,566 @@
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-html{height:100%;overflow:hidden;}
+html{
+  height: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body{
-  /* dvh = real visible height on mobile (excludes browser chrome) */
-  height: calc(var(--dvh) * 100);
+  min-height: 100vh;
   min-height: calc(var(--dvh) * 100);
-  max-height: calc(var(--dvh) * 100);
-  overflow:hidden;
-  background:#f5f5f7;
-  font-family:"Inter",-apple-system,BlinkMacSystemFont,sans-serif;
-  -webkit-font-smoothing:antialiased;
-  display:flex;flex-direction:column;align-items:center;
+  min-height: 100dvh;
+  background: #f5f5f7;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-tap-highlight-color: transparent;
+  overflow-wrap: anywhere;
 }
 
-/* ── Outer wrapper: exactly full screen height, no overflow ── */
+/* ── Outer wrapper: responsive mobile-first container ── */
 .wrap{
-  width:100%;max-width:430px;
-  height: calc(var(--dvh) * 100);
-  display:flex;flex-direction:column;
-  background:#fff;
-  overflow:hidden;
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  min-height: calc(var(--dvh) * 100);
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  position: relative;
+  box-shadow: 0 0 40px rgba(0,0,0,.05);
 }
 
-/* ── Hero: shrinks proportionally on short screens ── */
+/* Center and frame on tablet/desktop views */
+@media (min-width: 481px){
+  body{
+    padding: clamp(12px, 2vh, 24px) 16px;
+  }
+  .wrap{
+    min-height: calc(100dvh - clamp(24px, 4vh, 48px));
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 12px 48px rgba(0,0,0,.12);
+  }
+}
+
+/* ── Hero: shrinks proportionally on short screens, safe-area aware ── */
 .hero{
   background:
     radial-gradient(ellipse 140% 120% at 80% -10%, #0a3d8f 0%, transparent 55%),
     radial-gradient(ellipse 100% 80% at -10% 110%, #082660 0%, transparent 60%),
     radial-gradient(ellipse 80% 60% at 50% 50%, #092e78 0%, transparent 70%),
     linear-gradient(175deg, #0d2a6e 0%, #001848 40%, #092e78 100%);
-  /* top/bottom pad shrinks on short screens */
-  padding: clamp(20px,5vh,34px) 20px clamp(22px,5vh,36px);
-  text-align:center;
-  position:relative;overflow:hidden;
-  flex-shrink:0;
+  padding: max(clamp(18px, 4.2vh, 28px), env(safe-area-inset-top, 0px)) max(18px, env(safe-area-inset-right, 0px)) clamp(18px, 3.8vh, 26px) max(18px, env(safe-area-inset-left, 0px));
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
   border-radius: 0 0 22px 22px;
 }
 .hero::before{
-  content:"";position:absolute;
-  top:-50px;left:50%;transform:translateX(-50%);
-  width:280px;height:180px;
-  background:radial-gradient(ellipse,rgba(255,255,255,.07) 0%,transparent 70%);
-  pointer-events:none;
+  content: "";
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280px;
+  height: 180px;
+  background: radial-gradient(ellipse, rgba(255,255,255,.07) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .hero-logo{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap: clamp(6px,1.5vh,10px);
-  margin-bottom: clamp(12px,2.5vh,18px);
-  position:relative;z-index:1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px, 1.5vh, 10px);
+  margin-bottom: clamp(10px, 2vh, 16px);
+  position: relative;
+  z-index: 1;
 }
-.hero-school-text{text-align:center;}
+.hero-school-text{text-align: center;}
 .hero-school-wordmark{
-  font-size: clamp(11px,2.8vw,13.5px);
-  font-weight:700;color:rgba(255,255,255,.92);
-  letter-spacing:1.6px;text-transform:uppercase;line-height:1.4;
+  font-size: clamp(11.5px, 2.8vw, 13.5px);
+  font-weight: 700;
+  color: rgba(255,255,255,.92);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  line-height: 1.35;
 }
 .hero-school-sub{
-  font-size: clamp(9px,2.2vw,10.5px);
-  font-weight:600;color:rgba(255,255,255,.4);
-  letter-spacing:1.4px;text-transform:uppercase;margin-top:1px;
+  font-size: clamp(9px, 2.2vw, 10.5px);
+  font-weight: 600;
+  color: rgba(255,255,255,.5);
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  margin-top: 2px;
 }
 .hero-divider{
-  width:28px;height:1px;background:rgba(255,255,255,.15);
-  margin: 0 auto clamp(5px,1.2vh,9px);
-  position:relative;z-index:1;
+  width: 28px;
+  height: 1px;
+  background: rgba(255,255,255,.18);
+  margin: 0 auto clamp(5px, 1.2vh, 9px);
+  position: relative;
+  z-index: 1;
 }
 .hero-eyebrow{
-  display:inline-flex;align-items:center;gap:5px;
-  font-size:9px;font-weight:600;
-  color:rgba(255,255,255,.45);letter-spacing:1.8px;text-transform:uppercase;
-  margin-bottom: clamp(4px,1vh,7px);
-  margin-top: clamp(12px,3vh,20px);
-  position:relative;z-index:1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9.5px;
+  font-weight: 600;
+  color: rgba(255,255,255,.6);
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  margin-bottom: clamp(4px, 1vh, 7px);
+  margin-top: clamp(8px, 2vh, 16px);
+  position: relative;
+  z-index: 1;
 }
-.eyebrow-dot{width:5px;height:5px;border-radius:50%;background:#4ade80;flex-shrink:0;}
+.eyebrow-dot{
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4ade80;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px rgba(74,222,128,0.6);
+}
 .hero-title{
-  font-size: clamp(17px,4.5vw,20px);
-  font-weight:800;color:#fff;letter-spacing:-.5px;
-  position:relative;z-index:1;
+  font-size: clamp(18px, 4.5vw, 21px);
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -.4px;
+  position: relative;
+  z-index: 1;
+  text-wrap: balance;
 }
 
-/* ── White card body: fills remaining height, NO overflow ── */
+/* ── White card body: flexes naturally, never clips content ── */
 .body{
-  flex:1;
-  min-height:0;          /* critical: lets flex child shrink below content size */
-  overflow:clip;
-  /* top gap user requested — rounded card lifted from hero with breathing room */
-  padding: clamp(22px,4vh,32px) 20px clamp(14px,2.5vh,22px);
-  border-radius:22px 22px 0 0;
-  margin-top: clamp(10px,2vh,16px);
-  position:relative;z-index:1;
-  background:#fff;
-  display:flex;flex-direction:column;
+  flex: 1;
+  min-height: 0;
+  padding: clamp(18px, 3vh, 26px) clamp(16px, 4.5vw, 22px) clamp(16px, 2.5vh, 22px);
+  border-radius: 22px 22px 0 0;
+  margin-top: clamp(8px, 1.6vh, 14px);
+  position: relative;
+  z-index: 1;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── Info box ── */
-#info-box{display:none;}
+#info-box{display: none; width: 100%;}
 
-.stu-row{display:flex;align-items:center;gap:11px;margin-bottom: clamp(10px,2vh,16px);}
-.avatar{
-  width: clamp(40px,9vw,48px);height: clamp(40px,9vw,48px);
-  flex-shrink:0;border-radius:10px;
-  background:linear-gradient(135deg,#0f2545,#1a3a6e);
-  display:flex;align-items:center;justify-content:center;
-  font-size: clamp(10px,2.5vw,12px);font-weight:700;color:#fff;
+.stu-row{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: clamp(10px, 2vh, 16px);
 }
-.stu-name{font-size: clamp(13px,3.3vw,15px);font-weight:700;color:#1d1d1f;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.stu-adm{font-size: clamp(10.5px,2.6vw,12px);color:#6e6e73;margin-top:1px;}
-.stu-class{font-size: clamp(10.5px,2.6vw,12px);color:#6e6e73;margin-top:1px;}
-.sep{height:1px;background:#f0f0f0;margin: 0 0 clamp(12px,2.5vh,20px);}
+.avatar{
+  width: clamp(42px, 10vw, 48px);
+  height: clamp(42px, 10vw, 48px);
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0f2545, #1a3a6e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(11px, 2.6vw, 13px);
+  font-weight: 700;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(15,37,69,0.18);
+}
+.stu-meta{min-width: 0; flex: 1;}
+.stu-name{
+  font-size: clamp(13.5px, 3.4vw, 15.5px);
+  font-weight: 700;
+  color: #1d1d1f;
+  letter-spacing: -.2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.stu-adm{font-size: clamp(11px, 2.6vw, 12.5px); color: #6e6e73; margin-top: 1.5px;}
+.stu-class{font-size: clamp(11px, 2.6vw, 12.5px); color: #6e6e73; margin-top: 1px;}
+.sep{height: 1px; background: #f0f0f0; margin: 0 0 clamp(12px, 2.2vh, 18px);}
 
-.amount-label{font-size:9.5px;font-weight:600;color:#aeaeb2;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:2px;}
-.amount-row{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom: clamp(12px,2vh,18px);}
+.amount-label{
+  font-size: 9.5px;
+  font-weight: 600;
+  color: #aeaeb2;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.amount-row{
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: clamp(12px, 2vh, 18px);
+}
 .amount-val{
-  font-size: clamp(27px,7vw,34px);
-  font-weight:800;color:#1d1d1f;letter-spacing:-1.2px;line-height:1;
+  font-size: clamp(28px, 7.5vw, 36px);
+  font-weight: 800;
+  color: #1d1d1f;
+  letter-spacing: -1.2px;
+  line-height: 1;
 }
 .due-pill{
-  font-size:10px;font-weight:700;color:#f59e0b;
-  background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);
-  padding:3px 9px;border-radius:20px;letter-spacing:.4px;text-transform:uppercase;margin-bottom:2px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #b45309;
+  background: rgba(245,158,11,.12);
+  border: 1px solid rgba(245,158,11,.25);
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: .4px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
 }
 
-.upi-row{display:flex;gap:7px;margin-bottom: clamp(18px,3.5vh,26px);}
+.upi-row{display: flex; gap: 7px; margin-bottom: clamp(14px, 2.5vh, 20px);}
 .upi-chip{
-  flex:1;text-align:center;background:#f5f5f7;border-radius:8px;
-  padding: clamp(7px,1.5vh,10px) 2px;
-  font-size: clamp(8.5px,2.2vw,10px);font-weight:600;color:#3a3a3c;letter-spacing:.2px;
+  flex: 1;
+  text-align: center;
+  background: #f5f5f7;
+  border-radius: 10px;
+  padding: 8px 4px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(9.5px, 2.4vw, 11px);
+  font-weight: 600;
+  color: #3a3a3c;
+  letter-spacing: .2px;
 }
 
-.prog-wrap{height:2px;background:#e8e8ed;border-radius:2px;overflow:hidden;margin-bottom: clamp(10px,2vh,16px);}
-.prog-bar{height:100%;background:#0071e3;border-radius:2px;width:0;transition:width .8s linear;}
+.prog-wrap{
+  height: 3px;
+  background: #e8e8ed;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: clamp(10px, 2vh, 16px);
+}
+.prog-bar{
+  height: 100%;
+  background: #0071e3;
+  border-radius: 3px;
+  width: 0;
+  transition: width .8s linear;
+}
 
-#state-loading{display:none;}
-#state-loading.active{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;min-height:280px;text-align:center;gap:14px;padding:40px 20px;}
-.ld-spin{width:40px;height:40px;border-radius:50%;border:3px solid #e8e8ed;border-top-color:#0071e3;animation:ld-rot .8s linear infinite;}
-@keyframes ld-rot{to{transform:rotate(360deg);}}
-.ld-txt{font-size:15px;font-weight:700;color:#1d1d1f;letter-spacing:-.2px;}
-.ld-sub{font-size:12px;color:#6e6e73;}
-#state-redirecting{display:none;}
-#state-redirecting.active{display:flex;flex-direction:column;flex:1;position:relative;min-height:0;}
-.btn-wrap{position:absolute;bottom:15px;left:0;right:0;}
+#state-loading{display: none;}
+#state-loading.active{
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 220px;
+  text-align: center;
+  gap: 14px;
+  padding: clamp(28px, 5vh, 44px) 16px;
+}
+.ld-spin{
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 3.5px solid #e8e8ed;
+  border-top-color: #0071e3;
+  animation: ld-rot .8s linear infinite;
+}
+@keyframes ld-rot{to{transform: rotate(360deg);}}
+.ld-txt{
+  font-size: 15px;
+  font-weight: 700;
+  color: #1d1d1f;
+  letter-spacing: -.2px;
+  text-wrap: balance;
+}
+.ld-sub{font-size: 12.5px; color: #6e6e73; text-wrap: pretty;}
+
+#state-redirecting{display: none;}
+#state-redirecting.active{
+  display: flex !important;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+}
+.btn-wrap{
+  margin-top: auto;
+  padding-top: clamp(14px, 2.5vh, 22px);
+  width: 100%;
+}
 
 .btn-primary{
-  display:block;width:100%;
-  background:#0071e3;color:#fff;
-  font-size: clamp(13px,3.3vw,15px);font-weight:600;border:none;border-radius:12px;
-  padding: clamp(10px,2.5vh,13px);
-  text-align:center;text-decoration:none;cursor:pointer;
-  box-shadow:0 2px 10px rgba(0,113,227,.22);
-  transition:all .15s;margin-bottom: clamp(10px,2vh,16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 48px;
+  background: #0071e3;
+  color: #fff;
+  font-size: clamp(13.5px, 3.4vw, 15.5px);
+  font-weight: 600;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 18px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 3px 12px rgba(0,113,227,.26);
+  transition: all .15s ease;
+  margin-bottom: clamp(10px, 1.8vh, 14px);
+  -webkit-user-select: none;
+  user-select: none;
 }
-.btn-primary:active{background:#005bbf;transform:scale(.985);}
-.btn-secondary{
-  display:block;width:100%;
-  background:#f5f5f7;color:#1d1d1f;
-  font-size: clamp(13px,3.3vw,15px);font-weight:500;border:none;border-radius:12px;
-  padding: clamp(11px,2.5vh,14px);
-  text-align:center;text-decoration:none;cursor:pointer;
-  transition:all .15s;margin-bottom: clamp(10px,2vh,16px);
-}
-.btn-secondary:active{background:#e8e8ed;}
+.btn-primary:active{background: #005bbf; transform: scale(.985);}
 
-.secure{display:flex;align-items:center;justify-content:center;gap:5px;}
-.secure svg{opacity:.3;}
-.secure span{font-size: clamp(9.5px,2.4vw,11px);color:#aeaeb2;}
+.secure{display: flex; align-items: center; justify-content: center; gap: 6px; padding: 4px 0;}
+.secure svg{opacity: .4;}
+.secure span{font-size: clamp(10px, 2.5vw, 11.5px); color: #8e8e93;}
 
-/* ── Footer: pinned, compact ── */
+/* ── Footer: pinned with safe-area spacing ── */
 .footer{
-  flex-shrink:0;
-  background:#f5f5f7;
-  border-top:1px solid #e8e8ed;
-  padding: clamp(6px,1.2vh,10px) 20px clamp(10px,2vh,14px);
-  text-align:center;
+  flex-shrink: 0;
+  background: #f5f5f7;
+  border-top: 1px solid #e8e8ed;
+  padding: clamp(8px, 1.4vh, 12px) max(20px, env(safe-area-inset-right, 0px)) max(clamp(10px, 2vh, 14px), env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px));
+  text-align: center;
 }
-.footer-school{font-size:12px;font-weight:600;color:#3a3a3c;margin-bottom:1px;}
-.footer-label{font-size:10px;color:#aeaeb2;margin-bottom: clamp(3px,0.8vh,6px);}
+.footer-school{font-size: 12.5px; font-weight: 600; color: #3a3a3c; margin-bottom: 2px;}
+.footer-label{font-size: 10.5px; color: #8e8e93; margin-bottom: clamp(4px, 0.9vh, 7px);}
 .call-btn{
-  display:inline-flex;align-items:center;gap:6px;
-  background:#fff;border:1px solid #e0e0e5;border-radius:980px;
-  padding: clamp(5px,1.2vh,8px) 16px;
-  font-size: clamp(11px,2.8vw,13px);font-weight:600;color:#0071e3;
-  text-decoration:none;box-shadow:0 1px 3px rgba(0,0,0,.05);transition:all .15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  background: #fff;
+  border: 1px solid #e0e0e5;
+  border-radius: 980px;
+  padding: 8px 18px;
+  min-height: 40px;
+  font-size: clamp(11.5px, 2.8vw, 13px);
+  font-weight: 600;
+  color: #0071e3;
+  text-decoration: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  transition: all .15s;
 }
-.call-btn:active{transform:scale(.97);}
+.call-btn:active{transform: scale(.97); background: #f0f7ff;}
 
-/* ── Error state ── */
-#state-error{display:none;text-align:center;}
-#state-error.active{display:flex;flex-direction:column;align-items:center;position:absolute;inset:0;background:#fff;z-index:5;padding: clamp(18px,3.5vh,26px) 20px 30px;}
+/* ── Error state: fluid flex, auto-margin actions, no overlap ── */
+#state-error{display: none; text-align: center;}
+#state-error.active{
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  width: 100%;
+  min-height: 100%;
+  padding: clamp(10px, 2vh, 18px) 0 clamp(8px, 1.5vh, 14px);
+}
 .err-badge{
-  display:inline-flex;align-items:center;gap:5px;
-  background:rgba(255,59,48,.08);border:1px solid rgba(255,59,48,.15);
-  border-radius:20px;padding:4px 12px;
-  font-size:10px;font-weight:700;color:#ff3b30;letter-spacing:1.2px;text-transform:uppercase;
-  margin-top:-6px;margin-bottom: var(--sp-md);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255,59,48,.08);
+  border: 1px solid rgba(255,59,48,.18);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #ff3b30;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: var(--sp-md);
 }
 .err-icon-wrap{
-  width: clamp(54px,14vw,68px);height: clamp(54px,14vw,68px);border-radius:20px;
-  background:linear-gradient(145deg,#fff8f7 0%,#ffecea 100%);
-  border:1px solid rgba(255,59,48,.1);
-  box-shadow:0 4px 20px rgba(255,59,48,.08), 0 1px 3px rgba(0,0,0,.04);
-  display:flex;align-items:center;justify-content:center;
-  margin: clamp(28px,6vh,42px) auto clamp(18px,4vh,28px);
-  font-size: clamp(24px,6vw,30px);
-  position:relative;
+  width: clamp(56px, 14vw, 68px);
+  height: clamp(56px, 14vw, 68px);
+  border-radius: 20px;
+  background: linear-gradient(145deg, #fff8f7 0%, #ffecea 100%);
+  border: 1px solid rgba(255,59,48,.12);
+  box-shadow: 0 4px 20px rgba(255,59,48,.08), 0 1px 3px rgba(0,0,0,.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: clamp(16px, 3.5vh, 30px) auto clamp(14px, 2.5vh, 22px);
+  position: relative;
 }
 .err-icon-wrap::after{
-  content:"";position:absolute;inset:-5px;border-radius:25px;
-  border:1px solid rgba(255,59,48,.06);
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 25px;
+  border: 1px solid rgba(255,59,48,.06);
 }
-.err-msg{font-size: clamp(16px,4vw,19px);font-weight:800;color:#1d1d1f;letter-spacing:-.5px;margin-bottom: var(--sp-xs);text-align:center;}
-.err-sub{font-size: clamp(11.5px,2.9vw,13px);color:#6e6e73;line-height:1.6;margin: 0 auto clamp(20px,4vh,30px);max-width:260px;text-align:center;width:100%;}
-.err-divider{width:100%;height:1px;background:#f0f0f0;margin: 0 0 clamp(20px,4vh,30px);}
-.err-actions{position:absolute;left:20px;right:20px;bottom: 6px;display:flex;flex-direction:column;align-items:stretch;gap: var(--sp-sm);}
+.err-msg{
+  font-size: clamp(17px, 4.2vw, 20px);
+  font-weight: 800;
+  color: #1d1d1f;
+  letter-spacing: -.5px;
+  margin-bottom: var(--sp-xs);
+  text-align: center;
+  text-wrap: balance;
+}
+.err-sub{
+  font-size: clamp(12px, 3vw, 13.5px);
+  color: #6e6e73;
+  line-height: 1.55;
+  margin: 0 auto;
+  max-width: 280px;
+  text-align: center;
+  width: 100%;
+  text-wrap: pretty;
+}
+.err-divider{width: 100%; height: 1px; background: #f0f0f0; margin: 0 0 clamp(16px, 2.5vh, 24px);}
+.err-actions{
+  margin-top: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--sp-sm);
+  padding-top: clamp(14px, 2.5vh, 22px);
+}
 .err-cta{
-  display:flex;align-items:center;justify-content:center;gap:9px;
-  background:linear-gradient(135deg,#0071e3,#0077ed);color:#fff;
-  font-size: clamp(13px,3.3vw,15px);font-weight:600;border-radius:13px;
-  padding: clamp(11px,2.5vh,14px);text-decoration:none;
-  box-shadow:0 4px 14px rgba(0,113,227,.28);transition:all .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 48px;
+  background: linear-gradient(135deg, #0071e3, #0077ed);
+  color: #fff;
+  font-size: clamp(13.5px, 3.4vw, 15.5px);
+  font-weight: 600;
+  border-radius: 14px;
+  padding: 12px 18px;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(0,113,227,.28);
+  transition: all .15s;
 }
-.err-cta:active{transform:scale(.985);box-shadow:0 2px 8px rgba(0,113,227,.2);}
+.err-cta:active{transform: scale(.985); box-shadow: 0 2px 8px rgba(0,113,227,.2);}
 .err-cta-sec{
-  display:flex;align-items:center;justify-content:center;gap:9px;
-  background:#f5f5f7;color:#1d1d1f;
-  font-size: clamp(13px,3.3vw,15px);font-weight:500;border-radius:13px;
-  padding: clamp(10px,2.2vh,13px);text-decoration:none;
-  border:1px solid #e8e8ed;transition:all .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 46px;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  font-size: clamp(13px, 3.2vw, 14.5px);
+  font-weight: 500;
+  border-radius: 14px;
+  padding: 11px 16px;
+  text-decoration: none;
+  border: 1px solid #e8e8ed;
+  transition: all .15s;
 }
-.err-cta-sec:active{background:#ebebed;}
-.err-note{font-size:11px;color:#aeaeb2;letter-spacing:.2px;text-align:center;}
+.err-cta-sec:active{background: #ebebed; transform: scale(.985);}
 
-/* ── Success state ── */
-#state-success{display:none;}
-#state-success.active{display:flex;flex-direction:column;align-items:center;position:absolute;inset:0;background:#fff;z-index:5;padding:clamp(18px,3.5vh,26px) 20px 30px;}
+/* ── Success state: fluid flex, auto-margin actions, no overlap ── */
+#state-success{display: none;}
+#state-success.active{
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  width: 100%;
+  min-height: 100%;
+  padding: clamp(10px, 2vh, 18px) 0 clamp(8px, 1.5vh, 14px);
+}
 .suc-badge{
-  display:inline-flex;align-items:center;gap:5px;
-  background:rgba(52,199,89,.1);border:1px solid rgba(52,199,89,.2);
-  border-radius:20px;padding:4px 12px;
-  font-size:10px;font-weight:700;color:#34c759;letter-spacing:1.2px;text-transform:uppercase;
-  margin-top:-6px;margin-bottom:var(--sp-md);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(52,199,89,.1);
+  border: 1px solid rgba(52,199,89,.22);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #28a745;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: var(--sp-md);
 }
 .suc-icon-wrap{
-  width:clamp(64px,16vw,80px);height:clamp(64px,16vw,80px);border-radius:24px;
-  background:linear-gradient(145deg,#f0fff4,#dcfce7);
-  border:1px solid rgba(52,199,89,.15);
-  box-shadow:0 8px 32px rgba(52,199,89,.15),0 2px 6px rgba(0,0,0,.04);
-  display:flex;align-items:center;justify-content:center;
-  margin:clamp(20px,4.5vh,34px) auto clamp(14px,3vh,22px);
-  font-size:clamp(28px,7vw,36px);
-  position:relative;animation:suc-pop .45s cubic-bezier(.34,1.56,.64,1) both;
+  width: clamp(60px, 15vw, 76px);
+  height: clamp(60px, 15vw, 76px);
+  border-radius: 22px;
+  background: linear-gradient(145deg, #f0fff4, #dcfce7);
+  border: 1px solid rgba(52,199,89,.18);
+  box-shadow: 0 8px 32px rgba(52,199,89,.15), 0 2px 6px rgba(0,0,0,.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: clamp(16px, 3.5vh, 28px) auto clamp(12px, 2.5vh, 20px);
+  position: relative;
+  animation: suc-pop .45s cubic-bezier(.34,1.56,.64,1) both;
 }
 .suc-icon-wrap::after{
-  content:"";position:absolute;inset:-6px;border-radius:30px;
-  border:1px solid rgba(52,199,89,.08);
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 28px;
+  border: 1px solid rgba(52,199,89,.08);
 }
-@keyframes suc-pop{from{transform:scale(.6);opacity:0;}to{transform:scale(1);opacity:1;}}
-.suc-msg{font-size:clamp(18px,4.5vw,22px);font-weight:800;color:#1d1d1f;letter-spacing:-.5px;margin-bottom:4px;text-align:center;}
-.suc-sub{font-size:clamp(12px,3vw,13.5px);color:#6e6e73;line-height:1.6;margin:0 auto clamp(16px,3vh,24px);max-width:260px;text-align:center;}
+@keyframes suc-pop{from{transform: scale(.6); opacity: 0;} to{transform: scale(1); opacity: 1;}}
+.suc-msg{
+  font-size: clamp(18px, 4.5vw, 22px);
+  font-weight: 800;
+  color: #1d1d1f;
+  letter-spacing: -.5px;
+  margin-bottom: 4px;
+  text-align: center;
+  text-wrap: balance;
+}
+.suc-sub{
+  font-size: clamp(12px, 3vw, 13.5px);
+  color: #6e6e73;
+  line-height: 1.55;
+  margin: 0 auto clamp(14px, 2.5vh, 22px);
+  max-width: 280px;
+  text-align: center;
+  text-wrap: pretty;
+}
 .suc-amount-card{
-  width:100%;background:linear-gradient(135deg,#f0fff4,#dcfce7);
-  border:1px solid rgba(52,199,89,.2);border-radius:14px;
-  padding:clamp(12px,2.5vh,16px) 18px;margin-bottom:clamp(16px,3vh,22px);
-  display:flex;align-items:center;justify-content:space-between;
+  width: 100%;
+  background: linear-gradient(135deg, #f0fff4, #dcfce7);
+  border: 1px solid rgba(52,199,89,.22);
+  border-radius: 14px;
+  padding: clamp(12px, 2.2vh, 16px) 18px;
+  margin-bottom: clamp(14px, 2.5vh, 20px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
-.suc-amount-label{font-size:11px;font-weight:600;color:#16a34a;letter-spacing:.8px;text-transform:uppercase;}
-.suc-amount-val{font-size:clamp(22px,5.5vw,27px);font-weight:800;color:#15803d;letter-spacing:-1px;}
-.suc-divider{width:100%;height:1px;background:#f0f0f0;margin:0 0 clamp(16px,3vh,22px);}
-.suc-actions{position:absolute;left:20px;right:20px;bottom: clamp(18px,3.5vh,26px);}
-.suc-cta{
-  display:flex;align-items:center;justify-content:center;
-  background:#34c759;color:#fff;
-  font-size:clamp(13px,3.3vw,15px);font-weight:600;border-radius:13px;
-  padding:clamp(11px,2.5vh,14px);text-decoration:none;border:none;width:100%;
-  box-shadow:0 4px 14px rgba(52,199,89,.3);transition:all .15s;cursor:pointer;
+.suc-amount-label{font-size: 11px; font-weight: 600; color: #16a34a; letter-spacing: .8px; text-transform: uppercase;}
+.suc-amount-val{font-size: clamp(22px, 5.5vw, 28px); font-weight: 800; color: #15803d; letter-spacing: -1px;}
+
+/* ── Screen adaptation for ultra-compact mobile (<= 340px) ── */
+@media (max-width: 340px){
+  .hero{padding-left: 12px; padding-right: 12px;}
+  .body{padding-left: 12px; padding-right: 12px;}
+  .upi-chip{font-size: 9px; padding: 6px 2px;}
+  .amount-val{font-size: 24px;}
 }
-.suc-cta:active{transform:scale(.985);}
 </style>
 </head>
 <body>
@@ -310,7 +598,7 @@ body{
 
   <div class="hero">
     <div class="hero-logo">
-      <img src="https://raw.githubusercontent.com/lamahajan/UPI-Redirect/main/Logo.png" alt="Lotus International School" style="width:62px;height:62px;object-fit:contain;"/>
+      <img src="https://raw.githubusercontent.com/lamahajan/UPI-Redirect/main/Logo.png" alt="Lotus International School" width="60" height="60" loading="eager" fetchpriority="high" style="width:60px;height:60px;object-fit:contain;aspect-ratio:1/1;"/>
 
       <div class="hero-school-text">
         <div class="hero-school-wordmark">LOTUS INTERNATIONAL SCHOOL</div>
@@ -340,7 +628,7 @@ body{
       </div>
     </div>
 
-    <div id="state-loading" class="active" style="display:flex">
+    <div id="state-loading" class="active">
       <div class="ld-spin"></div>
       <div class="ld-txt" id="ld-txt">Fetching payment status…</div>
       <div class="ld-sub">Please wait, do not close this page</div>
@@ -354,16 +642,12 @@ body{
         <div class="upi-chip">Paytm</div>
         <div class="upi-chip">BHIM</div>
       </div>
-      <div id="qr-wrap" style="display:none;text-align:center;margin-bottom:16px;">
-        <img id="qr-img" src="" alt="Scan to pay" style="width:170px;height:170px;border-radius:12px;border:1px solid #e8e8ed;"/>
-        <div style="font-size:11px;color:#6e6e73;margin-top:8px;">Scan with any UPI app to pay</div>
+      <div id="qr-wrap" style="display:none;text-align:center;margin:12px auto 16px;">
+        <img id="qr-img" src="" alt="Scan to pay" style="width:min(180px,50vw);height:min(180px,50vw);aspect-ratio:1/1;border-radius:12px;border:1px solid #e8e8ed;display:inline-block;"/>
+        <div style="font-size:11.5px;color:#6e6e73;margin-top:8px;">Scan with any UPI app to pay</div>
       </div>
       <div class="btn-wrap">
         <a id="pay-btn" class="btn-primary" href="#">Open Payment App</a>
-        <a class="btn-secondary" href="tel:+919872760880" style="display:flex;align-items:center;justify-content:center;gap:7px;">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-          Need help? Call +91 98727-60880
-        </a>
         <div class="secure">
           <svg width="10" height="12" viewBox="0 0 10 12" fill="none"><path d="M5 0L0 2V5.5C0 8.5 2.2 11.3 5 12C7.8 11.3 10 8.5 10 5.5V2L5 0Z" fill="#1d1d1f"/></svg>
           <span>256-bit encrypted · Amount pre-filled</span>
@@ -386,12 +670,8 @@ body{
           <div style="font-size:13px;font-weight:700;color:#15803d;" id="suc-name">—</div>
         </div>
       </div>
-      <div id="suc-txn-row" style="display:none;margin-top:10px;font-size:11.5px;color:#6e6e73;text-align:center">
-        Transaction ID: <span id="suc-txn-id" style="font-weight:600;color:#1d1d1f;font-family:monospace">—</span>
-      </div>
-      <div class="suc-divider"></div>
-      <div class="suc-actions">
-        <button class="suc-cta" onclick="window.close()">Done</button>
+      <div id="suc-txn-row" style="display:none;margin-top:10px;font-size:11.5px;color:#6e6e73;text-align:center;word-break:break-all;">
+        Transaction ID: <span id="suc-txn-id" style="font-weight:600;color:#1d1d1f;font-family:monospace;user-select:all;-webkit-user-select:all;">—</span>
       </div>
     </div>
 
@@ -400,15 +680,20 @@ body{
       <div class="err-icon-wrap"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ff3b30" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15 15 9"/><path d="M10.5 6.5 12 5a3.5 3.5 0 0 1 5 5l-1.5 1.5"/><path d="M13.5 17.5 12 19a3.5 3.5 0 0 1-5-5l1.5-1.5"/></svg></div>
       <div class="err-msg" id="err-msg">Payment Link Invalid</div>
       <div class="err-sub" id="err-sub">This link is invalid or may have expired. Please contact the school office to get a valid payment link.</div>
-      <div class="err-divider"></div>
-      <div class="err-actions">
+      <div class="err-actions" id="err-actions-wrap" style="display:none">
+        <div class="err-divider"></div>
         <a class="err-cta" id="err-part-btn" href="#" style="display:none">Pay Any Amount Instead</a>
-        <a class="err-cta" id="err-call-btn" href="#" onclick="showContactSheet();return false;">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-          Contact School Office
-        </a>
       </div>
     </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-school">Lotus International School</div>
+    <div class="footer-label">School Office &amp; Accounts Helpline</div>
+    <a class="call-btn" href="tel:+919872760880">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+      Call Office (+91 98727-60880)
+    </a>
   </div>
 
 </div>
@@ -416,16 +701,14 @@ body{
 // ── Real mobile viewport height fix ──
 // Sets --dvh from the actual visible window height (excludes the address
 // bar / browser chrome), and keeps it updated as that chrome shows/hides.
-// Without this, --dvh falls back to 1vh and the layout uses the full
-// (address-bar-included) 100vh, pushing bottom-pinned content like
-// .err-actions below the real visible fold on phones.
 (function setRealVH(){
   function apply(){
-    document.documentElement.style.setProperty('--dvh', (window.innerHeight * 0.01) + 'px');
+    var vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--dvh', vh + 'px');
   }
   apply();
-  window.addEventListener('resize', apply);
-  window.addEventListener('orientationchange', apply);
+  window.addEventListener('resize', apply, { passive: true });
+  window.addEventListener('orientationchange', apply, { passive: true });
 })();
 
 (function(){
@@ -533,17 +816,21 @@ body{
     var ov = document.createElement("div");
     ov.id = "pay-choice";
     ov.setAttribute("role","dialog");
-    ov.style.cssText = "position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:9999;display:flex;align-items:flex-end;justify-content:center;padding:14px;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)";
+    ov.setAttribute("aria-modal","true");
+    ov.setAttribute("aria-label","Payment choice");
+    ov.style.cssText = "position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,.48);z-index:9999;display:flex;align-items:flex-end;justify-content:center;padding:14px;padding-bottom:max(16px, env(safe-area-inset-bottom, 0px));-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);overscroll-behavior:contain;";
     ov.innerHTML =
-      '<div style="background:#fff;border-radius:22px;width:100%;max-width:420px;padding:22px 18px 16px;box-shadow:0 12px 40px rgba(0,0,0,.25)">' +
-        '<div style="font-size:17px;font-weight:700;color:#1d1d1f;text-align:center;margin-bottom:4px">How would you like to pay?</div>' +
-        '<div style="font-size:12.5px;color:#6e6e73;text-align:center;margin-bottom:16px">Choose one to continue</div>' +
-        '<button id="pc-full" type="button" style="display:block;width:100%;border:0;border-radius:14px;padding:15px 12px;font-size:15px;font-weight:700;background:#0071e3;color:#fff;margin-bottom:10px;cursor:pointer;font-family:inherit">Pay Full Amount &middot; \u20B9' + Number(amount||0).toLocaleString("en-IN") + '</button>' +
-        '<button id="pc-part" type="button" style="display:block;width:100%;border:0;border-radius:14px;padding:12px;font-size:15px;font-weight:700;background:#f2f2f7;color:#1d1d1f;cursor:pointer;font-family:inherit">Pay Any Amount<div style="font-size:11.5px;font-weight:500;color:#6e6e73;margin-top:3px">You will type the amount in your UPI app</div></button>' +
+      '<div style="background:#fff;border-radius:24px;width:100%;max-width:420px;max-height:85dvh;overflow-y:auto;padding:22px 18px 18px;box-shadow:0 16px 48px rgba(0,0,0,.25);">' +
+        '<div style="font-size:17px;font-weight:700;color:#1d1d1f;text-align:center;margin-bottom:4px;text-wrap:balance">How would you like to pay?</div>' +
+        '<div style="font-size:12.5px;color:#6e6e73;text-align:center;margin-bottom:18px">Choose one to continue</div>' +
+        '<button id="pc-full" type="button" style="display:flex;align-items:center;justify-content:center;width:100%;min-height:50px;border:0;border-radius:14px;padding:14px 12px;font-size:15px;font-weight:700;background:#0071e3;color:#fff;margin-bottom:10px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent">Pay Full Amount &middot; \u20B9' + Number(amount||0).toLocaleString("en-IN") + '</button>' +
+        '<button id="pc-part" type="button" style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;min-height:50px;border:0;border-radius:14px;padding:12px;font-size:14.5px;font-weight:700;background:#f2f2f7;color:#1d1d1f;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent">Pay Any Amount<span style="font-size:11.5px;font-weight:500;color:#6e6e73;margin-top:2px">You will type the amount in your UPI app</span></button>' +
       '</div>';
     document.body.appendChild(ov);
-    document.getElementById("pc-full").onclick = function(){ ov.parentNode.removeChild(ov); onFull(); };
+    function closeChoice(){ if(ov.parentNode) ov.parentNode.removeChild(ov); }
+    document.getElementById("pc-full").onclick = function(){ closeChoice(); onFull(); };
     document.getElementById("pc-part").onclick = function(){ window.location.href = window.location.pathname + "?pqr=" + encodeURIComponent(partId); };
+    ov.addEventListener("click", function(e){ if(e.target === ov) closeChoice(); });
   }
 
   // ── Part-payment link (?pqr=…) ───────────────────────────────────────
@@ -591,12 +878,12 @@ body{
           ? name.trim().split(" ").map(function(w){return w[0];}).slice(0,2).join("").toUpperCase()
           : (adm||"ST").slice(0,2).toUpperCase();
 
-        var bal = Number(d.balance)||0;
+        // Any-amount page: no fixed figure is shown — the parent types the amount in the UPI app.
         var lbl  = document.querySelector("#info-box .amount-label");
         var pill = document.querySelector("#info-box .due-pill");
-        if(lbl)  lbl.textContent  = bal > 0 ? "Total Due" : "Any Amount";
-        if(pill) pill.textContent = "Pay any amount";
-        document.getElementById("disp-am").textContent = bal > 0 ? ("₹"+bal.toLocaleString("en-IN")) : "Any amount";
+        if(lbl)  lbl.textContent  = "Pay";
+        if(pill) pill.textContent = "Your choice";
+        document.getElementById("disp-am").textContent = "Any Amount";
         document.getElementById("info-box").style.display = "block";
 
         var secure = document.querySelector("#state-redirecting .secure span");
@@ -608,7 +895,7 @@ body{
         if(btnWrap && !document.getElementById("part-hint")){
           var hint = document.createElement("div");
           hint.id = "part-hint";
-          hint.style.cssText = "font-size:12px;color:#6e6e73;text-align:center;margin-bottom:12px;line-height:1.5";
+          hint.style.cssText = "font-size:12.5px;color:#6e6e73;text-align:center;margin-bottom:14px;line-height:1.5;text-wrap:pretty;";
           hint.textContent = "You can pay any amount — type it in your UPI app.";
           btnWrap.insertBefore(hint, btnWrap.firstChild);
         }
@@ -751,13 +1038,6 @@ body{
       }
 
       // ── Send the parent to pay ──
-      // `short_url` is either:
-      //  a) a raw upi://pay?... deep link (Razorpay QR Codes API,
-      //     image_content) — only works where a UPI app is installed
-      //     (mobile), or
-      //  b) an https rzp.io link (fallback, if qr_image_content isn't
-      //     enabled on the account yet) — works as a normal webpage on any
-      //     device, so auto-redirect is safe there.
       showState("redirecting");   // lookup finished, QR is payable — leave the loader
       var isUpiLink = /^upi:\/\//i.test(d.short_url || "");
       var isMobile  = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -794,8 +1074,6 @@ body{
     });
 
   // ── Poll worker for payment confirmation ──
-  // Starts after user returns from Razorpay's checkout (visibility change)
-  // Also starts after 3s anyway (in case visibilitychange doesn't fire)
   var _pollTimer   = null;
   var _pollCount   = 0;
   var _maxPolls    = 60;   // 60 × 5s = 5 minutes
@@ -813,8 +1091,6 @@ body{
     if(_pollCount > _maxPolls){ clearInterval(_pollTimer); return; }
 
     // Poll via proxy /payment-status/:qr_id (reads qr_map on main Firebase).
-    // This is the only polling strategy now — it never exposes the Firebase
-    // database secret to the parent's browser.
     if(proxyUrl && qrId){
       fetch(proxyUrl+"/payment-status/"+qrId)
         .then(function(r){ return r.json(); })
@@ -853,14 +1129,16 @@ function showContactSheet(){
   var ov = document.createElement("div");
   ov.id = "contact-sheet";
   ov.setAttribute("role","dialog");
-  ov.style.cssText = "position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:9999;display:flex;align-items:flex-end;justify-content:center;padding:14px;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)";
+  ov.setAttribute("aria-modal","true");
+  ov.setAttribute("aria-label","Contact School Office");
+  ov.style.cssText = "position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,.48);z-index:9999;display:flex;align-items:flex-end;justify-content:center;padding:14px;padding-bottom:max(16px, env(safe-area-inset-bottom, 0px));-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);overscroll-behavior:contain;";
   ov.innerHTML =
-    '<div style="background:#fff;border-radius:22px;width:100%;max-width:420px;padding:22px 18px 16px;box-shadow:0 12px 40px rgba(0,0,0,.25)">' +
-      '<div style="font-size:17px;font-weight:700;color:#1d1d1f;text-align:center;margin-bottom:4px">Contact School Office</div>' +
-      '<div style="font-size:12.5px;color:#6e6e73;text-align:center;margin-bottom:16px">Choose how you would like to reach us</div>' +
-      '<a href="https://wa.me/919872760880" target="_blank" rel="noopener" style="display:block;text-decoration:none;text-align:center;border-radius:14px;padding:15px 12px;font-size:15px;font-weight:700;background:#25d366;color:#fff;margin-bottom:10px">WhatsApp Us</a>' +
-      '<a href="tel:+919872760880" style="display:block;text-decoration:none;text-align:center;border-radius:14px;padding:15px 12px;font-size:15px;font-weight:700;background:#0071e3;color:#fff;margin-bottom:10px">Call School Office</a>' +
-      '<button id="cs-cancel" type="button" style="display:block;width:100%;border:0;border-radius:14px;padding:12px;font-size:14px;font-weight:600;background:#f2f2f7;color:#6e6e73;cursor:pointer;font-family:inherit">Cancel</button>' +
+    '<div style="background:#fff;border-radius:24px;width:100%;max-width:420px;max-height:85dvh;overflow-y:auto;padding:22px 18px 18px;box-shadow:0 16px 48px rgba(0,0,0,.25);">' +
+      '<div style="font-size:17px;font-weight:700;color:#1d1d1f;text-align:center;margin-bottom:4px;text-wrap:balance">Contact School Office</div>' +
+      '<div style="font-size:12.5px;color:#6e6e73;text-align:center;margin-bottom:18px">Choose how you would like to reach us</div>' +
+      '<a href="https://wa.me/919872760880" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;min-height:50px;text-decoration:none;text-align:center;border-radius:14px;padding:14px 12px;font-size:15px;font-weight:700;background:#25d366;color:#fff;margin-bottom:10px;-webkit-tap-highlight-color:transparent">WhatsApp Us</a>' +
+      '<a href="tel:+919872760880" style="display:flex;align-items:center;justify-content:center;min-height:50px;text-decoration:none;text-align:center;border-radius:14px;padding:14px 12px;font-size:15px;font-weight:700;background:#0071e3;color:#fff;margin-bottom:10px;-webkit-tap-highlight-color:transparent">Call School Office</a>' +
+      '<button id="cs-cancel" type="button" style="display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;border:0;border-radius:14px;padding:12px;font-size:14px;font-weight:600;background:#f2f2f7;color:#6e6e73;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent">Cancel</button>' +
     '</div>';
   document.body.appendChild(ov);
   function close(){ if(ov.parentNode) ov.parentNode.removeChild(ov); }
@@ -873,7 +1151,7 @@ function showState(state, errorVariant){
     var el = document.getElementById("state-"+s);
     if(!el) return;
     if(s === state){
-      el.style.display = (s === "loading") ? "flex" : "block";
+      el.style.display = "flex";
       el.classList.add("active");
     } else {
       el.style.display = "none";
@@ -881,8 +1159,7 @@ function showState(state, errorVariant){
     }
   });
 
-  // success/error panels are absolute overlays on top of the student card —
-  // hide the card so the two never render on top of each other.
+  // success/error panels take over the card body — hide the student card so it doesn't crowd
   var ib = document.getElementById("info-box");
   if(ib && state !== "redirecting") ib.style.display = "none";
 
@@ -906,14 +1183,16 @@ function showState(state, errorVariant){
     if(s2) s2.textContent = texts.sub;
     // "Pay a part amount instead" — only on the Expired screen, only if a Part QR exists
     var pb = document.getElementById("err-part-btn");
+    var aw = document.getElementById("err-actions-wrap");
     if(pb){
       if(errorVariant === "expired" && window._expPart){
         pb.href = window.location.pathname + "?pqr=" + encodeURIComponent(window._expPart);
-        pb.style.display = "";
-      } else { pb.style.display = "none"; }
-      // Only one contact button: primary when alone, secondary under "Pay Any Amount Instead"
-      var cb = document.getElementById("err-call-btn");
-      if(cb) cb.className = (pb.style.display === "none") ? "err-cta" : "err-cta-sec";
+        pb.style.display = "flex";
+        if(aw) aw.style.display = "flex";
+      } else {
+        pb.style.display = "none";
+        if(aw) aw.style.display = "none";
+      }
     }
   }
 }
