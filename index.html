@@ -403,9 +403,9 @@ body{
       <div class="err-divider"></div>
       <div class="err-actions">
         <a class="err-cta" id="err-part-btn" href="#" style="display:none">Pay Any Amount Instead</a>
-        <a class="err-cta" id="err-call-btn" href="tel:+919872760880">
+        <a class="err-cta" id="err-call-btn" href="#" onclick="showContactSheet();return false;">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-          Call School Office
+          Contact School Office
         </a>
       </div>
     </div>
@@ -846,6 +846,27 @@ body{
   setTimeout(startPolling, 4000);
 
 })();
+
+// ── "Contact School Office" popup: WhatsApp or Call ──
+function showContactSheet(){
+  if(document.getElementById("contact-sheet")) return;
+  var ov = document.createElement("div");
+  ov.id = "contact-sheet";
+  ov.setAttribute("role","dialog");
+  ov.style.cssText = "position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:9999;display:flex;align-items:flex-end;justify-content:center;padding:14px;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)";
+  ov.innerHTML =
+    '<div style="background:#fff;border-radius:22px;width:100%;max-width:420px;padding:22px 18px 16px;box-shadow:0 12px 40px rgba(0,0,0,.25)">' +
+      '<div style="font-size:17px;font-weight:700;color:#1d1d1f;text-align:center;margin-bottom:4px">Contact School Office</div>' +
+      '<div style="font-size:12.5px;color:#6e6e73;text-align:center;margin-bottom:16px">Choose how you would like to reach us</div>' +
+      '<a href="https://wa.me/919872760880" target="_blank" rel="noopener" style="display:block;text-decoration:none;text-align:center;border-radius:14px;padding:15px 12px;font-size:15px;font-weight:700;background:#25d366;color:#fff;margin-bottom:10px">WhatsApp Us</a>' +
+      '<a href="tel:+919872760880" style="display:block;text-decoration:none;text-align:center;border-radius:14px;padding:15px 12px;font-size:15px;font-weight:700;background:#0071e3;color:#fff;margin-bottom:10px">Call School Office</a>' +
+      '<button id="cs-cancel" type="button" style="display:block;width:100%;border:0;border-radius:14px;padding:12px;font-size:14px;font-weight:600;background:#f2f2f7;color:#6e6e73;cursor:pointer;font-family:inherit">Cancel</button>' +
+    '</div>';
+  document.body.appendChild(ov);
+  function close(){ if(ov.parentNode) ov.parentNode.removeChild(ov); }
+  document.getElementById("cs-cancel").onclick = close;
+  ov.addEventListener("click", function(e){ if(e.target === ov) close(); });
+}
 
 function showState(state, errorVariant){
   ["loading","redirecting","success","error"].forEach(function(s){
